@@ -1,0 +1,233 @@
+/* Structural Base Wrappers */
+.machinery-full-page-container {
+  background-color: #FFFFFF;
+  padding: 40px 0;
+  font-family: Arial, sans-serif;
+}
+
+/* 3-Column Split Framework Layout */
+.machinery-top-grid {
+  display: grid;
+  grid-template-columns: 2.2fr 2fr 1.3fr;
+  gap: 40px;
+  align-items: start;
+  margin-bottom: 60px;
+}
+
+/* Column Media Galleries adjustments */
+.machinery-gallery-pane {
+  position: relative;
+}
+.machinery-hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Center Content Column Typography styles */
+.machinery-page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 15px 0;
+}
+.machinery-main-price {
+  font-size: 28px;
+  font-weight: 800;
+  color: #E30613;
+  margin-bottom: 25px;
+}
+.price-tax-subtext {
+  display: block;
+  font-size: 13px;
+  color: #222222;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+/* Checkmark lists block */
+.equipment-highlights-box {
+  margin: 30px 0;
+  border-left: 4px solid #E30613;
+  padding-left: 20px;
+}
+.equipment-highlights-box h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+}
+.checkmark-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+}
+.checkmark-list li {
+  font-size: 14px;
+  color: #222222;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.checkmark-icon {
+  color: #E30613;
+  font-weight: bold;
+}
+
+/* Tabs Mechanics Styles */
+.machinery-tabs-nav {
+  display: flex;
+  gap: 20px;
+  border-bottom: 2px solid #F5F5F5;
+  margin-bottom: 20px;
+}
+.tab-link {
+  background: none;
+  border: none;
+  padding: 10px 5px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #222222;
+  border-bottom: 3px solid transparent;
+}
+.active-tab {
+  color: #E30613;
+  border-bottom-color: #E30613;
+}
+.machinery-tab-content {
+  display: none;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #222222;
+  margin-bottom: 30px;
+}
+.current-content {
+  display: block;
+}
+
+/* Sidebar Box Styling Parameters */
+.sticky-sidebar-wrapper {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 20px;
+}
+.sidebar-red-card {
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.red-card-header {
+  background-color: #E30613;
+  color: #FFFFFF;
+  padding: 15px 20px;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.red-card-body {
+  background-color: #000000;
+  color: #FFFFFF;
+  padding: 5px 0;
+}
+.sidebar-data-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 20px;
+  font-size: 13px;
+  border-bottom: 1px solid #222222;
+}
+.sidebar-data-row:last-child {
+  border-bottom: none;
+}
+.sidebar-data-row .lbl { color: #F5F5F5; }
+.sidebar-data-row .val { font-weight: 700; color: #FFFFFF; }
+
+/* Category key specs (snippets/machine-key-specs.liquid) */
+.key-spec-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background-color: #222222;
+  border-bottom: 1px solid #222222;
+  margin: -5px 0 5px;
+}
+.key-spec-tile {
+  background-color: #000000;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.key-spec-tiles .key-spec-tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.key-spec-tile__label {
+  color: #BDBDBD;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.key-spec-tile__value {
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+/* Buttons Custom Classes definitions */
+
+.btn--black-download { background-color: #000000; color: #FFFFFF; text-decoration: none; font-weight: bold; text-transform: uppercase; padding: 16px; font-size: 14px; text-align: center; display: block; border-radius: 4px; border: 1px solid #222222; transition: all 0.2s ease; }
+.btn--black-download:hover { background-color: #222222; }
+.btn--full-width-cta { width: 100%; box-sizing: border-box; }
+
+/* Bottom Technical Specification Tables elements rules */
+.machinery-bottom-specifications {
+  margin-top: 40px;
+}
+.spec-table-container {
+  margin-bottom: 35px;
+  border: 1px solid #222222;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+.table-group-title {
+  background-color: #222222;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+.spec-table-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 24px;
+  font-size: 13.5px;
+  border-bottom: 1px solid #F5F5F5;
+  background-color: #FFFFFF;
+}
+.spec-table-row:nth-child(even) {
+  background-color: #F5F5F5;
+}
+.spec-table-row:last-child {
+  border-bottom: none;
+}
+.spec-table-row span { color: #222222; }
+.spec-table-row strong { color: #000000; font-weight: 700; }
+
+/* Mobile and Responsive Media Adaptation queries Breakpoints */
+@media (max-width: 1024px) {
+  .machinery-top-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+  .machinery-sidebar-pane { grid-column: span 2; }
+}
+@media (max-width: 767px) {
+  .machinery-top-grid { grid-template-columns: 1fr; }
+  .machinery-sidebar-pane { grid-column: span 1; }
+  .checkmark-list { grid-template-columns: 1fr; }
+  .spec-table-row { flex-direction: column; gap: 4px; }
+}

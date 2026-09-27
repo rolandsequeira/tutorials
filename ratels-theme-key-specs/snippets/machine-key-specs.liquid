@@ -1,0 +1,242 @@
+{% comment %}
+  Renders the key specs for a machine, chosen by its category.
+
+  Category (spec group) is resolved in this order:
+    1. `group` parameter
+    2. product.metafields.custom.spec_group (loaders / excavators / electric / attachments / forestry / other)
+    3. the collection being browsed (`collection_handle`), e.g. lastmaskiner, gravmaskiner, elektriska-maskiner ...
+    4. product.type, then the product's own collections
+    5. fallback: other
+
+  Specs per group (first non-empty metafield in each "a/b/c" list wins):
+    loaders      Operating Weight • Lift Capacity • Engine Power • Hydraulic Flow
+    excavators   Operating Weight • Engine Power • Digging Depth • Digging Reach
+    electric     Operating Weight • Battery Capacity • Working Time • Power kW
+    attachments  Weight • Working Width • Hydraulic Flow
+    forestry     Operating Weight • Load Capacity • Engine Power • Crane Reach / PTO
+    other        Operating Weight • Load Capacity • Engine Power
+
+  Metafield values may use the "value|key_attribute|detail" format; only the value part is shown.
+  Placeholder values ("unknown", "-", "0 kg", values without digits) are skipped.
+
+  Accepts:
+  - product: {Object} Product (required)
+  - output: {String} 'card' (default), 'tiles', 'keys' (comma list of metafield keys shown) or 'group'
+  - collection_handle: {String} Handle of the collection being browsed (optional)
+  - group: {String} Force a spec group (optional)
+
+  Usage:
+  {% render 'machine-key-specs', product: product, collection_handle: collection.handle %}
+{% endcomment %}
+
+{%- liquid
+  assign is_sv = false
+  if request.locale.iso_code == 'sv'
+    assign is_sv = true
+  endif
+
+  assign spec_group = product.metafields.custom.spec_group | append: '' | split: '|' | first | strip | downcase
+  assign group_param = group | default: ''
+  if group_param != ''
+    assign spec_group = group_param | downcase
+  endif
+  assign browse_handle = collection_handle | default: '' | downcase
+
+  # Match collection handle / product type / product collections. Swedish and English words both work.
+  if spec_group == blank and browse_handle != ''
+    assign h = browse_handle
+    if h contains 'elektr' or h contains 'electric'
+      assign spec_group = 'electric'
+    elsif h contains 'grav' or h contains 'gräv' or h contains 'excavat'
+      assign spec_group = 'excavators'
+    elsif h contains 'last' or h contains 'loader'
+      assign spec_group = 'loaders'
+    elsif h contains 'redskap' or h contains 'attachment'
+      assign spec_group = 'attachments'
+    elsif h contains 'skog' or h contains 'lantbruk' or h contains 'forest' or h contains 'agri'
+      assign spec_group = 'forestry'
+    elsif h contains 'annat' or h contains 'other'
+      assign spec_group = 'other'
+    endif
+  endif
+
+  if spec_group == blank
+    assign t = product.type | downcase
+    if t contains 'electric' or t contains 'elektr'
+      assign spec_group = 'electric'
+    elsif t contains 'excavator' or t contains 'grävmaskin' or t contains 'gravmaskin'
+      assign spec_group = 'excavators'
+    elsif t contains 'loader' or t contains 'skid' or t contains 'lastmaskin'
+      assign spec_group = 'loaders'
+    elsif t contains 'attachment' or t contains 'redskap' or t contains 'bucket' or t contains 'skopa'
+      assign spec_group = 'attachments'
+    elsif t contains 'tractor' or t contains 'traktor' or t contains 'forwarder' or t contains 'timber' or t contains 'forest' or t contains 'skog' or t contains 'agri' or t contains 'lantbruk'
+      assign spec_group = 'forestry'
+    endif
+  endif
+
+  if spec_group == blank
+    for c in product.collections
+      assign h = c.handle
+      if h contains 'elektr' or h contains 'electric'
+        assign spec_group = 'electric'
+      elsif h contains 'grav' or h contains 'excavat'
+        assign spec_group = 'excavators'
+      elsif h contains 'last' or h contains 'loader'
+        assign spec_group = 'loaders'
+      elsif h contains 'redskap' or h contains 'attachment'
+        assign spec_group = 'attachments'
+      elsif h contains 'skog' or h contains 'lantbruk' or h contains 'forest' or h contains 'agri'
+        assign spec_group = 'forestry'
+      endif
+      if spec_group != blank
+        break
+      endif
+    endfor
+  endif
+
+  # Each entry: label_id:metafield_a/metafield_b:default_unit (unit is appended to bare numbers).
+  # label_id '*' means: label after the metafield that actually had a value.
+  case spec_group
+    when 'loaders'
+      assign spec_defs = 'operating_weight:operating_weight:kg,lift_capacity:rated_load_capacity/tipping_load:kg,engine_power:engine_power:kW,hydraulic_flow:hydraulic_flow/maximum_auxiliary_flow:L/min'
+    when 'excavators'
+      assign spec_defs = 'operating_weight:operating_weight:kg,engine_power:engine_power:kW,digging_depth:digging_depth/max_digging_depth:mm,digging_reach:digging_reach/max_digging_reach:mm'
+    when 'electric'
+      assign spec_defs = 'operating_weight:operating_weight:kg,battery_capacity:battery_capacity/usable_battery_capacity:kWh,working_time:runtime_normal_duty/runtime_light_duty/runtime_heavy_duty:h,power_kw:drive_motor_power_continuous/drive_motor_power_peak/engine_power:kW'
+    when 'attachments'
+      assign spec_defs = 'weight:weight/operating_weight:kg,working_width:working_width/standard_bucket_width/overall_width:mm,hydraulic_flow:required_hydraulic_flow/hydraulic_flow:L/min'
+    when 'forestry'
+      assign spec_defs = 'operating_weight:operating_weight:kg,load_capacity:rated_load_capacity/load_capacity:kg,engine_power:engine_power:kW,*:crane_reach/pto_power/pto_speed:'
+    else
+      assign spec_group = 'other'
+      assign spec_defs = 'operating_weight:operating_weight:kg,load_capacity:rated_load_capacity/load_capacity:kg,engine_power:engine_power:kW'
+  endcase
+
+  assign spec_defs = spec_defs | split: ','
+  assign shown_keys = ''
+-%}
+
+{%- if output == 'group' -%}
+  {{- spec_group -}}
+{%- else -%}
+  {%- capture spec_rows -%}
+    {%- for def in spec_defs -%}
+      {%- liquid
+        assign def_parts = def | split: ':'
+        assign label_id = def_parts[0]
+        assign candidates = def_parts[1] | split: '/'
+        assign unit = def_parts[2]
+        assign spec_value = ''
+        assign found_key = ''
+
+        for key in candidates
+          assign raw = product.metafields.custom[key] | append: '' | split: '|' | first | remove_first: "'" | strip
+          assign raw_lc = raw | downcase
+          if raw == blank or raw_lc == 'unknown' or raw_lc == 'n/a' or raw_lc == 'null'
+            continue
+          endif
+          assign first_char = raw | slice: 0
+          if first_char == '-'
+            continue
+          endif
+          assign first_two = raw | slice: 0, 2
+          if raw == '0' or first_two == '0 '
+            continue
+          endif
+          assign no_digits = raw | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9'
+          if no_digits.size == raw.size
+            continue
+          endif
+          assign spec_value = raw
+          assign found_key = key
+          break
+        endfor
+
+        if spec_value != blank and unit != blank
+          assign letters_left = no_digits | remove: '.' | remove: ',' | remove: '+' | remove: ' ' | remove: '~' | remove: '-'
+          if letters_left == blank
+            assign spec_value = spec_value | append: ' ' | append: unit
+          endif
+        endif
+
+        if label_id == '*'
+          assign label_id = found_key
+        endif
+
+        case label_id
+          when 'operating_weight'
+            assign label = 'Operating Weight'
+            assign label_sv = 'Arbetsvikt'
+          when 'weight'
+            assign label = 'Weight'
+            assign label_sv = 'Vikt'
+          when 'lift_capacity'
+            assign label = 'Lift Capacity'
+            assign label_sv = 'Lyftkapacitet'
+          when 'load_capacity'
+            assign label = 'Load Capacity'
+            assign label_sv = 'Lastkapacitet'
+          when 'engine_power'
+            assign label = 'Engine Power'
+            assign label_sv = 'Motoreffekt'
+          when 'hydraulic_flow'
+            assign label = 'Hydraulic Flow'
+            assign label_sv = 'Hydraulflöde'
+          when 'digging_depth'
+            assign label = 'Digging Depth'
+            assign label_sv = 'Grävdjup'
+          when 'digging_reach'
+            assign label = 'Digging Reach'
+            assign label_sv = 'Räckvidd'
+          when 'battery_capacity'
+            assign label = 'Battery Capacity'
+            assign label_sv = 'Batterikapacitet'
+          when 'working_time'
+            assign label = 'Working Time'
+            assign label_sv = 'Drifttid'
+          when 'power_kw'
+            assign label = 'Power'
+            assign label_sv = 'Effekt'
+          when 'working_width'
+            assign label = 'Working Width'
+            assign label_sv = 'Arbetsbredd'
+          when 'crane_reach'
+            assign label = 'Crane Reach'
+            assign label_sv = 'Kranräckvidd'
+          else
+            assign label = 'PTO'
+            assign label_sv = 'Kraftuttag'
+        endcase
+
+        if is_sv
+          assign label = label_sv
+        endif
+      -%}
+      {%- if spec_value != blank -%}
+        {%- assign shown_keys = shown_keys | append: found_key | append: ',' -%}
+        {%- if output == 'tiles' -%}
+          <div class="key-spec-tile key-spec-tile--{{ label_id }}">
+            <span class="key-spec-tile__label">{{ label }}</span>
+            <span class="key-spec-tile__value">{{ spec_value }}</span>
+          </div>
+        {%- else -%}
+          <div class="spec-line spec-line--{{ label_id }}">
+            <span class="spec-label">{{ label }}:</span>
+            <span class="spec-value">{{ spec_value }}</span>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if output == 'keys' -%}
+    {{- shown_keys -}}
+  {%- elsif output == 'tiles' -%}
+    {%- if spec_rows != blank -%}
+      <div class="key-spec-tiles" data-spec-group="{{ spec_group }}">{{ spec_rows }}</div>
+    {%- endif -%}
+  {%- else -%}
+    <div class="card-quick-specs" data-spec-group="{{ spec_group }}">{{ spec_rows }}</div>
+  {%- endif -%}
+{%- endif -%}
