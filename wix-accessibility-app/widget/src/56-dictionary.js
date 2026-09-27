@@ -8,6 +8,15 @@ function showDefinition(word, rect) {
   box.setAttribute('aria-label', t('dictionary') + ': ' + word);
   box.innerHTML = '';
   box.appendChild(h('button', { type: 'button', class: 'x', 'aria-label': t('close'), html: ICONS.close, onclick: closeDict }));
+  var search = h('form', { class: 'dsearch', role: 'search', onsubmit: function (e) {
+    e.preventDefault();
+    var w = search.querySelector('input').value.trim();
+    if (w) showDefinition(w, rect);
+  } }, [
+    h('input', { type: 'search', 'aria-label': t('dictSearch'), placeholder: t('dictSearch'), value: word }),
+    h('button', { type: 'submit', text: '→', 'aria-label': t('dictSearch') }),
+  ]);
+  box.appendChild(search);
   box.appendChild(h('h4', { text: word }));
   var body = h('div', { role: 'status', text: t('dictLoading') });
   box.appendChild(body);
@@ -18,6 +27,7 @@ function showDefinition(word, rect) {
   var wikiLang = (ROOT.lang || LANG || 'en').slice(0, 2);
   var more = h('a', { href: 'https://' + wikiLang + '.wiktionary.org/wiki/' + encodeURIComponent(word), target: '_blank', rel: 'noopener', text: t('dictMore') });
 
+  if (!word) { body.textContent = ''; box.querySelector('h4').remove(); setTimeout(function () { search.querySelector('input').focus(); }, 30); return; }
   if (wikiLang !== 'en') { body.textContent = ''; body.appendChild(more); return; }
   fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(word))
     .then(function (r) { return r.ok ? r.json() : []; })
@@ -51,6 +61,7 @@ function dictEsc(e) { if (e.key === 'Escape') closeDict(); }
 
 feature('dictionary', 'tools', {
   kind: 'toggle',
+  afterClick: function (v) { if (v) showDefinition('', { left: 16, top: 80, bottom: 80 }); },
   apply: function (v) {
     document.removeEventListener('dblclick', dictHandler, true);
     document.removeEventListener('keydown', dictEsc, true);

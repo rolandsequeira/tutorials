@@ -1,5 +1,8 @@
 // State management + widget UI (trigger button and panel).
 var panelView = 'main';
+var uiPrefs = null; // visitor UI preferences: { big: bool, side: 'left'|'right' }
+function getUiPrefs() { if (!uiPrefs) uiPrefs = storeGet(STORE_KEY + ':ui', {}) || {}; return uiPrefs; }
+function saveUiPrefs() { storeSet(STORE_KEY + ':ui', uiPrefs); }
 var panelOpen = false;
 var lastFocus = null;
 
@@ -84,6 +87,7 @@ function tile(id) {
         next = ((state[id] || 0) + 1) % (max + 1);
       }
       setFeature(id, next);
+      if (f.afterClick) f.afterClick(next);
       announce(t(id) + ': ' + (f.kind === 'levels' ? levelLabel(f, next) : next ? t('on') : t('off')));
     },
   }, children);
@@ -152,7 +156,17 @@ function renderPanel() {
 
   if (panelView === 'structure') {
     renderStructure(body);
+  } else if (panelView === 'report') {
+    renderReport(body);
   } else {
+    var big = !!getUiPrefs().big;
+    body.appendChild(h('div', { class: 'switchrow' }, [
+      h('span', { id: 'a11ytk-big', text: t('oversize') }),
+      h('button', {
+        type: 'button', role: 'switch', class: 'sw', 'data-fid': 'oversize', 'aria-checked': String(big), 'aria-labelledby': 'a11ytk-big',
+        onclick: function () { uiPrefs.big = !big; saveUiPrefs(); applyUiPrefs(); renderPanel(); track('ui:oversize'); },
+      }),
+    ]));
     if (hasFeature('profiles')) {
       body.appendChild(h('h3', { text: t('sectionProfiles') }));
       var pg = h('div', { class: 'profiles' });
@@ -160,12 +174,13 @@ function renderPanel() {
       body.appendChild(pg);
     }
     [['content', 'sectionContent'], ['color', 'sectionColor'], ['orientation', 'sectionOrientation'], ['tools', 'sectionTools']].forEach(function (g) {
-      var ids = GROUPS[g[0]].filter(hasFeature);
+      var ids = GROUPS[g[0]].filter(hasFeature).sort(function (a, b) { return CONFIG.features.indexOf(a) - CONFIG.features.indexOf(b); });
       if (!ids.length) return;
       body.appendChild(h('h3', { text: t(g[1]) }));
       var grid = h('div', { class: 'grid' });
       ids.forEach(function (id) { grid.appendChild(tile(id)); });
       body.appendChild(grid);
+      if (g[0] === 'tools' && isOn('screenReader') && window.speechSynthesis) body.appendChild(voicePicker());
     });
   }
   body.scrollTop = scroll;
@@ -181,12 +196,21 @@ function renderFooter(foot) {
   if (CONFIG.ui.statementUrl) {
     foot.appendChild(h('a', { href: CONFIG.ui.statementUrl, target: '_blank', rel: 'noopener' }, [h('span', { html: ICONS.doc }), t('statement')]));
   }
+  foot.appendChild(h('button', { type: 'button', 'data-fid': 'move', onclick: moveWidget }, [h('span', { html: ICONS.move }), t('moveWidget')]));
+  foot.appendChild(h('button', {
+    type: 'button', 'data-fid': 'report',
+    onclick: function () { panelView = 'report'; renderPanel(); var ta = shadow.querySelector('.form textarea'); if (ta) ta.focus(); },
+  }, [h('span', { html: ICONS.flag }), t('reportProblem')]));
   foot.appendChild(h('button', {
     type: 'button', 'data-fid': 'hide',
     onclick: function () { storeSet(STORE_KEY + ':hidden', true, true); closePanel(); applyTriggerVisibility(); announce(t('hidden')); track('hide'); },
   }, [h('span', { html: ICONS.hide }), t('hide')]));
   if (CONFIG.ui.showBranding) {
-    foot.appendChild(h('div', { class: 'brand', text: t('poweredBy') + ' ' + CONFIG.ui.brandName }));
+    var brand = h('div', { class: 'brand' }, [t('poweredBy') + ' ']);
+    brand.appendChild(CONFIG.ui.brandUrl
+      ? h('a', { href: CONFIG.ui.brandUrl, target: '_blank', rel: 'noopener', text: CONFIG.ui.brandName })
+      : document.createTextNode(CONFIG.ui.brandName));
+    foot.appendChild(brand);
   }
 }
 
@@ -223,12 +247,85 @@ function applyTriggerVisibility() {
 function positionStyles() {
   var ui = CONFIG.ui;
   var pos = ui.position.split('-');
-  var v = pos[0], side = pos[1];
+  var v = pos[0], side = getUiPrefs().side || pos[1];
   var s = side + ':' + ui.offsetX + 'px;';
   if (v === 'middle') s += 'top:50%;margin-top:-28px;';
   else s += v + ':' + ui.offsetY + 'px;';
   return { trigger: s, side: side };
 }
+
+function applyUiPrefs() {
+  var root = shadow.querySelector('.root');
+  root.classList.toggle('big', !!getUiPrefs().big);
+  var pos = positionStyles();
+  var trig = shadow.querySelector('.trigger');
+  var display = trig.style.display;
+  trig.setAttribute('style', pos.trigger);
+  trig.style.display = display;
+  var panel = shadow.querySelector('.panel');
+  panel.classList.toggle('left', pos.side === 'left');
+  panel.classList.toggle('right', pos.side === 'right');
+}
+
+function moveWidget() {
+  uiPrefs.side = positionStyles().side === 'left' ? 'right' : 'left';
+  saveUiPrefs();
+  applyUiPrefs();
+  track('ui:move');
+}
+
+function voicePicker() {
+  var base = (ROOT.lang || LANG || 'en').slice(0, 2).toLowerCase();
+  var voices = speechSynthesis.getVoices().filter(function (v) { return v.lang.toLowerCase().indexOf(base) === 0; });
+  var sel = h('select', {
+    id: 'a11ytk-voice', 'data-fid': 'voice',
+    onchange: function (e) { uiPrefs.voice = e.target.value || null; saveUiPrefs(); speak(t('screenReader')); },
+  }, [h('option', { value: '', text: 'Auto' })]);
+  voices.forEach(function (v) { sel.appendChild(h('option', { value: v.voiceURI, text: v.name, selected: getUiPrefs().voice === v.voiceURI })); });
+  return h('div', { class: 'switchrow', style: 'margin-top:8px' }, [h('label', { for: 'a11ytk-voice', text: t('voice') }), sel]);
+}
+
+/* ---------- Report a problem ---------- */
+function renderReport(container) {
+  container.appendChild(h('button', {
+    type: 'button', class: 'icon-btn', style: 'background:var(--card);color:var(--fg);width:auto;padding:0 12px;gap:6px', 'data-fid': 'back',
+    onclick: function () { panelView = 'main'; renderPanel(); shadow.querySelector('.panel .close').focus(); },
+  }, [h('span', { html: ICONS.back }), t('back')]));
+  var status = h('p', { role: 'status' });
+  var form = h('form', { class: 'form sub' }, [
+    h('h3', { text: t('reportProblem') }),
+    h('label', { for: 'a11ytk-rp-msg', text: t('reportDesc') }),
+    h('textarea', { id: 'a11ytk-rp-msg', name: 'message', rows: '5', required: true, maxlength: '2000' }),
+    h('label', { for: 'a11ytk-rp-email', text: t('reportEmail') }),
+    h('input', { id: 'a11ytk-rp-email', name: 'email', type: 'email', maxlength: '200', autocomplete: 'email' }),
+    h('button', { type: 'submit', class: 'send', text: t('reportSend') }),
+    status,
+  ]);
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msg = form.elements.message.value.trim();
+    if (!msg) return;
+    form.querySelector('.send').disabled = true;
+    fetch(BASE + '/api/widget/feedback', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ i: INSTANCE, page: location.href, message: msg, email: form.elements.email.value.trim(), lang: LANG, prefs: Object.keys(state).filter(isOnSafe) }),
+    }).then(function (r) {
+      if (!r.ok) throw new Error(String(r.status));
+      form.elements.message.value = '';
+      status.textContent = t('reportThanks');
+      track('report:sent');
+    }).catch(function () {
+      status.textContent = t('reportFail');
+    }).then(function () { form.querySelector('.send').disabled = false; form.elements.message.focus(); });
+  });
+  container.appendChild(form);
+}
+function handleEscape() {
+  var panel = shadow.querySelector('.panel');
+  if (panelView !== 'main') { panelView = 'main'; renderPanel(); panel.querySelector('.close').focus(); }
+  else closePanel();
+}
+function isOnSafe(id) { return FEATURES[id] ? isOn(id) : false; }
 
 function buildUI() {
   hostEl = h('div', { id: HOST_ID });
@@ -276,7 +373,7 @@ function buildUI() {
 
   // Keyboard: Esc closes, Tab is trapped inside the dialog.
   panel.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { e.stopPropagation(); if (panelView !== 'main') { panelView = 'main'; renderPanel(); panel.querySelector('.close').focus(); } else closePanel(); return; }
+    if (e.key === 'Escape') { e.stopPropagation(); handleEscape(); return; }
     if (e.key !== 'Tab') return;
     var f = Array.prototype.filter.call(panel.querySelectorAll('button:not([disabled]), select, a[href]'), function (el) { return el.offsetParent !== null; });
     if (!f.length) return;
@@ -286,6 +383,7 @@ function buildUI() {
   });
 
   applyTriggerVisibility();
+  applyUiPrefs();
   on('render', function () { if (panelOpen) renderPanel(); });
   on('lang', function () {
     trigger.setAttribute('aria-label', t('open'));

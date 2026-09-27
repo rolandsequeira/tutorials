@@ -18,34 +18,39 @@ A complete, sellable accessibility app for the Wix App Market, in the same categ
 | Area | Features | Plan |
 |---|---|---|
 | **10 one-click profiles** | Seizure safe, vision impaired, ADHD, cognitive, keyboard navigation, blind users, dyslexia, older adults, motor impaired, color blind | Free |
-| **Content** | Text size 80–200% (scales each element, so it works with Wix's px-based typography), line height, letter spacing, word spacing, text alignment, readable font (Atkinson Hyperlegible), dyslexia font (OpenDyslexic, self-hosted), highlight titles and links, text magnifier | Free |
-| **Color** | Dark, light and high contrast, inverted colors, low and high saturation, monochrome. These use a `backdrop-filter` overlay, so Wix's fixed headers keep working. | Free |
+| **Content** | Text size 80–200% (scales each element, so it works with Wix's px-based typography), content scaling 80–150% (zooms the whole layout), line height, letter spacing, word spacing, text alignment, readable font (Atkinson Hyperlegible), dyslexia font (OpenDyslexic, self-hosted), highlight titles and links, text magnifier | Free |
+| **Color** | Dark, light and high contrast, inverted colors, low and high saturation, monochrome. These use a `backdrop-filter` overlay, so Wix's fixed headers keep working. Color-blindness correction for protanopia, deuteranopia, tritanopia and achromatopsia. Smart contrast darkens or lightens only the text that fails WCAG contrast. | Free |
 | **Color** | Custom text, title and background colors | Pro |
-| **Orientation** | Big cursor (black or white), reading guide, reading mask, stop animations (also pauses video), hide images, mute sounds, highlight focus, highlight hover, image descriptions on hover, keyboard shortcuts (Alt+H/L/F/B/G/M), page structure panel (headings, landmarks, links) | Free |
-| **Assistive tools** | Text to speech on hover/focus (3 speeds), read page aloud with highlighting, voice navigation ("scroll down", "show numbers", "click 3", "click contact", …), virtual keyboard (works with Wix/React inputs), dictionary (double-click a word) | Pro |
+| **Orientation** | Big cursor (black or white), reading guide, reading mask, stop animations (also pauses video), hide images, mute sounds, highlight focus, highlight hover, image descriptions on hover, keyboard shortcuts (Alt+H/L/F/B/G/M/D/T/I), page structure panel (headings, landmarks, links), read mode (distraction-free text view) | Free |
+| **Assistive tools** | Text to speech on hover/focus (3 speeds, voice picker; Ctrl+/ to start, Ctrl+K to pause, and shortcuts are spoken aloud), read page aloud with highlighting, voice navigation ("scroll down", "show numbers", "click 3", "click contact", …), talk & type (dictate into form fields), virtual keyboard (works with Wix/React inputs), dictionary (double-click a word or search), Brazilian Sign Language (VLibras, opt-in by the owner) | Pro |
 | **Auto-fixes** | AI alt text, names for icon-only links/buttons (Facebook, Instagram, mailto, tel…), form labels, iframe titles, page `lang`, "opens in new tab" notice, skip-to-content link, re-enabling pinch-zoom | Pro |
-| **UI** | 15 languages including RTL Arabic and Hebrew, Alt+A hotkey, `#accessibility` links open the menu, remembers visitor choices, light/dark panel, fully keyboard and screen-reader operable (dialog, focus trap, `aria-pressed`, live announcements) | Free |
+| **UI** | 15 languages including RTL Arabic and Hebrew, Alt+A hotkey, `#accessibility` links open the menu, remembers visitor choices, light/dark panel, oversize panel option, visitors can move the widget to the other side, "Report a problem" form, fully keyboard and screen-reader operable (dialog, focus trap, `aria-pressed`, live announcements) | Free |
 
 ### For site owners (dashboard)
 
-- Customize button position, offsets, icon, size, colors, panel theme, default language, and hide on mobile or hide the button entirely.
-- Turn individual features on or off, set the accessibility statement URL, and optionally send GA4 events.
+- Customize button position, offsets, icon, desktop and mobile icon size, colors, panel theme, default language, and hide on mobile or hide the button entirely.
+- Turn individual features on or off and reorder the menu (Pro), set the accessibility statement URL, and optionally send events to Google Analytics 4 or Adobe Analytics.
 - **Accessibility report.** The widget samples about 10% of real page views, at most once per page every 6 hours, and checks 14 WCAG rules: alt text, link and button names, labels, lang, title, zoom, frame titles, tabindex, autoplay, H1, heading order, main landmark and color contrast. Free owners see scores and counts. Paid owners see each issue with sample elements, WCAG references, how to fix it in the Wix editor, and how many issues were auto-fixed. This is the main upsell.
-- **AI alt text manager.** Review and edit every generated description, with usage against the monthly quota.
+- **Documents check.** PDFs linked from the site are downloaded (only from Wix or the site's own domain) and checked for tags, language and title. Free owners see counts. Paid owners see which files need re-exporting.
+- **AI alt text manager.** Review and edit every generated description, mark images as decorative, and see usage against the monthly quota.
+- **Visitor reports inbox.** Problems visitors send with "Report a problem", with the page, the features they had on, a reply-by-email button and resolve/reopen.
+- **PDF export** of the accessibility report (print → Save as PDF).
 - **Visitor analytics.** Menu opens per day, most-used features and profiles, estimated page views.
 - **Accessibility statement generator.**
-- Removing the "Powered by" branding (Pro). Custom CSS and excluding paths such as `/checkout` (Business).
+- Removing the "Powered by" branding (Pro). White label with your own brand name and link, custom CSS, and excluding paths such as `/checkout` (Business).
 
 ### Plans (edit `src/plans.js`)
 
 | | Free | Pro | Business |
 |---|---|---|---|
 | All free adjustments + profiles | ✓ | ✓ | ✓ |
-| Assistive tools (TTS, voice, keyboard, dictionary, custom colors) | | ✓ | ✓ |
+| Assistive tools (TTS, voice navigation, talk & type, keyboard, dictionary, sign language, custom colors) | | ✓ | ✓ |
 | Auto-fixes | | ✓ | ✓ |
 | AI alt text / month | 0 | 1,000 | 10,000 |
 | Detailed WCAG report | counts only | ✓ | ✓ |
 | Remove branding | | ✓ | ✓ |
+| Reorder menu | | ✓ | ✓ |
+| White label (your brand in the widget) | | | ✓ |
 | Custom CSS, excluded paths | | | ✓ |
 | Analytics history | 7 days | 90 days | 365 days |
 
@@ -161,6 +166,9 @@ Measure on real images before choosing. Without `ANTHROPIC_API_KEY`, images stay
 
 - Public widget endpoints are keyed by instance ID, which is visible in page source. Someone could send fake analytics or spend a site's AI quota with Wix CDN image URLs. Per-IP and per-site rate limits and the image-host allowlist limit this. Add origin checks against the site domain if abuse appears.
 - Voice commands are English. The widget UI is translated into 15 languages.
+- Sign language uses the free VLibras service (Brazil, Portuguese only). It loads a script from vlibras.gov.br and couldn't be tested from the build environment.
+- The PDF check looks for tags, language and title. It is not a full PDF/UA validation.
+- Not built (the competitor sells these): live translation of the whole site into 140+ languages (possible with an AI translation cache, but it has a real per-page cost), and human services (manual audits, VPAT/ACR reports, remediation). You can offer the services yourself.
 - The dictionary uses dictionaryapi.dev for English and links to Wiktionary for other languages.
 - The report covers common automated checks, not a full audit. Consider adding axe-core for Business.
 - Possible next steps: Wix Blocks/CLI version, agency multi-site billing, email reports, sign-language widget.

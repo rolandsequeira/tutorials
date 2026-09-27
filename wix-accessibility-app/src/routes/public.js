@@ -2,13 +2,14 @@ import express from 'express';
 import { publicWidgetConfig, getPlan } from '../plans.js';
 import { hashUrl } from '../db.js';
 import { isAllowedImageUrl, normalizeImageUrl } from '../alttext.js';
+import { isAllowedDocUrl } from '../documents.js';
 import { rateLimiter, clientIp } from '../ratelimit.js';
 
 const INSTANCE_RE = /^[a-zA-Z0-9-]{8,64}$/;
 const EVENT_RE = /^[a-zA-Z0-9_.:-]{1,48}$/;
 
 /** Endpoints called by the widget running on visitors' browsers (any origin). */
-export function publicRoutes({ repo, cfg, altText }) {
+export function publicRoutes({ repo, cfg, altText, documents }) {
   const r = express.Router();
   const ipLimit = rateLimiter({ capacity: 60, refillPerSec: 1 });
   const siteLimit = rateLimiter({ capacity: 600, refillPerSec: 10 });
@@ -94,6 +95,30 @@ export function publicRoutes({ repo, cfg, altText }) {
     res.json({ alts, queued });
   });
 
+  // Visitor "Report a problem" form. Available on every plan.
+  const feedbackLimit = rateLimiter({ capacity: 5, refillPerSec: 1 / 120 });
+  r.post('/feedback', express.json({ limit: '16kb' }), (req, res) => {
+    const site = loadSite(req, res);
+    if (!site) return;
+    if (!feedbackLimit(clientIp(req))) return res.status(429).json({ error: 'rate_limited' });
+    const message = typeof req.body.message === 'string' ? req.body.message.trim().slice(0, 2000) : '';
+    if (message.length < 3) return res.status(400).json({ error: 'message_required' });
+    let email = typeof req.body.email === 'string' ? req.body.email.trim().slice(0, 200) : '';
+    if (email && !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email)) email = '';
+    let pageUrl = null;
+    try {
+      const u = new URL(String(req.body.page));
+      if (u.protocol === 'https:' || u.protocol === 'http:') pageUrl = u.toString().slice(0, 500);
+    } catch { /* optional */ }
+    const meta = {
+      lang: typeof req.body.lang === 'string' ? req.body.lang.slice(0, 8) : '',
+      prefs: (Array.isArray(req.body.prefs) ? req.body.prefs : []).filter((p) => typeof p === 'string' && /^[a-zA-Z]{2,30}$/.test(p)).slice(0, 30),
+      ua: String(req.get('user-agent') || '').slice(0, 200),
+    };
+    repo.addFeedback(site.instanceId, { pageUrl, message, email: email || null, meta });
+    res.status(201).json({ ok: true });
+  });
+
   // Sampled page audit from the widget. Stored at most once per path per 6h.
   r.post('/audit', express.json({ limit: '64kb' }), (req, res) => {
     const site = loadSite(req, res);
@@ -116,6 +141,11 @@ export function publicRoutes({ repo, cfg, altText }) {
       fixed: Math.max(0, Math.min(10000, Number(it.fixed) || 0)),
     }));
     repo.saveAudit(site.instanceId, path, String(req.body.page).slice(0, 500), score, issues);
+    let newDocs = 0;
+    for (const d of (Array.isArray(req.body.pdfs) ? req.body.pdfs : []).slice(0, 25)) {
+      if (typeof d === 'string' && d.length < 1000 && isAllowedDocUrl(d, site.siteUrl) && repo.addDocument(site.instanceId, d, String(req.body.page).slice(0, 500))) newDocs++;
+    }
+    if (newDocs && documents) setImmediate(() => documents.processQueue());
     res.sendStatus(204);
   });
 

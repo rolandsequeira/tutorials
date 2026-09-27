@@ -1,15 +1,15 @@
 // One-click accessibility profiles: bundles of feature values.
 var PROFILES = [
   ['p_seizure', { stopAnimations: true, saturation: 1, muteSounds: true }],
-  ['p_vision', { fontSize: 130, contrast: 3, readableFont: true, highlightTitles: true, bigCursor: 1, highlightLinks: true }],
+  ['p_vision', { fontSize: 130, smartContrast: true, readableFont: true, highlightTitles: true, bigCursor: 1, highlightLinks: true }],
   ['p_adhd', { readingMask: true, stopAnimations: true, saturation: 1, highlightFocus: true }],
-  ['p_cognitive', { highlightTitles: true, highlightLinks: true, readingGuide: true, readableFont: true, stopAnimations: true }],
+  ['p_cognitive', { highlightTitles: true, highlightLinks: true, readingGuide: true, readableFont: true, stopAnimations: true, dictionary: true }],
   ['p_keyboard', { keyboardNav: true, highlightFocus: true }],
   ['p_blind', { screenReader: 1, keyboardNav: true, highlightFocus: true }],
   ['p_dyslexia', { dyslexiaFont: true, letterSpacing: 1, lineHeight: 1, wordSpacing: 1, readingGuide: true }],
   ['p_elderly', { fontSize: 140, lineHeight: 1, bigCursor: 1, readableFont: true, highlightLinks: true }],
-  ['p_motor', { bigCursor: 1, highlightFocus: true, highlightHover: true, stopAnimations: true, virtualKeyboard: true }],
-  ['p_colorblind', { saturation: 2, highlightLinks: true, highlightTitles: true }],
+  ['p_motor', { bigCursor: 1, highlightFocus: true, highlightHover: true, stopAnimations: true, talkType: true }],
+  ['p_colorblind', { colorBlind: 2, highlightLinks: true, highlightTitles: true }],
 ];
 
 function profileValues(id) {

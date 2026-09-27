@@ -54,6 +54,7 @@ export function dashboardRoutes({ repo, cfg, wix, sites, log = console }) {
       scriptEmbedded: site.scriptEmbedded || cfg.devMode,
       usage: { aiAltThisMonth: repo.getUsage(site.instanceId, 'ai_alt') },
       altCounts: repo.altCounts(site.instanceId),
+      openFeedback: repo.openFeedbackCount(site.instanceId),
       upgradeUrl: cfg.wixAppId ? wix.upgradeUrl(site.instanceId) : null,
       widgetUrl: `${cfg.baseUrl}/widget.js`,
       appName: cfg.appName,
@@ -108,6 +109,24 @@ export function dashboardRoutes({ repo, cfg, wix, sites, log = console }) {
     const alt = typeof req.body.alt === 'string' ? req.body.alt.trim().slice(0, 250) : null;
     if (alt === null) return res.status(400).json({ error: 'alt required' });
     const ok = repo.editAlt(req.site.instanceId, Number(req.params.id), alt);
+    res.status(ok ? 200 : 404).json({ ok });
+  });
+
+  r.get('/documents', (req, res) => {
+    const plan = getPlan(req.site.plan);
+    const docs = repo.listDocuments(req.site.instanceId);
+    const summary = { total: docs.length, tagged: 0, untagged: 0, pending: 0, error: 0 };
+    for (const d of docs) summary[d.status] = (summary[d.status] || 0) + 1;
+    res.json({ details: plan.auditDetails, summary, items: plan.auditDetails ? docs : [] });
+  });
+
+  r.get('/feedback', (req, res) => {
+    res.json({ items: repo.listFeedback(req.site.instanceId) });
+  });
+
+  r.put('/feedback/:id', (req, res) => {
+    const status = req.body.status === 'resolved' ? 'resolved' : 'open';
+    const ok = repo.setFeedbackStatus(req.site.instanceId, Number(req.params.id), status);
     res.status(ok ? 200 : 404).json({ ok });
   });
 

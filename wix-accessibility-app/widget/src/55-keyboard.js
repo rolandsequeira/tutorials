@@ -5,6 +5,9 @@ var NAV_TARGETS = {
   f: 'input:not([type=hidden]),select,textarea',
   b: 'button,[role=button],input[type=submit],input[type=button]',
   g: 'img[alt]:not([alt=""]),[role=img]',
+  d: 'header,nav,main,aside,footer,form[aria-label],[role=banner],[role=navigation],[role=main],[role=complementary],[role=contentinfo],[role=search],[role=region][aria-label]',
+  t: 'table',
+  i: 'li',
 };
 
 function isTyping(el) {
@@ -25,15 +28,24 @@ function navKeydown(e) {
   if (!list.length) return;
   e.preventDefault();
   var next = moveInList(list, e.shiftKey ? -1 : 1);
-  if (next) announce(accName(next) || textOf(next, 80));
+  if (!next) return;
+  var label = describeForSpeech(next) || accName(next) || textOf(next, 200);
+  if (state.screenReader) speak(label);
+  else announce(label);
+}
+
+/** Shortcuts are active when keyboard navigation or text to speech is on. */
+function updateNavListener() {
+  document.removeEventListener('keydown', navKeydown, true);
+  if (state.keyboardNav || state.screenReader) document.addEventListener('keydown', navKeydown, true);
 }
 
 feature('keyboardNav', 'orientation', {
   kind: 'toggle',
   apply: function (v) {
-    document.removeEventListener('keydown', navKeydown, true);
+    state.keyboardNav = v;
+    updateNavListener();
     if (v) {
-      document.addEventListener('keydown', navKeydown, true);
       // Make custom widgets reachable with Tab.
       document.querySelectorAll('[role=button]:not([tabindex]),[role=link]:not([tabindex]),[role=tab]:not([tabindex]),[role=menuitem]:not([tabindex])').forEach(function (el) {
         if (!isOwn(el)) { el.setAttribute('tabindex', '0'); el.setAttribute('data-a11ytk-tab', ''); }

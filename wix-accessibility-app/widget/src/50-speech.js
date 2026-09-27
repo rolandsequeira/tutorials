@@ -18,7 +18,9 @@ function speak(text, opts) {
   var u = new SpeechSynthesisUtterance(text.slice(0, 3000));
   var lang = ROOT.lang || LANG;
   u.lang = lang;
-  var v = pickVoice(lang);
+  if (getUiPrefs().voice) u.lang = '';
+  var chosen = getUiPrefs().voice;
+  var v = (chosen && synth.getVoices().find(function (x) { return x.voiceURI === chosen; })) || pickVoice(lang);
   if (v) u.voice = v;
   u.rate = RATES[state.screenReader || 1] || 1;
   if (opts.onend) u.onend = opts.onend;
@@ -64,6 +66,8 @@ feature('screenReader', 'tools', {
   kind: 'levels', levels: ['l_normal', 'l_fast', 'l_slow'],
   apply: function (v) {
     if (v && !synth) { announce(t('speechUnsupported')); return; }
+    state.screenReader = v;
+    updateNavListener();
     document.removeEventListener('focusin', srFocus, true);
     document.removeEventListener('mouseover', srHover, true);
     if (v) {

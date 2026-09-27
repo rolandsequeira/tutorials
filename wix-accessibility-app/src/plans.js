@@ -4,19 +4,19 @@
 export const FREE_FEATURES = [
   // content
   'fontSize', 'lineHeight', 'letterSpacing', 'wordSpacing', 'textAlign',
-  'readableFont', 'dyslexiaFont', 'highlightTitles', 'highlightLinks', 'textMagnifier',
+  'readableFont', 'dyslexiaFont', 'highlightTitles', 'highlightLinks', 'textMagnifier', 'contentScale',
   // color
-  'contrast', 'saturation',
+  'contrast', 'saturation', 'colorBlind', 'smartContrast',
   // orientation
   'bigCursor', 'readingGuide', 'readingMask', 'stopAnimations', 'hideImages',
   'muteSounds', 'highlightFocus', 'highlightHover', 'imageDescriptions',
-  'keyboardNav', 'pageStructure',
+  'keyboardNav', 'pageStructure', 'readMode',
   // profiles
   'profiles',
 ];
 
 export const PRO_FEATURES = [
-  'customColors', 'screenReader', 'readPage', 'voiceNav', 'virtualKeyboard', 'dictionary',
+  'customColors', 'screenReader', 'readPage', 'voiceNav', 'virtualKeyboard', 'dictionary', 'talkType', 'signLanguage',
 ];
 
 export const PLANS = {
@@ -29,6 +29,8 @@ export const PLANS = {
     removeBranding: false,
     customCss: false,
     excludePaths: false,
+    whiteLabel: false,
+    customMenu: false,
     analyticsDays: 7,
   },
   pro: {
@@ -40,6 +42,8 @@ export const PLANS = {
     removeBranding: true,
     customCss: false,
     excludePaths: false,
+    whiteLabel: false,
+    customMenu: true,
     analyticsDays: 90,
   },
   business: {
@@ -51,6 +55,8 @@ export const PLANS = {
     removeBranding: true,
     customCss: true,
     excludePaths: true,
+    whiteLabel: true,
+    customMenu: true,
     analyticsDays: 365,
   },
 };
@@ -78,6 +84,7 @@ export const DEFAULT_SETTINGS = {
   offsetY: 20,
   icon: 'person',          // person | wheelchair | eye | toggle
   iconSize: 'medium',      // small | medium | large
+  iconSizeMobile: 'medium',
   primaryColor: '#1a56db',
   iconColor: '#ffffff',
   panelTheme: 'auto',      // auto | light | dark
@@ -97,7 +104,12 @@ export const DEFAULT_SETTINGS = {
     viewportZoom: true,
   },
   ga4: false,
+  adobe: false,
+  featureOrder: [],
   showBranding: true,
+  signLanguage: false,     // VLibras (Brazilian Sign Language) - opt-in, loads a third-party script
+  brandText: '',           // white label (Business): replaces "Powered by <app>"
+  brandUrl: '',
   customCss: '',
   excludePaths: [],
 };
@@ -107,6 +119,7 @@ const ENUMS = {
   position: ['bottom-right', 'bottom-left', 'top-right', 'top-left', 'middle-right', 'middle-left'],
   icon: ['person', 'wheelchair', 'eye', 'toggle'],
   iconSize: ['small', 'medium', 'large'],
+  iconSizeMobile: ['small', 'medium', 'large'],
   panelTheme: ['auto', 'light', 'dark'],
 };
 export const LANGUAGES = ['auto', 'en', 'es', 'fr', 'de', 'it', 'pt', 'nl', 'pl', 'tr', 'ru', 'ar', 'he', 'hi', 'zh', 'ja'];
@@ -129,7 +142,7 @@ export function sanitizeSettings(input, current = DEFAULT_SETTINGS, planKey = 'f
   for (const k of ['primaryColor', 'iconColor']) {
     if (typeof input[k] === 'string' && HEX.test(input[k])) out[k] = input[k];
   }
-  for (const k of ['hideOnMobile', 'hideTrigger', 'ga4']) {
+  for (const k of ['hideOnMobile', 'hideTrigger', 'ga4', 'adobe', 'signLanguage']) {
     if (typeof input[k] === 'boolean') out[k] = input[k];
   }
   if (typeof input.statementUrl === 'string') {
@@ -139,6 +152,10 @@ export function sanitizeSettings(input, current = DEFAULT_SETTINGS, planKey = 'f
   if (Array.isArray(input.disabledFeatures)) {
     const known = new Set([...FREE_FEATURES, ...PRO_FEATURES]);
     out.disabledFeatures = input.disabledFeatures.filter((f) => known.has(f));
+  }
+  if (Array.isArray(input.featureOrder) && plan.customMenu) {
+    const known = new Set([...FREE_FEATURES, ...PRO_FEATURES]);
+    out.featureOrder = [...new Set(input.featureOrder.filter((f) => known.has(f)))];
   }
   if (input.autoFix && typeof input.autoFix === 'object') {
     for (const k of Object.keys(DEFAULT_SETTINGS.autoFix)) {
@@ -151,6 +168,13 @@ export function sanitizeSettings(input, current = DEFAULT_SETTINGS, planKey = 'f
   if (typeof input.customCss === 'string' && plan.customCss) {
     // Strip anything that could break out of the <style> element.
     out.customCss = input.customCss.replace(/<\/?\s*style/gi, '').slice(0, 10000);
+  }
+  if (plan.whiteLabel) {
+    if (typeof input.brandText === 'string') out.brandText = input.brandText.replace(/[<>]/g, '').trim().slice(0, 40);
+    if (typeof input.brandUrl === 'string') {
+      const u = input.brandUrl.trim();
+      if (u === '' || /^https:\/\/[^\s"'<>]+$/i.test(u)) out.brandUrl = u.slice(0, 300);
+    }
   }
   if (Array.isArray(input.excludePaths) && plan.excludePaths) {
     out.excludePaths = input.excludePaths
@@ -166,11 +190,13 @@ export function publicWidgetConfig(site, appName) {
   const plan = getPlan(site.plan);
   const s = sanitizeSettings({}, site.settings, site.plan);
   const disabled = new Set(s.disabledFeatures);
+  const order = plan.customMenu ? s.featureOrder : [];
+  const rank = (f) => { const i = order.indexOf(f); return i === -1 ? 1000 + plan.features.indexOf(f) : i; };
   return {
     v: 1,
     plan: site.plan,
     enabled: s.enabled,
-    features: plan.features.filter((f) => !disabled.has(f)),
+    features: plan.features.filter((f) => !disabled.has(f) && (f !== 'signLanguage' || s.signLanguage)).sort((a, b) => rank(a) - rank(b)),
     autoFix: plan.autoFix ? s.autoFix : null,
     aiAltText: plan.aiAltTextPerMonth > 0 && s.autoFix.altText,
     ui: {
@@ -179,6 +205,7 @@ export function publicWidgetConfig(site, appName) {
       offsetY: s.offsetY,
       icon: s.icon,
       iconSize: s.iconSize,
+      iconSizeMobile: s.iconSizeMobile,
       primaryColor: s.primaryColor,
       iconColor: s.iconColor,
       panelTheme: s.panelTheme,
@@ -187,9 +214,11 @@ export function publicWidgetConfig(site, appName) {
       hideTrigger: s.hideTrigger,
       statementUrl: s.statementUrl,
       showBranding: plan.removeBranding ? s.showBranding : true,
-      brandName: appName,
+      brandName: plan.whiteLabel && s.brandText ? s.brandText : appName,
+      brandUrl: plan.whiteLabel && s.brandText ? s.brandUrl : '',
     },
     ga4: s.ga4,
+    adobe: s.adobe,
     customCss: plan.customCss ? s.customCss : '',
     excludePaths: plan.excludePaths ? s.excludePaths : [],
     // Sample rate for background page audits (keeps server load tiny).

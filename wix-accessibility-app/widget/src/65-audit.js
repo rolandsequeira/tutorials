@@ -101,6 +101,16 @@ function runAudit() {
   return { score: Math.max(0, 100 - penalty), issues: list };
 }
 
+function pdfLinks() {
+  var out = [];
+  document.querySelectorAll('a[href]').forEach(function (a) {
+    if (out.length >= 25 || isOwn(a)) return;
+    var href = a.href;
+    if (/\.pdf($|[?#])/i.test(href) && out.indexOf(href) === -1) out.push(href);
+  });
+  return out;
+}
+
 function maybeAudit() {
   var key = STORE_KEY + ':audit:' + location.pathname;
   var last = storeGet(key, 0);
@@ -115,7 +125,7 @@ function maybeAudit() {
       result.issues.forEach(function (it) { it.fixed = fixCounts[it.id] || 0; });
       fetch(BASE + '/api/widget/audit', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ i: INSTANCE, page: location.href, score: result.score, issues: result.issues }),
+        body: JSON.stringify({ i: INSTANCE, page: location.href, score: result.score, issues: result.issues, pdfs: pdfLinks() }),
       }).catch(function () {});
     }, 4000);
   };

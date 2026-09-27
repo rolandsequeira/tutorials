@@ -47,6 +47,29 @@ CREATE TABLE IF NOT EXISTS events (
   count       INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (instance_id, day, name)
 );
+CREATE TABLE IF NOT EXISTS feedback (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  instance_id TEXT NOT NULL,
+  page_url    TEXT,
+  message     TEXT NOT NULL,
+  email       TEXT,
+  meta        TEXT,
+  status      TEXT NOT NULL DEFAULT 'open', -- open | resolved
+  created_at  TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_feedback_site ON feedback(instance_id, created_at);
+CREATE TABLE IF NOT EXISTS documents (
+  instance_id TEXT NOT NULL,
+  url_hash    TEXT NOT NULL,
+  url         TEXT NOT NULL,
+  page_url    TEXT,
+  status      TEXT NOT NULL DEFAULT 'pending', -- pending | tagged | untagged | error
+  detail      TEXT,
+  created_at  TEXT NOT NULL,
+  checked_at  TEXT,
+  PRIMARY KEY (instance_id, url_hash)
+);
+CREATE INDEX IF NOT EXISTS idx_docs_pending ON documents(status, created_at);
 CREATE TABLE IF NOT EXISTS audits (
   instance_id TEXT NOT NULL,
   path        TEXT NOT NULL,
@@ -120,6 +143,16 @@ function createRepo(db) {
     editAlt: db.prepare("UPDATE alt_texts SET alt = ?, status = 'edited', updated_at = ? WHERE id = ? AND instance_id = ?"),
     countAlts: db.prepare('SELECT status, COUNT(*) AS n FROM alt_texts WHERE instance_id = ? GROUP BY status'),
 
+    insertFeedback: db.prepare('INSERT INTO feedback (instance_id, page_url, message, email, meta, created_at) VALUES (?, ?, ?, ?, ?, ?)'),
+    listFeedback: db.prepare('SELECT id, page_url, message, email, meta, status, created_at FROM feedback WHERE instance_id = ? ORDER BY created_at DESC LIMIT 200'),
+    setFeedbackStatus: db.prepare('UPDATE feedback SET status = ? WHERE id = ? AND instance_id = ?'),
+    countOpenFeedback: db.prepare("SELECT COUNT(*) AS n FROM feedback WHERE instance_id = ? AND status = 'open'"),
+    insertDoc: db.prepare('INSERT OR IGNORE INTO documents (instance_id, url_hash, url, page_url, created_at) VALUES (?, ?, ?, ?, ?)'),
+    countDocs: db.prepare('SELECT COUNT(*) AS n FROM documents WHERE instance_id = ?'),
+    pendingDocs: db.prepare(`SELECT d.instance_id, d.url_hash, d.url, s.site_url FROM documents d JOIN sites s ON s.instance_id = d.instance_id
+      WHERE d.status = 'pending' ORDER BY d.created_at LIMIT ?`),
+    setDoc: db.prepare('UPDATE documents SET status = ?, detail = ?, checked_at = ? WHERE instance_id = ? AND url_hash = ?'),
+    listDocs: db.prepare('SELECT url, page_url, status, detail, checked_at FROM documents WHERE instance_id = ? ORDER BY status DESC, url LIMIT 300'),
     upsertAudit: db.prepare(`INSERT INTO audits (instance_id, path, page_url, score, issues, created_at) VALUES (?, ?, ?, ?, ?, ?)
       ON CONFLICT(instance_id, path) DO UPDATE SET page_url = excluded.page_url, score = excluded.score, issues = excluded.issues, created_at = excluded.created_at`),
     lastAuditAt: db.prepare('SELECT created_at FROM audits WHERE instance_id = ? AND path = ?'),
@@ -172,6 +205,17 @@ function createRepo(db) {
       return out;
     },
 
+    addFeedback: (id, { pageUrl, message, email, meta }) => q.insertFeedback.run(id, pageUrl, message, email, JSON.stringify(meta || {}), now()),
+    listFeedback: (id) => q.listFeedback.all(id).map((r) => ({ ...r, meta: JSON.parse(r.meta || '{}') })),
+    setFeedbackStatus: (id, rowId, status) => q.setFeedbackStatus.run(status, rowId, id).changes > 0,
+    openFeedbackCount: (id) => q.countOpenFeedback.get(id).n,
+    addDocument(id, url, pageUrl) {
+      if (q.countDocs.get(id).n >= 300) return false;
+      return q.insertDoc.run(id, hashUrl(url), url, pageUrl, now()).changes > 0;
+    },
+    pendingDocuments: (limit) => q.pendingDocs.all(limit),
+    setDocument: (id, hash, status, detail) => q.setDoc.run(status, JSON.stringify(detail || {}), now(), id, hash),
+    listDocuments: (id) => q.listDocs.all(id).map((r) => ({ ...r, detail: JSON.parse(r.detail || '{}') })),
     saveAudit: (id, p, pageUrl, score, issues) => q.upsertAudit.run(id, p, pageUrl, score, JSON.stringify(issues), now()),
     lastAuditAt: (id, p) => q.lastAuditAt.get(id, p)?.created_at || null,
     listAudits: (id) => q.listAudits.all(id).map((r) => ({ ...r, issues: JSON.parse(r.issues) })),

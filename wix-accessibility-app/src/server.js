@@ -6,6 +6,7 @@ import { openDb } from './db.js';
 import { createWixClient } from './wix.js';
 import { createSiteService } from './sites.js';
 import { createAltTextService } from './alttext.js';
+import { createDocumentService } from './documents.js';
 import { publicRoutes } from './routes/public.js';
 import { dashboardRoutes } from './routes/dashboard.js';
 import { webhookRoutes } from './routes/webhooks.js';
@@ -13,11 +14,12 @@ import { webhookRoutes } from './routes/webhooks.js';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.resolve(here, '..', 'public');
 
-export function createApp({ cfg = loadConfig(), repo, wix, altClient, log = console } = {}) {
+export function createApp({ cfg = loadConfig(), repo, wix, altClient, docFetch, log = console } = {}) {
   repo ??= openDb(cfg.dbPath);
   wix ??= createWixClient(cfg);
   const sites = createSiteService({ repo, wix, cfg, log });
   const altText = createAltTextService({ repo, cfg, log, client: altClient });
+  const documents = createDocumentService({ repo, log, fetchImpl: docFetch });
 
   const app = express();
   app.disable('x-powered-by');
@@ -58,7 +60,7 @@ export function createApp({ cfg = loadConfig(), repo, wix, altClient, log = cons
     res.sendFile(path.join(publicDir, 'preview.html'));
   });
 
-  app.use('/api/widget', publicRoutes({ repo, cfg, altText }));
+  app.use('/api/widget', publicRoutes({ repo, cfg, altText, documents }));
   app.use('/api/dashboard', dashboardRoutes({ repo, cfg, wix, sites, log }));
   app.use('/webhooks', webhookRoutes({ cfg, sites, log }));
 
@@ -75,15 +77,16 @@ export function createApp({ cfg = loadConfig(), repo, wix, altClient, log = cons
     res.status(500).json({ error: 'internal' });
   });
 
-  return { app, repo, sites, altText };
+  return { app, repo, sites, altText, documents };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const cfg = loadConfig();
-  const { app, sites, altText } = createApp({ cfg });
+  const { app, sites, altText, documents } = createApp({ cfg });
   app.listen(cfg.port, () => console.log(`[server] ${cfg.appName} listening on :${cfg.port} (dev=${cfg.devMode})`));
   // Background jobs: alt-text queue every minute, plan resync nightly.
   setInterval(() => altText.processQueue(), 60_000).unref();
+  setInterval(() => documents.processQueue(), 5 * 60_000).unref();
   if (cfg.wixAppId && cfg.wixAppSecret) {
     setInterval(() => sites.resyncPaidSites(), 24 * 3600_000).unref();
   }

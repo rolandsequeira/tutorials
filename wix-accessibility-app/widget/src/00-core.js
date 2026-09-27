@@ -118,8 +118,16 @@ function emit(evt, data) { (bus[evt] || []).forEach(function (fn) { try { fn(dat
 var counters = {};
 function track(name, n) {
   counters[name] = (counters[name] || 0) + (n || 1);
-  if (CONFIG && CONFIG.ga4 && typeof window.gtag === 'function' && name.indexOf(':') > 0) {
-    try { window.gtag('event', 'accessibility_' + name.split(':')[0], { a11y_item: name.split(':')[1] }); } catch (e) { /* ignore */ }
+  if (!CONFIG || name.indexOf(':') < 0) return;
+  var kind = name.split(':')[0], item = name.split(':')[1];
+  if (CONFIG.ga4 && typeof window.gtag === 'function') {
+    try { window.gtag('event', 'accessibility_' + kind, { a11y_item: item }); } catch (e) { /* ignore */ }
+  }
+  if (CONFIG.adobe) {
+    try {
+      if (Array.isArray(window.adobeDataLayer)) window.adobeDataLayer.push({ event: 'accessibility_' + kind, accessibility: { item: item } });
+      else if (window._satellite && typeof window._satellite.track === 'function') window._satellite.track('accessibility_' + kind, { item: item });
+    } catch (e) { /* ignore */ }
   }
 }
 function flushCounters() {

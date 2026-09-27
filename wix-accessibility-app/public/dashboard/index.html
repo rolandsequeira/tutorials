@@ -24,6 +24,7 @@
     <button role="tab" aria-selected="false" data-tab="settings" id="tab-settings">Widget settings</button>
     <button role="tab" aria-selected="false" data-tab="report" id="tab-report">Accessibility report</button>
     <button role="tab" aria-selected="false" data-tab="alt" id="tab-alt">AI alt text</button>
+    <button role="tab" aria-selected="false" data-tab="feedback" id="tab-feedback">Visitor reports <span id="fb-count" class="count" hidden></span></button>
     <button role="tab" aria-selected="false" data-tab="statement" id="tab-statement">Statement</button>
   </nav>
 
@@ -68,8 +69,11 @@
             <label>Icon
               <select name="icon"><option value="person">Person</option><option value="wheelchair">Wheelchair</option><option value="eye">Eye</option><option value="toggle">Contrast toggle</option></select>
             </label>
-            <label>Icon size
+            <label>Icon size (desktop)
               <select name="iconSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
+            </label>
+            <label>Icon size (phones)
+              <select name="iconSizeMobile"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
             </label>
             <label>Button color <input type="color" name="primaryColor"></label>
             <label>Icon color <input type="color" name="iconColor"></label>
@@ -94,14 +98,21 @@
           <label class="switch"><input type="checkbox" name="hideOnMobile"> Hide the button on phones</label>
           <label class="switch"><input type="checkbox" name="hideTrigger"> Hide the floating button (open from a link to <code>#accessibility</code> or Alt+A)</label>
           <label class="switch"><input type="checkbox" name="ga4"> Send usage events to Google Analytics 4 (if installed on the site)</label>
+          <label class="switch"><input type="checkbox" name="adobe"> Send usage events to Adobe Analytics (Adobe Client Data Layer or Launch, if installed)</label>
           <label>Accessibility statement URL <input type="url" name="statementUrl" placeholder="https://yoursite.com/accessibility"></label>
           <label class="switch" data-requires="removeBranding"><input type="checkbox" name="showBranding"> Show "Powered by" text <span class="lock">Pro</span></label>
         </fieldset>
 
         <fieldset>
           <legend>Visitor features</legend>
-          <p class="muted">Untick anything you don't want to offer. Locked items need a paid plan.</p>
+          <p class="muted">Untick anything you don't want to offer. Locked items need a paid plan. <span id="order-hint">Use the arrows to change the order in the menu.</span></p>
           <div class="checks" id="feature-checks"></div>
+        </fieldset>
+
+        <fieldset data-requires="removeBranding">
+          <legend>Sign language <span class="lock">Pro</span></legend>
+          <label class="switch"><input type="checkbox" name="signLanguage"> Offer a Brazilian Sign Language (Libras) interpreter, powered by the free VLibras service</label>
+          <p class="muted small">Recommended for Portuguese-language sites in Brazil. When a visitor turns it on, the widget loads a script from vlibras.gov.br.</p>
         </fieldset>
 
         <fieldset data-requires="autoFix">
@@ -116,6 +127,14 @@
             <label><input type="checkbox" name="autoFix.newTabWarning"> Announce links that open a new tab</label>
             <label><input type="checkbox" name="autoFix.skipLink"> Add "Skip to main content" link</label>
             <label><input type="checkbox" name="autoFix.viewportZoom"> Allow pinch zoom on mobile</label>
+          </div>
+        </fieldset>
+
+        <fieldset data-requires="whiteLabel">
+          <legend>White label <span class="lock">Business</span></legend>
+          <div class="row">
+            <label>Brand name shown in the widget footer <input name="brandText" maxlength="40" placeholder="Your agency or company"></label>
+            <label>Brand link (https) <input type="url" name="brandUrl" placeholder="https://youragency.com"></label>
           </div>
         </fieldset>
 
@@ -135,14 +154,27 @@
 
     <!-- Report -->
     <section role="tabpanel" id="panel-report" aria-labelledby="tab-report" hidden>
-      <p class="muted">We check a small sample of real page views for common WCAG problems. Pages appear here after visitors load them.</p>
+      <div class="actions no-print">
+        <p class="muted" style="flex:1">We check a small sample of real page views for common WCAG problems. Pages appear here after visitors load them.</p>
+        <button type="button" class="btn" id="pdf-report">Download PDF</button>
+      </div>
+      <h2 class="print-only" id="print-title">Accessibility report</h2>
       <div id="report"></div>
+      <h2>Documents (PDF)</h2>
+      <p class="muted">PDFs linked from your pages. Untagged PDFs can't be read properly by screen readers — re-export them with "tagged PDF" enabled (Word: Save as PDF → Options → "Document structure tags for accessibility").</p>
+      <div id="documents"></div>
     </section>
 
     <!-- Alt text -->
     <section role="tabpanel" id="panel-alt" aria-labelledby="tab-alt" hidden>
       <div id="alt-summary"></div>
       <div id="alt-list"></div>
+    </section>
+
+    <!-- Visitor feedback -->
+    <section role="tabpanel" id="panel-feedback" aria-labelledby="tab-feedback" hidden>
+      <p class="muted">Problems your visitors reported with the widget's "Report a problem" button. Reply to people who left an email.</p>
+      <div id="feedback-list"></div>
     </section>
 
     <!-- Statement -->

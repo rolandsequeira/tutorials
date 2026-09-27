@@ -13,7 +13,7 @@ function restoreState() {
     var f = FEATURES[id];
     if (!f || f.kind === 'action' || !hasFeature(id) || !saved[id]) return;
     // Do not auto-start the microphone on page load; browsers require a gesture anyway.
-    if (id === 'voiceNav') return;
+    if (id === 'voiceNav' || id === 'readMode') return;
     state[id] = saved[id];
     try { f.apply(saved[id]); } catch (e) { console.error('[a11ytk]', id, e); }
   });
@@ -60,6 +60,20 @@ function watchRoutes() {
 }
 
 function globalKeys(e) {
+  if (e.key === 'Escape' && panelOpen) { handleEscape(); return; }
+  // Screen reader shortcuts: Ctrl+/ toggles text to speech, Ctrl+K pauses/resumes speech.
+  if (e.ctrlKey && !e.altKey && !e.metaKey && e.key === '/' && hasFeature('screenReader')) {
+    e.preventDefault();
+    var next = state.screenReader ? 0 : 1;
+    setFeature('screenReader', next);
+    if (next) speak(t('screenReader') + ': ' + t('on') + '. ' + t('srHelp'));
+    return;
+  }
+  if (e.ctrlKey && !e.altKey && !e.metaKey && (e.key === 'k' || e.key === 'K') && state.screenReader && window.speechSynthesis) {
+    e.preventDefault();
+    if (speechSynthesis.paused) speechSynthesis.resume(); else if (speechSynthesis.speaking) speechSynthesis.pause();
+    return;
+  }
   // Alt+A toggles the panel from anywhere (also when the trigger is hidden).
   if (e.altKey && !e.ctrlKey && !e.metaKey && (e.code === 'KeyA')) {
     e.preventDefault();
