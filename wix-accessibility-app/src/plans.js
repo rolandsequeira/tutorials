@@ -82,10 +82,10 @@ export const DEFAULT_SETTINGS = {
   position: 'bottom-right', // bottom-right | bottom-left | top-right | top-left | middle-right | middle-left
   offsetX: 20,
   offsetY: 20,
-  icon: 'person',          // person | wheelchair | eye | toggle
+  icon: 'lumaccess',       // lumaccess | person | wheelchair | eye | toggle
   iconSize: 'medium',      // small | medium | large
   iconSizeMobile: 'medium',
-  primaryColor: '#1a56db',
+  primaryColor: '#4338ca',
   iconColor: '#ffffff',
   panelTheme: 'auto',      // auto | light | dark
   language: 'auto',        // auto | en | es | ...
@@ -117,7 +117,7 @@ export const DEFAULT_SETTINGS = {
 const HEX = /^#[0-9a-f]{6}$/i;
 const ENUMS = {
   position: ['bottom-right', 'bottom-left', 'top-right', 'top-left', 'middle-right', 'middle-left'],
-  icon: ['person', 'wheelchair', 'eye', 'toggle'],
+  icon: ['lumaccess', 'person', 'wheelchair', 'eye', 'toggle'],
   iconSize: ['small', 'medium', 'large'],
   iconSizeMobile: ['small', 'medium', 'large'],
   panelTheme: ['auto', 'light', 'dark'],
@@ -186,7 +186,16 @@ export function sanitizeSettings(input, current = DEFAULT_SETTINGS, planKey = 'f
 }
 
 /** Settings as the public widget sees them (plan limits applied). */
-export function publicWidgetConfig(site, appName) {
+function withUtm(url, medium) {
+  try {
+    const u = new URL(url);
+    u.searchParams.set('utm_source', 'lumaccess-widget');
+    u.searchParams.set('utm_medium', medium);
+    return u.toString();
+  } catch { return ''; }
+}
+
+export function publicWidgetConfig(site, appName, landingUrl = '') {
   const plan = getPlan(site.plan);
   const s = sanitizeSettings({}, site.settings, site.plan);
   const disabled = new Set(s.disabledFeatures);
@@ -215,7 +224,7 @@ export function publicWidgetConfig(site, appName) {
       statementUrl: s.statementUrl,
       showBranding: plan.removeBranding ? s.showBranding : true,
       brandName: plan.whiteLabel && s.brandText ? s.brandText : appName,
-      brandUrl: plan.whiteLabel && s.brandText ? s.brandUrl : '',
+      brandUrl: plan.whiteLabel && s.brandText ? s.brandUrl : (landingUrl ? withUtm(landingUrl, 'powered-by') : ''),
     },
     ga4: s.ga4,
     adobe: s.adobe,

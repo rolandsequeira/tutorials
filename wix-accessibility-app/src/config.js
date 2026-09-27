@@ -24,7 +24,11 @@ export function loadConfig(overrides = {}) {
     port: Number(env.PORT || 8080),
     baseUrl: (env.BASE_URL || 'http://localhost:8080').replace(/\/$/, ''),
     dbPath: env.DB_PATH || './data/app.db',
-    appName: env.APP_NAME || 'A11y Toolkit',
+    appName: env.APP_NAME || 'LumAccess',
+    companyName: env.COMPANY_NAME || 'Coders Creation',
+    // Public marketing page for the app ("Powered by" links here) and the page for consulting orders.
+    landingUrl: (env.LANDING_URL || 'https://coderscreation.com/').trim(),
+    servicesUrl: (env.SERVICES_URL || env.LANDING_URL || 'https://coderscreation.com/').trim(),
     wixAppId: env.WIX_APP_ID || '',
     wixAppSecret: env.WIX_APP_SECRET || '',
     wixPublicKey: (env.WIX_PUBLIC_KEY || '').replace(/\\n/g, '\n'),

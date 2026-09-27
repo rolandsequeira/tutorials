@@ -6,6 +6,7 @@ function svg(body, fill) {
 }
 
 var ICONS = {
+  lumaccess: '<svg viewBox="0 0 64 64" width="24" height="24" aria-hidden="true" focusable="false"><g stroke="#FCD34D" stroke-width="3.5" stroke-linecap="round"><line x1="23.8" y1="11.3" x2="20.3" y2="9.3"/><line x1="32" y1="6.5" x2="32" y2="2.5"/><line x1="40.2" y1="11.3" x2="43.7" y2="9.3"/></g><circle cx="32" cy="18" r="5.5" fill="currentColor"/><g fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 29 Q32 36 52 29"/><path d="M32 31.5 V40"/><path d="M32 40 L23.5 55"/><path d="M32 40 L40.5 55"/></g></svg>',
   person: svg('<circle cx="12" cy="4" r="2"/><path d="M4 8.5c2.7.8 5.3 1.2 8 1.2s5.3-.4 8-1.2l.5 1.9c-2.1.7-4.3 1.1-6.5 1.3V14l2 8h-2.2L12 16l-1.8 6H8l2-8v-2.3c-2.2-.2-4.4-.6-6.5-1.3z"/>', true),
   wheelchair: svg('<circle cx="10" cy="3.5" r="2"/><path d="M9 7.5h2l.4 4H16v2h-4.3l.3 2.2 4.5.1 2.4 4.4-1.8.9-1.8-3.3-5-.1c-.5 0-.9-.4-1-.9zM7.2 11.1l.3 2.1a4.5 4.5 0 1 0 6.2 5.2l1.4 1.5A6.5 6.5 0 1 1 7.2 11.1z"/>', true),
   eye: svg('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),

@@ -32,6 +32,9 @@ export function createApp({ cfg = loadConfig(), repo, wix, altClient, docFetch, 
     maxAge: '365d', immutable: true,
     setHeaders: (res) => res.set('Access-Control-Allow-Origin', '*'),
   }));
+  app.use('/brand', express.static(path.join(publicDir, 'brand'), {
+    maxAge: '7d', setHeaders: (res) => res.set('Access-Control-Allow-Origin', '*'),
+  }));
   app.use('/i18n', express.static(path.join(publicDir, 'i18n'), {
     maxAge: '1d', setHeaders: (res) => res.set('Access-Control-Allow-Origin', '*'),
   }));

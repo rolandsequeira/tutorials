@@ -340,7 +340,7 @@ function buildUI() {
 
   var trigger = h('button', {
     type: 'button', class: 'trigger', 'aria-label': t('open'), 'aria-expanded': 'false', 'aria-controls': 'a11ytk-panel',
-    title: t('open'), style: pos.trigger, html: ICONS[CONFIG.ui.icon] || ICONS.person, onclick: togglePanel,
+    title: t('open'), style: pos.trigger, html: ICONS[CONFIG.ui.icon] || ICONS.lumaccess, onclick: togglePanel,
   });
   root.appendChild(trigger);
 
@@ -360,7 +360,7 @@ function buildUI() {
     id: 'a11ytk-panel', class: 'panel ' + pos.side, role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'a11ytk-title', hidden: true,
   }, [
     h('div', { class: 'head' }, [
-      h('span', { html: ICONS[CONFIG.ui.icon] || ICONS.person }),
+      h('span', { html: ICONS[CONFIG.ui.icon] || ICONS.lumaccess }),
       h('h2', { id: 'a11ytk-title', text: t('title') }),
       langSelect,
       h('button', { type: 'button', class: 'icon-btn close', html: ICONS.close, onclick: closePanel }),

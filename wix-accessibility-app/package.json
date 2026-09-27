@@ -1,6 +1,6 @@
 {
-  "name": "wix-a11y-toolkit",
-  "version": "1.1.0",
+  "name": "lumaccess",
+  "version": "1.2.0",
   "private": true,
   "description": "Accessibility widget + backend for a Wix App Market app (self-hosted).",
   "type": "module",

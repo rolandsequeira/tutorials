@@ -38,6 +38,36 @@
   };
 
   var site = null;
+  var SERVICES = [
+    ['manual-audit', 'Manual accessibility audit', 'Experts test your site with screen readers and keyboards against WCAG 2.2 AA and give you a prioritized fix list.'],
+    ['remediation', 'Accessibility remediation', 'We fix the issues in your Wix site for you: alt text, headings, contrast, forms, focus order and more.'],
+    ['acr-vpat', 'VPAT®-based conformance report (ACR)', 'A formal Accessibility Conformance Report for procurement, clients and regulators.'],
+    ['pdf-remediation', 'PDF & document remediation', 'We tag and repair PDFs and documents so screen readers can read them.'],
+    ['design-review', 'Design accessibility review', 'Review of your designs and brand colors before they go live.'],
+    ['app-audit', 'Mobile & web app audit', 'Accessibility audit for iOS/Android apps and single-page web apps.'],
+    ['white-label', 'Custom setup & white label', 'We configure LumAccess for your brand, reorder the menu and train your team.'],
+  ];
+  function serviceUrl(slug) {
+    try {
+      var u = new URL(site.servicesUrl);
+      u.searchParams.set('service', slug);
+      if (site.siteUrl) u.searchParams.set('site', site.siteUrl);
+      u.searchParams.set('utm_source', 'lumaccess-dashboard');
+      u.searchParams.set('utm_medium', 'app');
+      return u.toString();
+    } catch (e) { return site.servicesUrl; }
+  }
+  function renderServices() {
+    var box = $('#services');
+    box.innerHTML = '';
+    SERVICES.forEach(function (s) {
+      box.appendChild(el('div', { class: 'card svc' }, [
+        el('h3', { text: s[1] }),
+        el('p', { class: 'muted', text: s[2] }),
+        el('a', { class: 'btn primary', href: serviceUrl(s[0]), target: '_blank', rel: 'noopener', text: 'Request a quote' }),
+      ]));
+    });
+  }
   function $(s, r) { return (r || document).querySelector(s); }
   function el(tag, attrs, kids) {
     var e = document.createElement(tag);
@@ -89,7 +119,10 @@
   /* ---------- Site + overview ---------- */
   function renderHeader() {
     $('#app-name').textContent = site.appName;
-    document.title = site.appName + ' – dashboard';
+    $('#foot-brand').textContent = site.appName + ' by ' + site.companyName;
+    $('#foot-help').href = site.landingUrl;
+    renderServices();
+    document.title = site.appName + ' dashboard';
     $('#site-line').textContent = site.siteName ? site.siteName + (site.siteUrl ? ' · ' + site.siteUrl : '') : 'Your site';
     $('#plan-badge').textContent = site.planName + ' plan';
     var up = $('#upgrade');
@@ -286,6 +319,10 @@
       if (!r.audits.length) { box.appendChild(el('p', { text: 'No pages checked yet. Reports appear after your published site gets some visitors.' })); return; }
       var avg = Math.round(r.audits.reduce(function (s, a) { return s + a.score; }, 0) / r.audits.length);
       box.appendChild(el('p', null, ['Average score across ' + r.audits.length + ' pages: ', el('span', { class: 'score ' + scoreClass(avg), text: avg + '/100' })]));
+      box.appendChild(el('div', { class: 'help-cta' }, [
+        el('span', { text: 'Need these fixed for you? Our accessibility team can remediate your site.' }),
+        el('a', { class: 'btn', href: serviceUrl('remediation'), target: '_blank', rel: 'noopener', text: 'Get expert help' }),
+      ]));
       if (!r.details) {
         box.appendChild(el('div', { class: 'upsell' }, [
           el('strong', { text: 'See exactly what to fix. ' }),
@@ -370,6 +407,9 @@
       var s = r.summary;
       if (!s.total) { box.appendChild(el('p', { class: 'muted', text: 'No PDFs found on checked pages yet.' })); return; }
       box.appendChild(el('p', { text: s.total + ' PDFs found · ' + s.tagged + ' tagged · ' + s.untagged + ' not tagged' + (s.pending ? ' · ' + s.pending + ' being checked' : '') }));
+      if (s.untagged) {
+        box.appendChild(el('p', null, [el('a', { href: serviceUrl('pdf-remediation'), target: '_blank', rel: 'noopener', text: 'Have us fix these documents →' })]));
+      }
       if (!r.details) {
         box.appendChild(el('div', { class: 'upsell' }, ['Upgrade to Pro to see which documents need fixing.']));
         return;

@@ -3,15 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Accessibility dashboard</title>
+  <title>LumAccess dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="/brand/lumaccess-icon.svg">
   <link rel="stylesheet" href="/dashboard/dashboard.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="top">
-    <div>
-      <h1 id="app-name">Accessibility</h1>
-      <p class="muted" id="site-line">Loading…</p>
+    <div class="brandline">
+      <img src="/brand/lumaccess-icon.svg" alt="" width="44" height="44">
+      <div>
+        <h1 id="app-name">LumAccess</h1>
+        <p class="muted" id="site-line">Loading…</p>
+      </div>
     </div>
     <div class="plan">
       <span id="plan-badge" class="badge">…</span>
@@ -26,6 +30,7 @@
     <button role="tab" aria-selected="false" data-tab="alt" id="tab-alt">AI alt text</button>
     <button role="tab" aria-selected="false" data-tab="feedback" id="tab-feedback">Visitor reports <span id="fb-count" class="count" hidden></span></button>
     <button role="tab" aria-selected="false" data-tab="statement" id="tab-statement">Statement</button>
+    <button role="tab" aria-selected="false" data-tab="services" id="tab-services">Expert services</button>
   </nav>
 
   <main id="main" tabindex="-1">
@@ -67,7 +72,7 @@
           </div>
           <div class="row">
             <label>Icon
-              <select name="icon"><option value="person">Person</option><option value="wheelchair">Wheelchair</option><option value="eye">Eye</option><option value="toggle">Contrast toggle</option></select>
+              <select name="icon"><option value="lumaccess">LumAccess</option><option value="person">Person</option><option value="wheelchair">Wheelchair</option><option value="eye">Eye</option><option value="toggle">Contrast toggle</option></select>
             </label>
             <label>Icon size (desktop)
               <select name="iconSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
@@ -192,7 +197,15 @@
       <textarea id="statement-out" rows="18" readonly></textarea>
       <button class="btn" id="copy-statement" type="button">Copy</button>
     </section>
+    <!-- Expert services (consulting upsell) -->
+    <section role="tabpanel" id="panel-services" aria-labelledby="tab-services" hidden>
+      <p>Automated tools find and fix many problems, but not all of them. Our accessibility team can audit, fix and document your site for you.</p>
+      <div class="cards" id="services"></div>
+    </section>
   </main>
+  <footer class="foot muted small">
+    <span id="foot-brand">LumAccess by Coders Creation</span> · <a id="foot-help" target="_blank" rel="noopener" href="#">Help &amp; contact</a>
+  </footer>
   <div id="chart-tip" class="chart-tip" role="tooltip" hidden></div>
   <script src="/dashboard/dashboard.js"></script>
 </body>

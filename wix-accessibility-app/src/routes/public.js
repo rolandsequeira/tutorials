@@ -36,7 +36,7 @@ export function publicRoutes({ repo, cfg, altText, documents }) {
     const site = loadSite(req, res);
     if (!site) return;
     res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=3600');
-    res.json(publicWidgetConfig(site, cfg.appName));
+    res.json(publicWidgetConfig(site, cfg.appName, cfg.landingUrl));
   });
 
   // Beacon payload: {i, e: {eventName: count}} sent as text/plain to avoid CORS preflight.

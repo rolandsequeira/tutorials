@@ -58,6 +58,9 @@ export function dashboardRoutes({ repo, cfg, wix, sites, log = console }) {
       upgradeUrl: cfg.wixAppId ? wix.upgradeUrl(site.instanceId) : null,
       widgetUrl: `${cfg.baseUrl}/widget.js`,
       appName: cfg.appName,
+      companyName: cfg.companyName,
+      landingUrl: cfg.landingUrl,
+      servicesUrl: cfg.servicesUrl,
     });
   });
 

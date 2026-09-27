@@ -73,7 +73,7 @@ test('settings sanitization enforces plan limits and formats', () => {
   const free = sanitizeSettings({ showBranding: false, customCss: 'body{}', primaryColor: 'red', position: 'nowhere', offsetX: 9999 }, undefined, 'free');
   assert.equal(free.showBranding, true);
   assert.equal(free.customCss, '');
-  assert.equal(free.primaryColor, '#1a56db');
+  assert.equal(free.primaryColor, '#4338ca');
   assert.equal(free.position, 'bottom-right');
   assert.equal(free.offsetX, 200);
   const biz = sanitizeSettings({ showBranding: false, customCss: '</style><script>x</script>', statementUrl: 'javascript:alert(1)' }, undefined, 'business');
@@ -307,6 +307,14 @@ test('audit queues site PDFs and the checker never leaves the allowlist', async 
   const list = await (await fetch(`${s.base}/api/dashboard/documents`, { headers: { 'x-wix-instance': signed } })).json();
   assert.equal(list.summary.total, 3);
   assert.equal(list.items.length, 3);
+});
+
+test('powered-by links to the landing page with UTM tags unless white-labelled', () => {
+  const free = publicWidgetConfig({ plan: 'free', settings: {} }, 'LumAccess', 'https://coderscreation.com/');
+  assert.equal(free.ui.brandName, 'LumAccess');
+  assert.match(free.ui.brandUrl, /^https:\/\/coderscreation\.com\/\?utm_source=lumaccess-widget&utm_medium=powered-by$/);
+  const biz = publicWidgetConfig({ plan: 'business', settings: sanitizeSettings({ brandText: 'Acme', brandUrl: 'https://acme.test' }, undefined, 'business') }, 'LumAccess', 'https://coderscreation.com/');
+  assert.equal(biz.ui.brandUrl, 'https://acme.test');
 });
 
 test('menu order (Pro) and Adobe Analytics flag reach the widget config', () => {

@@ -1,4 +1,6 @@
-# Wix Accessibility App (self-hosted)
+# LumAccess — accessibility app for Wix, by Coders Creation
+
+<img src="public/brand/lumaccess-logo.svg" alt="LumAccess by Coders Creation" width="320">
 
 A complete, sellable accessibility app for the Wix App Market, in the same category as
 "All in One Accessibility", UserWay and accessiBe. It has three parts:
@@ -7,7 +9,7 @@ A complete, sellable accessibility app for the Wix App Market, in the same categ
 2. **Owner dashboard**, shown inside the Wix dashboard in an iframe. Owners use it for settings, reports, AI alt text, analytics, an accessibility statement and upgrades.
 3. **Backend** (Node 22 + Express + SQLite). It handles Wix auth, webhooks and billing, widget config, AI alt text, audits and analytics, and runs on your VPS.
 
-> Working name: **"A11y Toolkit"**. Set `APP_NAME` to your own name. Do not reuse a competitor's name or branding.
+> **Brand:** LumAccess by Coders Creation. Logos are in `public/brand/` (SVG and PNG, light and dark). `APP_NAME`, `COMPANY_NAME`, `LANDING_URL` (the "Powered by LumAccess" link in every free widget) and `SERVICES_URL` (the page for consulting quotes, which receives `?service=&site=`) are set in `.env`. Before you file a trademark, run a proper search on the name; I only checked that no accessibility product uses it.
 
 ---
 
@@ -35,6 +37,7 @@ A complete, sellable accessibility app for the Wix App Market, in the same categ
 - **AI alt text manager.** Review and edit every generated description, mark images as decorative, and see usage against the monthly quota.
 - **Visitor reports inbox.** Problems visitors send with "Report a problem", with the page, the features they had on, a reply-by-email button and resolve/reopen.
 - **PDF export** of the accessibility report (print → Save as PDF).
+- **Expert services tab** that sells Coders Creation consulting: manual audits, remediation, VPAT®-based ACR reports, PDF remediation, design reviews, app audits and custom setup. Each "Request a quote" button opens `SERVICES_URL?service=<slug>&site=<site url>`, and the report and PDF sections link there too ("Get expert help").
 - **Visitor analytics.** Menu opens per day, most-used features and profiles, estimated page views.
 - **Accessibility statement generator.**
 - Removing the "Powered by" branding (Pro). White label with your own brand name and link, custom CSS, and excluding paths such as `/checkout` (Business).
