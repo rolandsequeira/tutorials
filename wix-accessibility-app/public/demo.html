@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Demo bakery – widget test page</title>
+  <style>
+    body { margin: 0; font-family: Georgia, serif; color: #333; background: #fafafa; }
+    header { position: fixed; top: 0; left: 0; right: 0; background: #fff; padding: 12px 24px; box-shadow: 0 1px 4px rgba(0,0,0,.1); display: flex; gap: 20px; align-items: center; z-index: 10; }
+    header a { color: #8a6d3b; font-size: 15px; }
+    #PAGES_CONTAINER { padding: 90px 24px 40px; max-width: 900px; margin: 0 auto; }
+    .hero { background: linear-gradient(120deg, #f6d365, #fda085); padding: 40px; border-radius: 12px; animation: pulse 3s infinite; }
+    @keyframes pulse { 50% { transform: scale(1.01); } }
+    .light { color: #aaa; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card { background: #fff; padding: 16px; border-radius: 10px; }
+    .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; }
+    .icon-link { display: inline-block; width: 32px; height: 32px; background: #3b5998; border-radius: 50%; }
+    p { font-size: 17px; line-height: 26px; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Demo Bakery</strong>
+    <a href="/menu">Menu</a>
+    <a href="/about">About</a>
+    <a href="#accessibility">Accessibility</a>
+    <a href="https://facebook.com/demobakery" target="_blank" class="icon-link"></a>
+    <div role="button" onclick="alert('cart')">🛒</div>
+  </header>
+  <div id="PAGES_CONTAINER">
+    <section class="hero">
+      <h1>Fresh bread every morning</h1>
+      <p>Sourdough, croissants and cakes baked daily with organic flour.</p>
+    </section>
+    <h3>Our favourites</h3>
+    <div class="grid">
+      <div class="card"><img src="https://static.wixstatic.com/media/11062b_7b5a1f0c.jpg" width="260" height="160" alt="IMG_2231.JPG"><h4>Sourdough</h4><p class="light">Crusty, tangy and slow fermented for 36 hours.</p></div>
+      <div class="card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='160'%3E%3Crect width='100%25' height='100%25' fill='%23e8c07d'/%3E%3C/svg%3E" width="260" height="160"><h4>Croissant</h4><p>Butter layered pastry.</p></div>
+      <div class="card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='160'%3E%3Crect width='100%25' height='100%25' fill='%23c98f6b'/%3E%3C/svg%3E" width="260" height="160" alt="Chocolate cake with berries"><h4>Chocolate cake</h4><p>Rich dark chocolate.</p></div>
+    </div>
+    <h2>Order online</h2>
+    <form onsubmit="event.preventDefault(); alert('sent: ' + this.email.value)">
+      <input type="email" name="email" placeholder="Your email">
+      <textarea name="order_notes"></textarea>
+      <button type="submit">Send</button>
+      <button type="button"><svg width="16" height="16"><circle cx="8" cy="8" r="6"/></svg></button>
+    </form>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</p>
+    <iframe src="about:blank" width="300" height="80"></iframe>
+    <p style="height: 800px">Scroll space.</p>
+  </div>
+  <script src="/widget.js" data-instance="dev-site-0001" defer></script>
+</body>
+</html>

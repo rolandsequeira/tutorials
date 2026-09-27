@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accessibility dashboard</title>
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <div>
+      <h1 id="app-name">Accessibility</h1>
+      <p class="muted" id="site-line">Loading…</p>
+    </div>
+    <div class="plan">
+      <span id="plan-badge" class="badge">…</span>
+      <a id="upgrade" class="btn primary" target="_blank" rel="noopener" hidden>Upgrade</a>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" aria-selected="true" data-tab="overview" id="tab-overview">Overview</button>
+    <button role="tab" aria-selected="false" data-tab="settings" id="tab-settings">Widget settings</button>
+    <button role="tab" aria-selected="false" data-tab="report" id="tab-report">Accessibility report</button>
+    <button role="tab" aria-selected="false" data-tab="alt" id="tab-alt">AI alt text</button>
+    <button role="tab" aria-selected="false" data-tab="statement" id="tab-statement">Statement</button>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <div id="error" class="alert" role="alert" hidden></div>
+
+    <!-- Overview -->
+    <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">
+      <div class="cards" id="install-cards"></div>
+      <h2>Visitor usage <span class="muted small" id="stats-range"></span></h2>
+      <div class="tiles" id="stat-tiles"></div>
+      <div class="viz-root">
+        <h3>Menu opens per day</h3>
+        <div id="daily-chart" class="chart" role="img" aria-label="Menu opens per day"></div>
+        <h3>Most used features</h3>
+        <ol id="top-features" class="ranked"></ol>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
+      <form id="settings-form">
+        <fieldset>
+          <legend>Status</legend>
+          <label class="switch"><input type="checkbox" name="enabled"> Show the accessibility widget on my site</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Appearance</legend>
+          <div class="row">
+            <label>Position
+              <select name="position">
+                <option value="bottom-right">Bottom right</option><option value="bottom-left">Bottom left</option>
+                <option value="middle-right">Middle right</option><option value="middle-left">Middle left</option>
+                <option value="top-right">Top right</option><option value="top-left">Top left</option>
+              </select>
+            </label>
+            <label>Horizontal offset (px) <input type="number" name="offsetX" min="0" max="200"></label>
+            <label>Vertical offset (px) <input type="number" name="offsetY" min="0" max="200"></label>
+          </div>
+          <div class="row">
+            <label>Icon
+              <select name="icon"><option value="person">Person</option><option value="wheelchair">Wheelchair</option><option value="eye">Eye</option><option value="toggle">Contrast toggle</option></select>
+            </label>
+            <label>Icon size
+              <select name="iconSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select>
+            </label>
+            <label>Button color <input type="color" name="primaryColor"></label>
+            <label>Icon color <input type="color" name="iconColor"></label>
+          </div>
+          <div class="row">
+            <label>Panel theme
+              <select name="panelTheme"><option value="auto">Match visitor's system</option><option value="light">Light</option><option value="dark">Dark</option></select>
+            </label>
+            <label>Default language
+              <select name="language">
+                <option value="auto">Auto-detect</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option>
+                <option value="de">Deutsch</option><option value="it">Italiano</option><option value="pt">Português</option><option value="nl">Nederlands</option>
+                <option value="pl">Polski</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="ar">العربية</option>
+                <option value="he">עברית</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="ja">日本語</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Behavior</legend>
+          <label class="switch"><input type="checkbox" name="hideOnMobile"> Hide the button on phones</label>
+          <label class="switch"><input type="checkbox" name="hideTrigger"> Hide the floating button (open from a link to <code>#accessibility</code> or Alt+A)</label>
+          <label class="switch"><input type="checkbox" name="ga4"> Send usage events to Google Analytics 4 (if installed on the site)</label>
+          <label>Accessibility statement URL <input type="url" name="statementUrl" placeholder="https://yoursite.com/accessibility"></label>
+          <label class="switch" data-requires="removeBranding"><input type="checkbox" name="showBranding"> Show "Powered by" text <span class="lock">Pro</span></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Visitor features</legend>
+          <p class="muted">Untick anything you don't want to offer. Locked items need a paid plan.</p>
+          <div class="checks" id="feature-checks"></div>
+        </fieldset>
+
+        <fieldset data-requires="autoFix">
+          <legend>Automatic fixes <span class="lock">Pro</span></legend>
+          <p class="muted">Repairs common markup problems as pages load. This helps screen-reader users, but it is not a substitute for fixing the issues in the Wix editor — see the Accessibility report.</p>
+          <div class="checks">
+            <label><input type="checkbox" name="autoFix.altText"> AI alt text for images without descriptions</label>
+            <label><input type="checkbox" name="autoFix.emptyLinks"> Name icon-only links and buttons</label>
+            <label><input type="checkbox" name="autoFix.formLabels"> Label unlabeled form fields</label>
+            <label><input type="checkbox" name="autoFix.iframeTitles"> Title embedded frames</label>
+            <label><input type="checkbox" name="autoFix.pageLang"> Set page language when missing</label>
+            <label><input type="checkbox" name="autoFix.newTabWarning"> Announce links that open a new tab</label>
+            <label><input type="checkbox" name="autoFix.skipLink"> Add "Skip to main content" link</label>
+            <label><input type="checkbox" name="autoFix.viewportZoom"> Allow pinch zoom on mobile</label>
+          </div>
+        </fieldset>
+
+        <fieldset data-requires="customCss">
+          <legend>Advanced <span class="lock">Business</span></legend>
+          <label>Custom CSS for your site (applied with the widget)<textarea name="customCss" rows="5" spellcheck="false"></textarea></label>
+          <label>Hide the widget on these paths (one per line, e.g. <code>/checkout</code>)<textarea name="excludePaths" rows="3" spellcheck="false"></textarea></label>
+        </fieldset>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">Save changes</button>
+          <a class="btn" id="preview-link" target="_blank" rel="noopener">Preview widget</a>
+          <span id="save-status" role="status" class="muted"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- Report -->
+    <section role="tabpanel" id="panel-report" aria-labelledby="tab-report" hidden>
+      <p class="muted">We check a small sample of real page views for common WCAG problems. Pages appear here after visitors load them.</p>
+      <div id="report"></div>
+    </section>
+
+    <!-- Alt text -->
+    <section role="tabpanel" id="panel-alt" aria-labelledby="tab-alt" hidden>
+      <div id="alt-summary"></div>
+      <div id="alt-list"></div>
+    </section>
+
+    <!-- Statement -->
+    <section role="tabpanel" id="panel-statement" aria-labelledby="tab-statement" hidden>
+      <p class="muted">Generate an accessibility statement, publish it as a page on your site, then paste its URL in Widget settings.</p>
+      <form id="statement-form" class="row">
+        <label>Organization name <input name="org" required></label>
+        <label>Contact email <input name="email" type="email" required></label>
+        <label>Target standard
+          <select name="std"><option>WCAG 2.2 level AA</option><option>WCAG 2.1 level AA</option></select>
+        </label>
+        <button class="btn primary" type="submit">Generate</button>
+      </form>
+      <label for="statement-out" class="block">Statement text</label>
+      <textarea id="statement-out" rows="18" readonly></textarea>
+      <button class="btn" id="copy-statement" type="button">Copy</button>
+    </section>
+  </main>
+  <div id="chart-tip" class="chart-tip" role="tooltip" hidden></div>
+  <script src="/dashboard/dashboard.js"></script>
+</body>
+</html>

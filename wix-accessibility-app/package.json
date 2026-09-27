@@ -1,0 +1,20 @@
+{
+  "name": "wix-a11y-toolkit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Accessibility widget + backend for a Wix App Market app (self-hosted).",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "build": "node scripts/build-widget.mjs",
+    "start": "node --disable-warning=ExperimentalWarning src/server.js",
+    "dev": "npm run build && DEV_MODE=1 node --disable-warning=ExperimentalWarning --watch src/server.js",
+    "test": "npm run build && node --disable-warning=ExperimentalWarning --test test/*.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
+    "express": "^5.2.1"
+  }
+}
