@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdBlock Notice settings</title>
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <div>
+      <h1 id="app-name">AdBlock Notice</h1>
+      <p class="muted" id="site-line">Loading…</p>
+    </div>
+    <div class="plan">
+      <span id="plan-badge" class="badge">…</span>
+      <a id="upgrade" class="btn primary" target="_blank" rel="noopener" hidden>Upgrade</a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <div id="error" class="alert" role="alert" hidden></div>
+    <div id="embed-warning" class="alert warn-box" hidden>
+      The notice script isn't active on your site yet. Reopen this page in a minute, and make sure the site is
+      published on a Premium plan with a connected domain (Wix only runs app scripts on those sites).
+    </div>
+
+    <section aria-labelledby="stats-h">
+      <h2 id="stats-h">Visitors <span class="muted small" id="stats-range"></span></h2>
+      <div class="tiles" id="stat-tiles"></div>
+      <div id="daily-chart" class="chart" role="img" aria-label="Visitors checked and visitors with an ad blocker per day"></div>
+    </section>
+
+    <div class="split">
+      <form id="settings-form" novalidate>
+        <h2>Notice settings</h2>
+        <fieldset>
+          <legend>Status</legend>
+          <label class="switch"><input type="checkbox" name="enabled"> Show a notice to visitors who use an ad blocker</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Behavior</legend>
+          <div class="radios" role="radiogroup" aria-label="What visitors can do">
+            <label><input type="radio" name="mode" value="dismiss"> <b>Ask politely</b><span class="muted small"> Visitors can close the notice and keep browsing.</span></label>
+            <label data-requires="blockMode"><input type="radio" name="mode" value="block"> <b>Block content</b><span class="lock" hidden>Pro</span><span class="muted small"> A full-screen wall until the ad blocker is turned off.</span></label>
+          </div>
+          <div class="row">
+            <label>Style
+              <select name="layout">
+                <option value="modal">Pop-up in the middle</option>
+                <option value="banner-top">Banner at the top</option>
+                <option value="banner-bottom">Banner at the bottom</option>
+              </select>
+            </label>
+            <label>Show it again
+              <select name="frequency">
+                <option value="every-page">On every page</option>
+                <option value="session">Once per visit</option>
+                <option value="day">Once a day</option>
+                <option value="week">Once a week</option>
+              </select>
+            </label>
+            <label>Delay (seconds)
+              <input type="number" name="delaySeconds" min="0" max="30" step="1">
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Text</legend>
+          <label>Title <input name="title" maxlength="120"></label>
+          <label>Message <textarea name="message" rows="3" maxlength="600"></textarea></label>
+          <div class="row">
+            <label>Reload button <input name="reloadLabel" maxlength="40"></label>
+            <label id="dismiss-label-field">Close button <input name="dismissLabel" maxlength="40"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Colors</legend>
+          <div class="row colors">
+            <label>Background <input type="color" name="backgroundColor"></label>
+            <label>Text <input type="color" name="textColor"></label>
+            <label>Accent <input type="color" name="accentColor"></label>
+            <label>Overlay darkness <input type="range" name="overlayOpacity" min="0" max="95" step="5"></label>
+          </div>
+        </fieldset>
+
+        <fieldset data-requires="excludePaths">
+          <legend>Pages <span class="lock" hidden>Pro</span></legend>
+          <label>Don't check these pages (one path per line, e.g. <code>/blog</code>)
+            <textarea name="excludePaths" rows="3" placeholder="/checkout&#10;/members"></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset data-requires="removeBranding">
+          <legend>Branding <span class="lock" hidden>Pro</span></legend>
+          <label class="switch"><input type="checkbox" name="showBranding"> Show "Powered by" under the notice</label>
+        </fieldset>
+
+        <div class="actions sticky-actions">
+          <button class="btn primary" type="submit">Save</button>
+          <a id="live-preview" class="btn" target="_blank" rel="noopener" hidden>Preview on my site</a>
+          <span id="save-status" class="muted" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+
+      <aside class="preview-col" aria-labelledby="preview-h">
+        <h2 id="preview-h">Preview</h2>
+        <div id="preview" class="preview">
+          <div class="fake-site" aria-hidden="true">
+            <div class="fake-nav"></div>
+            <div class="fake-hero"></div>
+            <div class="fake-line"></div><div class="fake-line short"></div><div class="fake-line"></div>
+          </div>
+        </div>
+        <p class="muted small">This is how visitors with an ad blocker see the notice. Buttons don't do anything here.</p>
+      </aside>
+    </div>
+  </main>
+
+  <script src="/notice.js"></script>
+  <script src="/dashboard/dashboard.js"></script>
+</body>
+</html>

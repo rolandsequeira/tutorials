@@ -1,0 +1,34 @@
+# Usage on the VPS (from the repo's wix-adblock-detector/ folder):
+#   cp .env.example .env   # fill in values, set BASE_URL=https://<your domain>
+#   DOMAIN=notice.example.com docker compose -f deploy/docker-compose.yml up -d --build
+services:
+  app:
+    build: ..
+    env_file: ../.env
+    environment:
+      - PORT=8080
+      - DB_PATH=/app/data/app.db
+    volumes:
+      - appdata:/app/data
+    restart: unless-stopped
+    expose:
+      - "8080"
+
+  caddy:
+    image: caddy:2-alpine
+    depends_on: [app]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN:?set DOMAIN to your public hostname}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+
+volumes:
+  appdata:
+  caddy_data:
+  caddy_config:
