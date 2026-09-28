@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo site</title>
+  <style>
+    body { margin: 0; font: 16px/1.6 Georgia, serif; color: #1f2937; background: #fafaf9; }
+    header { background: #1f2937; color: #fff; padding: 18px 24px; }
+    main { max-width: 760px; margin: 0 auto; padding: 24px; }
+    .slot { border: 1px dashed #9ca3af; color: #6b7280; padding: 24px; text-align: center; margin: 24px 0; font-family: system-ui, sans-serif; }
+    code { background: #e7e5e4; padding: 1px 5px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header><strong>The Daily Demo</strong></header>
+  <main>
+    <h1>Local test page</h1>
+    <p>This page loads the notice script exactly as Wix would, for the <code>dev-site-0001</code> site.
+      Turn an ad blocker (uBlock Origin, AdBlock, Brave Shields…) on and off and reload to see the notice.
+      Add <code>?sn-preview=1</code> to the URL to force the notice without an ad blocker.</p>
+    <p>Change the notice at <a href="/dashboard?instanceId=dev-site-0001">/dashboard?instanceId=dev-site-0001</a>
+      (add <code>&amp;plan=pro</code> to try the Pro options). Settings are cached for up to 5 minutes; open a new private window to skip the cache.</p>
+    <div class="slot">Advertisement placeholder</div>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+    <p id="result" style="font-family: system-ui, sans-serif"></p>
+  </main>
+  <script src="/notice.js" data-instance="dev-site-0001" defer></script>
+  <script>
+    addEventListener('load', function () {
+      SiteNotice.detect().then(function (r) {
+        document.getElementById('result').textContent =
+          'Detection result: ' + (r.blocked ? 'ad blocker found' : 'no ad blocker') +
+          ' (element bait: ' + r.bait + ', network bait: ' + r.network + ')';
+      });
+    });
+  </script>
+</body>
+</html>
