@@ -71,7 +71,43 @@ The config is cached in the browser for 5 minutes, so open a new private window 
 
 ---
 
-## Deploy to your VPS
+## Deploy on CloudPanel (Node.js site + PM2)
+
+Yes, the app needs a server: Wix loads `notice.js` and the settings page from it, and sends install and billing webhooks to
+it. Any CloudPanel server works; the app is one small Node process with a SQLite file.
+
+1. **DNS:** point an A record for a neutral hostname, such as `notice.yourdomain.com`, at the server (see "Staying unblocked").
+2. **Create the site:** in CloudPanel choose **Add Site → Create a Node.js Site**. Enter the domain, pick **Node.js 22**, set
+   **App Port** to `8080` (or any free port; use the same value for `PORT` below), and note the site user CloudPanel creates.
+   CloudPanel sets up Nginx to proxy the domain to that port.
+3. **HTTPS:** open the site, go to **SSL/TLS → Actions → New Let's Encrypt Certificate**, and create it for the domain.
+4. **Upload the code:** SSH in as the site user (or use CloudPanel's File Manager) and put this folder in the site root:
+   ```bash
+   cd ~/htdocs/notice.yourdomain.com
+   git clone <this repo> repo && cp -r repo/wix-adblock-detector/. . && rm -rf repo
+   node -v                      # must be 22.13 or newer (node:sqlite)
+   npm ci --omit=dev
+   cp .env.example .env         # fill it in; BASE_URL=https://notice.yourdomain.com and PORT=<App Port>
+   ```
+5. **Start it with PM2:**
+   ```bash
+   npm install -g pm2           # skip if pm2 -v already works
+   pm2 start ecosystem.config.cjs
+   pm2 save
+   crontab -e                   # add: @reboot cd ~/htdocs/notice.yourdomain.com && pm2 resurrect
+   curl https://notice.yourdomain.com/healthz   # {"ok":true}
+   ```
+   Keep one instance (the default in `ecosystem.config.cjs`): SQLite and the rate limiter expect a single process.
+6. **Updates:** pull the new code into the same folder, then `npm ci --omit=dev && pm2 restart adblock-notice`.
+7. **Backups:** the data is `data/app.db`. Add a cron job for the site user:
+   `15 3 * * * cd ~/htdocs/notice.yourdomain.com && node scripts/backup.mjs`
+   It writes a daily copy to `data/backups/` and keeps 14 days. Copy that folder off the server too.
+
+Then continue with the Wix Dev Center setup below, using `https://notice.yourdomain.com` for every URL.
+
+---
+
+## Deploy with Docker (alternative)
 
 Requirements: a VPS with Docker and a DNS A record pointing at it (for example `notice.yourdomain.com`).
 
@@ -127,5 +163,5 @@ Wix changes Dev Center menu names from time to time. If a label differs, look fo
 
 The visitor script sets no cookies. It uses `sessionStorage` to count each event once per visit and to remember a
 dismissal for the visit, and `localStorage` for the once-a-day / once-a-week options. The server stores only per-site,
-per-day counts, with no IP addresses or page URLs. Caddy's access log (`deploy/Caddyfile`) does include IPs; delete its
-`log` block if you don't want them.
+per-day counts, with no IP addresses or page URLs. The web server's access log (Nginx on CloudPanel, Caddy with Docker) does
+include IPs, as it does for any site.
