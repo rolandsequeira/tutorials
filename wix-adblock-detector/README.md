@@ -1,4 +1,4 @@
-# Ad Blocker Notice for Wix
+# AdBlock Notice for Wix
 
 A self-hosted Wix App Market app in the same category as "Adblocker Scanner". It detects visitors who use an
 ad blocker and shows them a notice the site owner can configure. It has three parts:

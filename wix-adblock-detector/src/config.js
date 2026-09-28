@@ -24,7 +24,7 @@ export function loadConfig(overrides = {}) {
     port: Number(env.PORT || 8080),
     baseUrl: (env.BASE_URL || 'http://localhost:8080').replace(/\/$/, ''),
     dbPath: env.DB_PATH || './data/app.db',
-    appName: env.APP_NAME || 'Ad Blocker Notice',
+    appName: env.APP_NAME || 'AdBlock Notice',
     // Public marketing page for the app (the "Powered by" link on free-plan notices).
     landingUrl: (env.LANDING_URL || 'https://coderscreation.com/').trim(),
     wixAppId: env.WIX_APP_ID || '',
