@@ -30,15 +30,16 @@ All metafields are in the `custom` namespace.
 
 # Swedish and English without mixing
 
-This folder is a code-only patch for the live theme (see INSTALL.txt). It doesn't include templates or settings, so live homepage content is kept.
+The full theme (`ratels-theme-full-sv-en.zip`) is the 27 Sep export with these changes. The homepage keeps the export's sections, order and category tiles.
 
 - **Language:** the theme follows the visitor's Shopify language (`snippets/site-lang.liquid`). ratelsgroup.com/sv (or ratelsgroup.se, if it serves the store) is Swedish, and ratelsgroup.com is English.
-- **Homepage, header and footer texts:** each text setting has a "(Svenska)" field.
-  - Filled in: the Swedish field is used on the Swedish site.
-  - Empty: the English text goes through `snippets/sv-auto.liquid`, a phrase list of the site's texts.
+- **Homepage, header and footer texts:** each text setting has a "(Svenska)" field, and all current texts are filled in in both languages.
+  - An empty Swedish field falls back to `snippets/sv-auto.liquid`, a phrase list of the site's texts.
   - On the English site, Swedish text typed into an English field goes through `snippets/en-auto.liquid`.
 - **SV | EN switch:** uses Shopify's language form.
 - **Product page:** labels come from `snippets/spec-label.liquid` (generated from the locale files). Values are translated and placeholders hidden by `snippets/spec-value.liquid`.
 - **Collection grid and cart:** bilingual. The cart links keep the /sv prefix.
+- **Contact page:** the funnelbud form follows the language.
+- `templates/index.context.se.json` was removed. It swapped the hero title to Swedish for Swedish-market visitors, even on the English site.
 
-Product and collection texts and menus come from Translate & Adapt.
+Product and collection texts and menus come from Translate & Adapt, which keeps those translations for the whole store rather than per theme.
