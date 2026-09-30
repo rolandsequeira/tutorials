@@ -1,0 +1,256 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- liquid
+  assign t_title_main = section.settings.title_main
+  if site_lang == 'sv' and section.settings.title_main_sv != blank
+    assign t_title_main = section.settings.title_main_sv
+  endif
+  assign t_title_colored = section.settings.title_colored
+  if site_lang == 'sv' and section.settings.title_colored_sv != blank
+    assign t_title_colored = section.settings.title_colored_sv
+  endif
+  assign t_subtext = section.settings.subtext
+  if site_lang == 'sv' and section.settings.subtext_sv != blank
+    assign t_subtext = section.settings.subtext_sv
+  endif
+  assign t_btn_text = section.settings.btn_text
+  if site_lang == 'sv' and section.settings.btn_text_sv != blank
+    assign t_btn_text = section.settings.btn_text_sv
+  endif
+  assign t_feature1_title = section.settings.feature1_title
+  if site_lang == 'sv' and section.settings.feature1_title_sv != blank
+    assign t_feature1_title = section.settings.feature1_title_sv
+  endif
+  assign t_feature1_text = section.settings.feature1_text
+  if site_lang == 'sv' and section.settings.feature1_text_sv != blank
+    assign t_feature1_text = section.settings.feature1_text_sv
+  endif
+  assign t_feature2_title = section.settings.feature2_title
+  if site_lang == 'sv' and section.settings.feature2_title_sv != blank
+    assign t_feature2_title = section.settings.feature2_title_sv
+  endif
+  assign t_feature2_text = section.settings.feature2_text
+  if site_lang == 'sv' and section.settings.feature2_text_sv != blank
+    assign t_feature2_text = section.settings.feature2_text_sv
+  endif
+  assign t_feature3_title = section.settings.feature3_title
+  if site_lang == 'sv' and section.settings.feature3_title_sv != blank
+    assign t_feature3_title = section.settings.feature3_title_sv
+  endif
+  assign t_feature3_text = section.settings.feature3_text
+  if site_lang == 'sv' and section.settings.feature3_text_sv != blank
+    assign t_feature3_text = section.settings.feature3_text_sv
+  endif
+-%}
+<div class="hero-rtl" style="background-color: #1a1a1a; background-image: url('{{ section.settings.bg_image | img_url: 'master' }}');">
+  <div class="hero-overlay"></div>
+  <div class="page-width hero-content-wrapper">
+    <div class="hero-text-box">
+      
+      <h1 class="hero-title">
+        {{ t_title_main }}<br>
+        <span class="text-red">{{ t_title_colored }}</span>
+      </h1>
+      
+      {%- if t_subtext != blank -%}
+        <p class="hero-subtext">{{ t_subtext }}</p>
+      {%- endif -%}
+      
+      {% comment %} HERO CTA BUTTON {% endcomment %}
+      {%- if t_btn_text != blank -%}
+        <a href="{{ section.settings.btn_link | default: pages.contact.url }}" class="btn btn--red" style="margin-top: 20px; display: inline-block;">
+          {{ t_btn_text }}
+        </a>
+      {%- endif -%}
+      
+      <div class="hero-features">
+        <div class="feature-item">
+          <div class="feature-icon">{{ section.settings.feature1_icon }}</div>
+          <div class="feature-text">
+            <strong>{{ t_feature1_title }}</strong>
+            <span>{{ t_feature1_text }}</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">{{ section.settings.feature2_icon }}</div>
+          <div class="feature-text">
+            <strong>{{ t_feature2_title }}</strong>
+            <span>{{ t_feature2_text }}</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">{{ section.settings.feature3_icon }}</div>
+          <div class="feature-text">
+            <strong>{{ t_feature3_title }}</strong>
+            <span>{{ t_feature3_text }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "RTL Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "title_main",
+      "label": "Heading (White Text)",
+      "default": "POWERFUL MACHINES."
+    },
+    {
+      "type": "text",
+      "id": "title_main_sv",
+      "label": "Heading (White Text) (Svenska)"
+    },
+    {
+      "type": "text",
+      "id": "title_colored",
+      "label": "Heading (Red Highlighted Text)",
+      "default": "PERSONAL SERVICE."
+    },
+    {
+      "type": "text",
+      "id": "title_colored_sv",
+      "label": "Heading (Red Highlighted Text) (Svenska)"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "High performance machines for every job. Backed by personal service you can rely on – before, during and after the sale."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtext_sv",
+      "label": "Subtext (Svenska)"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "GET A QUOTE"
+    },
+    {
+      "type": "text",
+      "id": "btn_text_sv",
+      "label": "Button Text (Svenska)",
+      "default": "BEGÄR OFFERT"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Feature 1"
+    },
+    {
+      "type": "text",
+      "id": "feature1_icon",
+      "label": "Feature 1 Icon",
+      "default": "🛡️"
+    },
+    {
+      "type": "text",
+      "id": "feature1_title",
+      "label": "Feature 1 Title",
+      "default": "QUALITY YOU CAN TRUST"
+    },
+    {
+      "type": "text",
+      "id": "feature1_title_sv",
+      "label": "Feature 1 Title (Svenska)"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "feature1_text",
+      "label": "Feature 1 Text",
+      "default": "Built for durability and long-term performance."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "feature1_text_sv",
+      "label": "Feature 1 Text (Svenska)"
+    },
+    {
+      "type": "header",
+      "content": "Feature 2"
+    },
+    {
+      "type": "text",
+      "id": "feature2_icon",
+      "label": "Feature 2 Icon",
+      "default": "👤"
+    },
+    {
+      "type": "text",
+      "id": "feature2_title",
+      "label": "Feature 2 Title",
+      "default": "EXPERT SUPPORT"
+    },
+    {
+      "type": "text",
+      "id": "feature2_title_sv",
+      "label": "Feature 2 Title (Svenska)"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "feature2_text",
+      "label": "Feature 2 Text",
+      "default": "Personal service from real people."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "feature2_text_sv",
+      "label": "Feature 2 Text (Svenska)"
+    },
+    {
+      "type": "header",
+      "content": "Feature 3"
+    },
+    {
+      "type": "text",
+      "id": "feature3_icon",
+      "label": "Feature 3 Icon",
+      "default": "⚙️"
+    },
+    {
+      "type": "text",
+      "id": "feature3_title",
+      "label": "Feature 3 Title",
+      "default": "READY WHEN YOU ARE"
+    },
+    {
+      "type": "text",
+      "id": "feature3_title_sv",
+      "label": "Feature 3 Title (Svenska)"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "feature3_text",
+      "label": "Feature 3 Text",
+      "default": "Machines and parts in stock."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "feature3_text_sv",
+      "label": "Feature 3 Text (Svenska)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RTL Hero Banner"
+    }
+  ]
+}
+{% endschema %}

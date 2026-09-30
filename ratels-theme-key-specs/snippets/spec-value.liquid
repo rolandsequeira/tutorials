@@ -1,0 +1,47 @@
+{%- comment -%}
+  Cleans a spec value for display.
+  - Placeholders ("unknown", "-", "- kN", "n/a") output nothing, so the row can be hidden.
+  - On the Swedish site, common English words are translated (Yes -> Ja, Petrol -> Bensin ...).
+
+  Accepts: value {String} the value part of a "value|flag|flag" metafield, lang {String} 'sv' or 'en'
+{%- endcomment -%}
+{%- liquid
+  assign v = value | remove_first: "'" | strip
+  assign v_lc = v | downcase
+  assign first_char = v | slice: 0
+  if v == blank or v_lc == 'unknown' or v_lc == 'n/a' or v_lc == 'null' or first_char == '-'
+    assign v = ''
+  elsif lang == 'sv'
+    case v_lc
+      when 'yes'
+        assign v = 'Ja'
+      when 'no'
+        assign v = 'Nej'
+      when 'optional'
+        assign v = 'Tillval'
+      when 'standard'
+        assign v = 'Standard'
+      when 'petrol', 'gasoline'
+        assign v = 'Bensin'
+      when 'electric'
+        assign v = 'El'
+      when 'air-cooled', 'air cooled'
+        assign v = 'Luftkyld'
+      when 'water-cooled', 'water cooled'
+        assign v = 'Vattenkyld'
+      when 'electronic'
+        assign v = 'Elektronisk'
+      when 'electro-hydraulic'
+        assign v = 'Elektrohydraulisk'
+      when 'hydrostatic'
+        assign v = 'Hydrostatisk'
+      when 'mechanical'
+        assign v = 'Mekanisk'
+      when 'tubeless'
+        assign v = 'Slanglös'
+      when 'lcd display'
+        assign v = 'LCD-display'
+    endcase
+  endif
+-%}
+{{- v -}}

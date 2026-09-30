@@ -24,6 +24,7 @@
   - output: {String} 'card' (default), 'tiles', 'keys' (comma list of metafield keys shown) or 'group'
   - collection_handle: {String} Handle of the collection being browsed (optional)
   - group: {String} Force a spec group (optional)
+  - lang: {String} 'sv' or 'en' from snippets/site-lang.liquid (optional, defaults to the Shopify language)
 
   Usage:
   {% render 'machine-key-specs', product: product, collection_handle: collection.handle %}
@@ -31,7 +32,9 @@
 
 {%- liquid
   assign is_sv = false
-  if request.locale.iso_code == 'sv'
+  if lang == 'sv'
+    assign is_sv = true
+  elsif lang == blank and request.locale.iso_code == 'sv'
     assign is_sv = true
   endif
 

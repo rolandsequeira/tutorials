@@ -1,0 +1,331 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+<header class="site-header">
+  <div class="page-width header-inner">
+    
+    <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu" onclick="toggleMobileMenu()">
+      <span class="hamburger-icon">☰</span>
+      <span class="close-icon" style="display: none;">✕</span>
+    </button>
+
+    <div class="header-logo">
+      <a href="{{ routes.root_url }}">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}" 
+               alt="{{ shop.name }}" 
+               width="{{ section.settings.logo_width }}" 
+               height="auto" 
+               style="max-width: {{ section.settings.logo_width }}px; display: block;">
+        {% else %}
+          <span class="logo-text-fallback">RTL <span class="text-red">RATELS GROUP</span></span>
+        {% endif %}
+      </a>
+    </div>
+
+    <nav class="header-nav" id="MobileNav">
+      <ul class="nav-links">
+        {% assign menu = section.settings.menu %}
+
+        {% for link in menu.links %}
+          {% if link.links != blank %}
+            <li class="has-dropdown">
+              <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>
+                {{ link.title | upcase }} <span class="dropdown-icon">▼</span>
+              </a>
+              <ul class="dropdown-menu">
+                {% for childlink in link.links %}
+                  <li>
+                    <a href="{{ childlink.url }}" {% if childlink.active %}class="active"{% endif %}>
+                      {{ childlink.title | upcase }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% else %}
+            <li>
+              <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>
+                {{ link.title | upcase }}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      
+      {% comment %} ALWAYS VISIBLE CALL BUTTON (SWEDISH ONLY) {% endcomment %}
+      {% if site_lang == 'sv' %}
+        <a href="tel:08301212" class="call-button">
+          📞&nbsp;<span class="call-text">Ring oss: </span>&nbsp;08-30 12 12
+        </a>
+      {% endif %}
+
+      {% comment %}
+        SV / EN switch: each language has its own domain (.se = Swedish, .com = English).
+        Links keep the current page and drop any /en or /sv prefix from the path.
+      {% endcomment %}
+      {%- liquid
+        assign current_path = request.path
+        assign locale_prefix = '/' | append: request.locale.iso_code
+        assign prefix_len = locale_prefix.size
+        assign path_start = current_path | slice: 0, prefix_len
+        assign char_after = current_path | slice: prefix_len, 1
+        if path_start == locale_prefix
+          if char_after == '/' or char_after == ''
+            assign current_path = current_path | slice: prefix_len, 2000
+          endif
+        endif
+        if current_path == blank
+          assign current_path = '/'
+        endif
+      -%}
+      <div class="lang-selector">
+        <a href="https://www.ratelsgroup.se{{ current_path }}" hreflang="sv" lang="sv"
+           class="lang-btn{% if site_lang == 'sv' %} active{% endif %}"{% if site_lang == 'sv' %} aria-current="true"{% endif %}>
+          <span class="lang-text">SV</span>
+        </a>
+
+        <span class="lang-divider">|</span>
+
+        <a href="https://www.ratelsgroup.com{{ current_path }}" hreflang="en" lang="en"
+           class="lang-btn{% if site_lang == 'en' %} active{% endif %}"{% if site_lang == 'en' %} aria-current="true"{% endif %}>
+          <span class="lang-text">EN</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Base Navigation Styling */
+  .machinery-collection-container { margin-top: 25px !important; margin-bottom: 25px !important;min-height: 500px;}
+  
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 15px 20px; 
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px; 
+  }
+
+  .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px; 
+  }
+
+  /* Call Button Styling */
+  .call-button {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    transition: color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .call-button:hover {
+    color: #e3000f; 
+  }
+  
+  /* Mobile Specific Elements */
+  .mobile-menu-toggle {
+    display: none; 
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001; 
+  }
+
+  /* Dropdown Parent Styling */
+  .has-dropdown { position: relative; }
+  .dropdown-icon { font-size: 10px; margin-left: 4px; vertical-align: middle; }
+
+  /* Dropdown Menu Styling */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    margin-top: 15px; 
+    left: 0;
+    background-color: #ffffff !important; 
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 10px 0;
+    min-width: 220px;
+    z-index: 999;
+    border-radius: 4px;
+    border-top: 3px solid #e3000f; 
+  }
+
+  .dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -15px; 
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: transparent;
+  }
+
+  .dropdown-menu li { display: block; width: 100%; }
+
+  .dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #000000 !important; 
+    font-weight: 500 !important; 
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .dropdown-menu a:hover, 
+  .dropdown-menu a.active {
+    background-color: #f5f5f5 !important; 
+    color: #e3000f !important; 
+  }
+
+  .has-dropdown:hover .dropdown-menu { display: block; }
+
+  /* Language Selector Styling */
+  .lang-selector {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+  }
+  .lang-btn {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #ffffff !important;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .lang-btn:hover, .lang-btn.active { opacity: 1 !important; font-weight: bold; }
+  .lang-divider { color: rgba(255, 255, 255, 0.3); user-select: none; font-size: 14px; }
+
+  /* --- RESPONSIVE MOBILE STYLES --- */
+  @media screen and (max-width: 990px) {
+    .mobile-menu-toggle { display: block; }
+    
+    .header-inner {
+      padding: 10px 15px;
+    }
+
+    .header-nav {
+      display: none; 
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: #111111; 
+      padding: 20px;
+      z-index: 1000;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+    }
+    
+    .header-nav.menu-open { display: block; }
+    .nav-links { flex-direction: column; align-items: flex-start; gap: 15px; }
+
+    .has-dropdown:hover .dropdown-menu { display: none; }
+    
+    .dropdown-menu {
+      position: static;
+      box-shadow: none;
+      background-color: transparent !important;
+      border-top: none;
+      padding: 0 0 0 15px;
+      margin-top: 5px;
+      display: block; 
+    }
+    
+    .dropdown-menu::before { display: none; }
+    .dropdown-menu a { color: #ffffff !important; padding: 8px 0; }
+    .dropdown-menu a:hover { background-color: transparent !important; }
+
+    /* Adjust header actions to fit */
+    .header-actions {
+      gap: 12px;
+    }
+    
+    .call-button {
+      font-size: 13px;
+    }
+    
+    /* Hide the text "Ring oss:" on mobile to save horizontal space */
+    .call-text {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function toggleMobileMenu() {
+    var nav = document.getElementById("MobileNav");
+    var hamburger = document.querySelector(".hamburger-icon");
+    var closeIcon = document.querySelector(".close-icon");
+    
+    if (nav.classList.contains("menu-open")) {
+      nav.classList.remove("menu-open");
+      hamburger.style.display = "inline";
+      closeIcon.style.display = "none";
+    } else {
+      nav.classList.add("menu-open");
+      hamburger.style.display = "none";
+      closeIcon.style.display = "inline";
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Global Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 150,
+      "unit": "px",
+      "label": "Custom logo width"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

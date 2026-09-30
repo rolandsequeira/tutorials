@@ -1,3 +1,4 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
 {{ 'component-machinery-product.css' | asset_url | stylesheet_tag }}
 
 <div class="machinery-full-page-container">
@@ -16,7 +17,7 @@
 
       <div class="machinery-tabs-nav">
         <button class="tab-link active-tab" onclick="switchMachineryTab(event, 'prod-desc')">
-          ⭕ {% if request.locale.iso_code == 'sv' %}Produktbeskrivning{% else %}Product Description{% endif %}
+          ⭕ {% if site_lang == 'sv' %}Produktbeskrivning{% else %}Product Description{% endif %}
         </button>
       </div>
 
@@ -26,7 +27,7 @@
       
       {% comment %} REPLACED SOLD OUT FORM WITH GET QUOTE LINK {% endcomment %}
       <a href="{{ pages.contact.url }}" class="btn btn--red btn--full-width-cta" style="display: block; text-align: center;">
-        {% if request.locale.iso_code == 'sv' %}BEGÄR OFFERT{% else %}GET YOUR QUOTE{% endif %}
+        {% if site_lang == 'sv' %}BEGÄR OFFERT{% else %}GET YOUR QUOTE{% endif %}
       </a>
     </div>
 
@@ -59,7 +60,7 @@
       <div class="machinery-main-price">
         {{ product.price | money }}
         <span class="price-tax-subtext">
-          {% if request.locale.iso_code == 'sv' %}Exkl. moms och frakt{% else %}Excl. tax and shipping{% endif %}
+          {% if site_lang == 'sv' %}Exkl. moms och frakt{% else %}Excl. tax and shipping{% endif %}
         </span>
       </div>
 
@@ -67,31 +68,30 @@
         <div class="sidebar-red-card">
           <div class="red-card-header">
             <span class="header-book-icon">📋</span> 
-            {% if request.locale.iso_code == 'sv' %}Nyckelegenskaper{% else %}Key Attributes{% endif %}
+            {% if site_lang == 'sv' %}Nyckelegenskaper{% else %}Key Attributes{% endif %}
           </div>
           
           {% comment %}
             RED CARD: category key specs (snippets/machine-key-specs.liquid) as tiles on top,
             then remaining flagged attributes (middle value parts[1] == '1'), minus the ones already shown.
           {% endcomment %}
-          {%- capture key_spec_keys -%}{% render 'machine-key-specs', product: product, collection_handle: collection.handle, output: 'keys' %}{%- endcapture -%}
+          {%- capture key_spec_keys -%}{% render 'machine-key-specs', lang: site_lang, product: product, collection_handle: collection.handle, output: 'keys' %}{%- endcapture -%}
           {%- assign key_spec_keys = key_spec_keys | strip | split: ',' -%}
           <div class="red-card-body">
-            {% render 'machine-key-specs', product: product, collection_handle: collection.handle, output: 'tiles' %}
+            {% render 'machine-key-specs', lang: site_lang, product: product, collection_handle: collection.handle, output: 'tiles' %}
             {% for field in product.metafields.custom %}
               {% assign val_str = field.last | string %}
               {% assign parts = val_str | split: '|' %}
               {% if parts[1] == '1' and key_spec_keys contains field.first %}{% continue %}{% endif %}
               {% if parts[1] == '1' %}
-                {% assign t_key = 'specs.' | append: field.first %}
-                {% assign translated_title = t_key | t %}
-                {% if translated_title contains 'translation missing' %}
-                  {% assign translated_title = field.first | replace: '_', ' ' | capitalize %}
-                {% endif %}
+                {%- capture translated_title -%}{% render 'spec-label', key: field.first, lang: site_lang %}{%- endcapture -%}
+                {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+                {%- if shown_value != blank -%}
                 <div class="sidebar-data-row">
                   <span class="lbl">{{ translated_title }}:</span>
-                  <span class="val">{{ parts[0] }}</span>
+                  <span class="val">{{ shown_value }}</span>
                 </div>
+                {%- endif -%}
               {% endif %}
             {% endfor %}
           </div>
@@ -100,19 +100,19 @@
         {% comment %} DYNAMIC METAFIELD BUTTONS {% endcomment %}
         {% if product.metafields.custom.product_catalog != blank %}
           <a href="{{ product.metafields.custom.product_catalog.value.url }}" target="_blank" class="btn btn--black-download btn--full-width-cta">
-            📥 {% if request.locale.iso_code == 'sv' %}LADDA NER BROSCHYR{% else %}DOWNLOAD BROCHURE{% endif %}
+            📥 {% if site_lang == 'sv' %}LADDA NER BROSCHYR{% else %}DOWNLOAD BROCHURE{% endif %}
           </a>
         {% endif %}
 
         {% if product.metafields.custom.accessories_pdf != blank %}
           <a href="{{ product.metafields.custom.accessories_pdf.value.url }}" target="_blank" class="btn btn--black-download btn--full-width-cta">
-            📥 {% if request.locale.iso_code == 'sv' %}LADDA NER TILLBEHÖR (PDF){% else %}DOWNLOAD ACCESSORIES (PDF){% endif %}
+            📥 {% if site_lang == 'sv' %}LADDA NER TILLBEHÖR (PDF){% else %}DOWNLOAD ACCESSORIES (PDF){% endif %}
           </a>
         {% endif %}
 
         {% if product.metafields.custom.product_gallery_link != blank %}
           <a href="{{ product.metafields.custom.product_gallery_link }}" target="_blank" class="btn btn--black-download btn--full-width-cta">
-            📥 {% if request.locale.iso_code == 'sv' %}PRODUKTGALLERI{% else %}PRODUCT GALLERY{% endif %}
+            📥 {% if site_lang == 'sv' %}PRODUKTGALLERI{% else %}PRODUCT GALLERY{% endif %}
           </a>   
         {% endif %}
 
@@ -128,22 +128,19 @@
     {% assign keys_GeneralInformation = "product_category,model_year,ce_certification" | split: "," %}
     {% for k in keys_GeneralInformation %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_GeneralInformation = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_GeneralInformation = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_GeneralInformation %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Allmän Information{% else %}General Information{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Allmän Information{% else %}General Information{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_GeneralInformation %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -154,22 +151,19 @@
     {% assign keys_Engine = "engine_brand,engine_model,fuel_type,emission_standard,engine_power,engine_torque,number_of_cylinders,displacement,rated_rpm,cooling_system,fuel_tank_capacity,fuel_consumption,engine_preheater" | split: "," %}
     {% for k in keys_Engine %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_Engine = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_Engine = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_Engine %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Motor{% else %}Engine{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Motor{% else %}Engine{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_Engine %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -180,22 +174,19 @@
     {% assign keys_Performance = "operating_weight,rated_load_capacity,tipping_load,bucket_capacity,maximum_lift_height,breakout_force,dump_height,dump_reach,travel_speed,climbing_ability,turning_radius_inside,turning_radius_outside,steering_angle" | split: "," %}
     {% for k in keys_Performance %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_Performance = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_Performance = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_Performance %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Prestanda{% else %}Performance{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Prestanda{% else %}Performance{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_Performance %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -206,22 +197,19 @@
     {% assign keys_Transmission = "transmission_type,drive_system,axle_brand,axle_type,differential_lock,hub_reduction,drive_motor_brand,number_of_wheel_motors" | split: "," %}
     {% for k in keys_Transmission %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_Transmission = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_Transmission = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_Transmission %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Transmission{% else %}Transmission{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Transmission{% else %}Transmission{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_Transmission %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -232,22 +220,19 @@
     {% assign keys_Hydraulics = "hydraulic_flow,hydraulic_pressure,hydraulic_pump_brand,hydraulic_pump_model,hydraulic_pump_type,hydraulic_oil_capacity,number_of_pumps,free_return_line,float_function,auxiliary_hydraulic_function_1,auxiliary_hydraulic_function_2,auxiliary_hydraulic_function_3,number_of_hydraulic_functions_front,number_of_hydraulic_functions_rear,rear_hydraulic_outlets,hydraulic_functions_lockable,hydraulic_functions_continuous_flow,number_of_free_return_lines,hydraulic_couplers_front,hydraulic_couplers_rear,hydraulic_quick_couplers,hydraulic_oil_cooler,high_flow_hydraulics,maximum_auxiliary_flow,maximum_auxiliary_pressure" | split: "," %}
     {% for k in keys_Hydraulics %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_Hydraulics = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_Hydraulics = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_Hydraulics %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Hydraulik{% else %}Hydraulics{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Hydraulik{% else %}Hydraulics{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_Hydraulics %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -258,22 +243,19 @@
     {% assign keys_Electrical = "system_voltage,battery_capacity,alternator_output,main_disconnect_switch,reverse_alarm,reverse_lights" | split: "," %}
     {% for k in keys_Electrical %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_Electrical = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_Electrical = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_Electrical %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Elsystem{% else %}Electrical{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Elsystem{% else %}Electrical{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_Electrical %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -284,22 +266,19 @@
     {% assign keys_Dimensions = "overall_length,overall_width,overall_height,ground_clearance,wheelbase,transport_length,transport_width,transport_height,tire_size,tire_type" | split: "," %}
     {% for k in keys_Dimensions %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_Dimensions = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_Dimensions = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_Dimensions %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Mått{% else %}Dimensions{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Mått{% else %}Dimensions{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_Dimensions %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -310,22 +289,19 @@
     {% assign keys_Cabin = "cabin_type,heater,air_conditioning,reverse_camera,bluetooth_radio,work_lights,beacon_light,seat,opening_side_window,windshield_wiper" | split: "," %}
     {% for k in keys_Cabin %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_Cabin = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_Cabin = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_Cabin %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Hytt{% else %}Cabin{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Hytt{% else %}Cabin{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_Cabin %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -336,22 +312,19 @@
     {% assign keys_ControlsJoystick = "joystick_brand,joystick_type,multifunction_joystick,integrated_hydraulic_controls,separate_hydraulic_levers,forward__reverse_on_joystick,hydraulic_function_buttons_on_joystick,float_function_on_joystick,differential_lock_button_on_joystick,cruise_control,display_type,rear_camera_display,emergency_stop" | split: "," %}
     {% for k in keys_ControlsJoystick %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_ControlsJoystick = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_ControlsJoystick = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_ControlsJoystick %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Reglage & Joystick{% else %}Controls & Joystick{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Reglage & Joystick{% else %}Controls & Joystick{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_ControlsJoystick %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -362,22 +335,19 @@
     {% assign keys_HydrostaticSystem = "hydrostatic_system_type,hydrostatic_pump_brand,hydrostatic_pump_model,hydrostatic_pump_type,hydrostatic_pump_flow,hydrostatic_pump_pressure,number_of_hydrostatic_pumps,drive_motor_brand,drive_motor_model,drive_motor_type,number_of_drive_motors,wheel_motor_brand,wheel_motor_model,high_speed_motor,inching_function,drive_control_type,traction_control,differential_lock" | split: "," %}
     {% for k in keys_HydrostaticSystem %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_HydrostaticSystem = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_HydrostaticSystem = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_HydrostaticSystem %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Hydrostatik{% else %}Hydrostatic System{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Hydrostatik{% else %}Hydrostatic System{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_HydrostaticSystem %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>
@@ -388,22 +358,19 @@
     {% assign keys_ElectricPowertrain = "powertrain_type,battery_type,battery_brand,battery_capacity,usable_battery_capacity,system_voltage,drive_motor_type,drive_motor_brand,drive_motor_power_continuous,drive_motor_power_peak,hydraulic_motor_type,hydraulic_motor_power,regenerative_braking,onboard_charger,charger_power,charging_voltage,charging_connector,fast_charging,fast_charge_power,charging_time_2080,charging_time_0100,runtime_light_duty,runtime_normal_duty,runtime_heavy_duty,energy_consumption,battery_heating,battery_cooling,battery_protection_rating,high_voltage_disconnect,emergency_battery_isolation,battery_warranty,battery_cycle_life" | split: "," %}
     {% for k in keys_ElectricPowertrain %}
       {% assign parts = product.metafields.custom[k] | split: '|' %}
-      {% if parts[2] == '1' %}{% assign has_visible_fields_ElectricPowertrain = true %}{% break %}{% endif %}
+      {% if parts[2] == '1' %}{%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}{% if shown_value != blank %}{% assign has_visible_fields_ElectricPowertrain = true %}{% break %}{% endif %}{% endif %}
     {% endfor %}
 
     {% if has_visible_fields_ElectricPowertrain %}
       <div class="spec-table-container">
-        <div class="table-group-title">{% if request.locale.iso_code == 'sv' %}Elektrisk Drivlina{% else %}Electric Powertrain{% endif %}</div>
+        <div class="table-group-title">{% if site_lang == 'sv' %}Elektrisk Drivlina{% else %}Electric Powertrain{% endif %}</div>
         <div class="table-body-rows">
           {% for k in keys_ElectricPowertrain %}
             {% assign parts = product.metafields.custom[k] | split: '|' %}
             {% if parts[2] == '1' %}
-              {% assign t_key = 'specs.' | append: k %}
-              {% assign translated_title = t_key | t %}
-              {% if translated_title contains 'translation missing' %}
-                {% assign translated_title = k | replace: '_', ' ' | capitalize %}
-              {% endif %}
-              <div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ parts[0] }}</strong></div>
+              {%- capture translated_title -%}{% render 'spec-label', key: k, lang: site_lang %}{%- endcapture -%}
+              {%- capture shown_value -%}{% render 'spec-value', value: parts[0], lang: site_lang %}{%- endcapture -%}
+              {%- if shown_value != blank -%}<div class="spec-table-row"><span>{{ translated_title }}:</span><strong>{{ shown_value }}</strong></div>{%- endif -%}
             {% endif %}
           {% endfor %}
         </div>

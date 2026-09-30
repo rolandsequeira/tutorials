@@ -1,0 +1,318 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- liquid
+  assign t_heading = section.settings.heading
+  if site_lang == 'sv' and section.settings.heading_sv != blank
+    assign t_heading = section.settings.heading_sv
+  endif
+  assign t_primary_button_text = section.settings.primary_button_text
+  if site_lang == 'sv' and section.settings.primary_button_text_sv != blank
+    assign t_primary_button_text = section.settings.primary_button_text_sv
+  endif
+  assign t_secondary_button_text = section.settings.secondary_button_text
+  if site_lang == 'sv' and section.settings.secondary_button_text_sv != blank
+    assign t_secondary_button_text = section.settings.secondary_button_text_sv
+  endif
+  assign t_view_all_text = section.settings.view_all_text
+  if site_lang == 'sv' and section.settings.view_all_text_sv != blank
+    assign t_view_all_text = section.settings.view_all_text_sv
+  endif
+-%}
+{% assign collection = collections[section.settings.collection] %}
+
+<div class="rtl-machines-section page-width">
+
+  <div class="rtl-heading-wrap">
+    <h2>{{ t_heading }}</h2>
+    <span class="rtl-heading-line"></span>
+  </div>
+
+  <div class="rtl-machines-grid">
+
+    {% for product in collection.products limit: section.settings.products_to_show %}
+
+      <div class="rtl-machine-card">
+
+        <a href="{{ product.url }}" class="rtl-machine-image-link">
+
+          {% if product.featured_image %}
+            <img
+              src="{{ product.featured_image | image_url: width: 800 }}"
+              alt="{{ product.title }}"
+              class="rtl-machine-image"
+              loading="lazy"
+            >
+          {% endif %}
+
+        </a>
+
+        <div class="rtl-machine-content">
+
+          <h3 class="rtl-machine-title">
+            {{ product.title }}
+          </h3>
+
+          <div class="rtl-machine-description">
+            {% if product.description != blank %}
+              {{ product.description | strip_html | truncate: 90 }}
+            {% endif %}
+          </div>
+
+          <a href="{{ product.url }}" class="rtl-btn-primary">
+            {{ t_primary_button_text }}
+          </a>
+
+<a href="{{ product.metafields.custom.product_catalog.value.url }}" class="rtl-btn-secondary" target="_blank">
+  {{ t_secondary_button_text }}
+</a>
+
+        </div>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+  {% if section.settings.show_view_all %}
+    <div class="rtl-view-all-wrap">
+      <a href="{{ collection.url }}" class="rtl-view-all-btn">
+        {{ t_view_all_text }}
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+
+<style>
+
+.rtl-machines-section{
+  padding:25px 45px;
+}
+
+.rtl-heading-wrap{
+  text-align:center;
+  margin-bottom:35px;
+}
+
+.rtl-heading-wrap h2{
+  margin:0;
+  font-size:32px;
+  font-weight:700;
+  text-transform:uppercase;
+}
+
+.rtl-heading-line{
+  display:block;
+  width:50px;
+  height:3px;
+  background:#d2222a;
+  margin:12px auto 0;
+}
+
+.rtl-machines-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:20px;
+}
+
+.rtl-machine-card{
+  background:#fff;
+  border:1px solid #e5e5e5;
+  transition:.3s;
+}
+
+.rtl-machine-card:hover{
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.rtl-machine-image-link{
+  display:block;
+}
+
+.rtl-machine-image{
+  width:100%;
+  display:block;
+  aspect-ratio:16/10;
+  object-fit:cover;
+}
+
+.rtl-machine-content{
+  padding:16px;
+  text-align:center;
+}
+
+.rtl-machine-title{
+  margin:0 0 10px;
+  font-size:18px;
+  font-weight:700;
+}
+
+.rtl-machine-description{
+  font-size:13px;
+  line-height:1.5;
+  color:#666;
+  min-height:60px;
+  margin-bottom:15px;
+}
+
+.rtl-btn-primary{
+  display:block;
+  background:#d2222a;
+  color:#fff;
+  text-decoration:none;
+  padding:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  font-size:13px;
+  margin-bottom:10px;
+}
+
+.rtl-btn-primary:hover{
+  background:#b61c22;
+  color:#fff;
+}
+
+.rtl-btn-secondary{
+  display:block;
+  border:1px solid #222;
+  color:#222;
+  text-decoration:none;
+  padding:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  font-size:13px;
+}
+
+.rtl-btn-secondary:hover{
+  background:#222;
+  color:#fff;
+}
+
+.rtl-view-all-wrap{
+  text-align:center;
+  margin-top:35px;
+}
+
+.rtl-view-all-btn{
+  display:inline-block;
+  border:1px solid #222;
+  padding:14px 30px;
+  text-decoration:none;
+  color:#222;
+  font-weight:700;
+  text-transform:uppercase;
+}
+
+.rtl-view-all-btn:hover{
+  background:#222;
+  color:#fff;
+}
+
+@media screen and (max-width:1200px){
+
+  .rtl-machines-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+}
+
+@media screen and (max-width:768px){
+
+  .rtl-machines-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media screen and (max-width:480px){
+
+  .rtl-machines-grid{
+    grid-template-columns:1fr;
+  }
+
+  .rtl-heading-wrap h2{
+    font-size:24px;
+  }
+
+}
+
+</style>
+
+{% schema %}
+{
+  "name": "Featured Machines",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "UTVALDA MASKINER"
+    },
+    {
+      "type": "text",
+      "id": "heading_sv",
+      "label": "Heading (Svenska)"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "default": 5,
+      "label": "Products to show"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "default": "GET A QUOTE",
+      "label": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text_sv",
+      "label": "Primary Button (Svenska)",
+      "default": "BEGÄR OFFERT"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "default": "LADDA DATABLAD",
+      "label": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text_sv",
+      "label": "Secondary Button (Svenska)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "default": true,
+      "label": "Show View All Button"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "default": "SE ALLA MASKINER",
+      "label": "View All Text"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text_sv",
+      "label": "View All Text (Svenska)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Machines"
+    }
+  ]
+}
+{% endschema %}

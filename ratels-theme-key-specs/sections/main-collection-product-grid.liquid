@@ -1,3 +1,4 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
 {{ 'theme-rtl.css' | asset_url | stylesheet_tag }}
 
 <div class="machinery-collection-container page-width section-padding">
@@ -13,7 +14,7 @@
     
     <aside class="collection-sidebar">
       <div class="filter-box">
-        <h3 class="filter-title">{{ 'collection.sidebar.categories' | t }}</h3>
+        <h3 class="filter-title">{% if site_lang == 'sv' %}KATEGORIER{% else %}CATEGORIES{% endif %}</h3>
         <ul class="filter-list">
           {% for link in linklists.categories.links %}
              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
@@ -27,9 +28,9 @@
         
         {%- if section.settings.enable_sorting -%}
           <div class="collection-sort-header">
-            <span class="product-count">{{ collection.products_count }} {{ 'collection.sorting.products' | t }}</span>
+            <span class="product-count">{{ collection.products_count }} {% if site_lang == 'sv' %}produkter{% else %}products{% endif %}</span>
             <div class="sort-wrapper">
-              <label for="SortBy">{{ 'collection.sorting.sort_by' | t }}</label>
+              <label for="SortBy">{% if site_lang == 'sv' %}Sortera efter:{% else %}Sort by:{% endif %}</label>
               <select name="sort_by" id="SortBy" class="sort-select" onchange="location = this.value;">
                 {%- for option in collection.sort_options -%}
                   <option value="?sort_by={{ option.value }}" {% if option.value == collection.sort_by %}selected="selected"{% endif %}>
@@ -43,13 +44,13 @@
 
         {% if collection.products.size == 0 %}
           <div class="empty-collection text-center mt-40">
-            <p>{{ 'collection.general.no_matches' | t }}</p>
+            <p>{% if site_lang == 'sv' %}Inga maskiner hittades i den här kategorin.{% else %}No machines found in this category.{% endif %}</p>
           </div>
         {% else %}
           
           <div class="grid-products">
             {% for product in collection.products %}
-              {%- capture spec_group -%}{% render 'machine-key-specs', product: product, collection_handle: collection.handle, output: 'group' %}{%- endcapture -%}
+              {%- capture spec_group -%}{% render 'machine-key-specs', lang: site_lang, product: product, collection_handle: collection.handle, output: 'group' %}{%- endcapture -%}
               <div class="machinery-product-card machinery-product-card--{{ spec_group | strip }}">
                 
                 <a href="{{ product.url | within: collection }}" class="card-image-link">
@@ -77,12 +78,12 @@
                   </h3>
                   
                   {% comment %} Key specs vary by category - see snippets/machine-key-specs.liquid {% endcomment %}
-                  {% render 'machine-key-specs', product: product, collection_handle: collection.handle %}
+                  {% render 'machine-key-specs', lang: site_lang, product: product, collection_handle: collection.handle %}
 
                   <div class="card-bottom">
                     <div class="card-price">{{ product.price | money }}</div>
 <a href="{{ product.url }}" class="btn btn--red btn--full-width-cta" style="display: block; text-align: center;">
-    {% if request.locale.iso_code == 'sv' %}BEGÄR OFFERT{% else %}GET YOUR QUOTE{% endif %}
+    {% if site_lang == 'sv' %}BEGÄR OFFERT{% else %}GET YOUR QUOTE{% endif %}
   </a>
                     
                   </div>

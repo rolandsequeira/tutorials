@@ -1,0 +1,293 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-rtl",
+      "settings": {
+        "bg_image": "shopify://shop_images/hero.png",
+        "title_main": "POWERFUL MACHINES.",
+        "title_colored": "PERSONAL SERVICE.",
+        "subtext": "High performance machines for every job. Backed by personal service you can rely on – before, during and after the sale.",
+        "btn_text": "GET A QUOTE",
+        "btn_link": "shopify://pages/contact",
+        "feature1_icon": "",
+        "feature1_title": "QUALITY YOU CAN TRUST",
+        "feature1_text": "Built for durability and long-term performance.",
+        "feature2_icon": "",
+        "feature2_title": "EXPERT SUPPORT",
+        "feature2_text": "Personal service from real people.",
+        "feature3_icon": "",
+        "feature3_title": "READY WHEN YOU ARE",
+        "feature3_text": "Machines and parts in stock.",
+        "title_main_sv": "KRAFTFULLA MASKINER.",
+        "title_colored_sv": "PERSONLIG SERVICE.",
+        "subtext_sv": "Högpresterande maskiner för varje jobb. Med personlig service du kan lita på – före, under och efter köpet.",
+        "btn_text_sv": "BEGÄR OFFERT",
+        "feature1_title_sv": "KVALITET DU KAN LITA PÅ",
+        "feature1_text_sv": "Byggda för hållbarhet och lång livslängd.",
+        "feature2_title_sv": "EXPERTSUPPORT",
+        "feature2_text_sv": "Personlig service från riktiga människor.",
+        "feature3_title_sv": "REDO NÄR DU ÄR",
+        "feature3_text_sv": "Maskiner och reservdelar i lager."
+      }
+    },
+    "categories": {
+      "type": "category-grid-rtl",
+      "blocks": {
+        "c2": {
+          "type": "category_item",
+          "settings": {
+            "title": "LOADERS",
+            "image": "shopify://shop_images/LOADER.png",
+            "link": "shopify://collections/loaders",
+            "title_sv": "LASTMASKINER"
+          }
+        },
+        "c3": {
+          "type": "category_item",
+          "settings": {
+            "title": "EXCAVATORS",
+            "image": "shopify://shop_images/EXCAVATOR.png",
+            "link": "shopify://collections/excavators",
+            "title_sv": "GRÄVMASKINER"
+          }
+        },
+        "c4": {
+          "type": "category_item",
+          "disabled": true,
+          "settings": {
+            "title": "PARTS",
+            "image": "shopify://shop_images/PARTS.png",
+            "link": "shopify://collections/parts",
+            "title_sv": "RESERVDELAR"
+          }
+        },
+        "c5": {
+          "type": "category_item",
+          "settings": {
+            "title": "ELECTRIC MACHINES",
+            "image": "shopify://shop_images/ELECTRIC.png",
+            "link": "shopify://collections/electric-machines",
+            "title_sv": "ELEKTRISKA MASKINER"
+          }
+        },
+        "c1": {
+          "type": "category_item",
+          "settings": {
+            "title": "ATTACHMENTS",
+            "image": "shopify://shop_images/ATTACHMENTS.png",
+            "link": "shopify://collections/attachments",
+            "title_sv": "REDSKAP"
+          }
+        },
+        "category_item_4x9H6V": {
+          "type": "category_item",
+          "settings": {
+            "title": "FORESTRY & AGRICULTURE",
+            "image": "shopify://shop_images/FORESTRY.png",
+            "link": "shopify://collections/forestry",
+            "title_sv": "SKOGSBRUK & LANTBRUK"
+          }
+        }
+      },
+      "block_order": [
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c1",
+        "category_item_4x9H6V"
+      ],
+      "settings": {
+        "title": "POPULAR CATEGORIES",
+        "title_sv": "POPULÄRA KATEGORIER"
+      }
+    },
+    "cta": {
+      "type": "cta-banner-rtl",
+      "disabled": true,
+      "settings": {
+        "title": "NEED A MACHINE?",
+        "text": "Tell us what you need and we will send you a proposal.",
+        "button_text": "GET A QUOTE",
+        "button_link": "",
+        "title_sv": "BEHÖVER DU EN MASKIN?",
+        "text_sv": "Berätta mer vad du har behov av och vi skickar dig ett förslag.",
+        "button_text_sv": "BEGÄR OFFERT"
+      }
+    },
+    "featured_machines_YnzeM3": {
+      "type": "featured-machines",
+      "name": "Featured Machines",
+      "settings": {
+        "heading": "LOADERS - HERACLES",
+        "collection": "frontpage",
+        "products_to_show": 5,
+        "primary_button_text": "GET A QUOTE",
+        "secondary_button_text": "DOWNLOAD PDF",
+        "show_view_all": true,
+        "view_all_text": "SEE ALL MACHINES",
+        "heading_sv": "LASTMASKINER - HERACLES",
+        "primary_button_text_sv": "BEGÄR OFFERT",
+        "secondary_button_text_sv": "LADDA NER PDF",
+        "view_all_text_sv": "SE ALLA MASKINER"
+      }
+    },
+    "featured_machines_aBDP3V": {
+      "type": "featured-machines",
+      "name": "Featured Machines",
+      "settings": {
+        "heading": "EXCAVATORS - RHINOCEROS",
+        "collection": "excavators",
+        "products_to_show": 5,
+        "primary_button_text": "GET A QUOTE",
+        "secondary_button_text": "DOWNLOAD PDF",
+        "show_view_all": true,
+        "view_all_text": "SEE ALL MACHINES",
+        "heading_sv": "GRÄVMASKINER - RHINOCEROS",
+        "primary_button_text_sv": "BEGÄR OFFERT",
+        "secondary_button_text_sv": "LADDA NER PDF",
+        "view_all_text_sv": "SE ALLA MASKINER"
+      }
+    },
+    "featured_machines_cYLxH6": {
+      "type": "featured-machines",
+      "name": "Featured Machines",
+      "settings": {
+        "heading": "FORESTRY - METSA",
+        "collection": "forestry",
+        "products_to_show": 5,
+        "primary_button_text": "GET A QUOTE",
+        "secondary_button_text": "DOWNLOAD PDF",
+        "show_view_all": true,
+        "view_all_text": "SEE ALL MACHINES",
+        "heading_sv": "SKOGSBRUK - METSA",
+        "primary_button_text_sv": "BEGÄR OFFERT",
+        "secondary_button_text_sv": "LADDA NER PDF",
+        "view_all_text_sv": "SE ALLA MASKINER"
+      }
+    },
+    "custom_split_banner_nK9bpB": {
+      "type": "custom-split-banner",
+      "disabled": true,
+      "name": "Split Image Banner",
+      "settings": {
+        "heading": "Your partner for heavy machinery",
+        "text": "Quality and service.",
+        "feature_1": "Quality in focus",
+        "feature_2": "Nationwide service",
+        "feature_3": "Tailored solutions",
+        "button_label": "CONTACT US",
+        "button_link": "",
+        "heading_sv": "Din partner för tunga maskiner",
+        "text_sv": "Kvalitet och service.",
+        "feature_1_sv": "Kvalitet i fokus",
+        "feature_2_sv": "Rikstäckande service",
+        "feature_3_sv": "Skräddarsydda lösningar",
+        "button_label_sv": "KONTAKTA OSS"
+      }
+    },
+    "email_signup_banner_XA9xki": {
+      "type": "email-signup-banner",
+      "name": "Diagonal Hero Widget",
+      "settings": {}
+    },
+    "custom_split_banner_BCkUni": {
+      "type": "custom-split-banner",
+      "name": "Industrial Hero Banner",
+      "settings": {
+        "image": "shopify://shop_images/NEED_A_MACHINE_1.png",
+        "heading": "NEED A MACHINE?",
+        "text": "Tell us what you need and we will send you the best offer.",
+        "feature_1": "",
+        "feature_2": "",
+        "feature_3": "",
+        "button_label": "GET A QUOTE",
+        "button_link": "shopify://pages/contact",
+        "heading_sv": "BEHÖVER DU EN MASKIN?",
+        "text_sv": "Berätta vad du behöver så skickar vi dig det bästa erbjudandet.",
+        "button_label_sv": "BEGÄR OFFERT"
+      }
+    },
+    "video_gallery_gjBmDi": {
+      "type": "video-gallery",
+      "blocks": {
+        "video_xw7PDn": {
+          "type": "video",
+          "settings": {
+            "title": "Heracles H580 - In Action",
+            "youtube_url": "https://www.youtube.com/watch?v=jM3si9WB5sQ",
+            "title_sv": "Heracles H580 – i arbete"
+          }
+        },
+        "video_pd3yr6": {
+          "type": "video",
+          "settings": {
+            "title": "Heracles H280 VS. Weidemann 1390",
+            "youtube_url": "https://www.youtube.com/watch?v=oebqyjwVx_k",
+            "title_sv": "Heracles H280 VS. Weidemann 1390"
+          }
+        },
+        "video_TaPTAj": {
+          "type": "video",
+          "settings": {
+            "title": "Heracles H160T - In Action",
+            "youtube_url": "https://www.youtube.com/watch?v=ctSIG4u1xw4",
+            "title_sv": "Heracles H160T – i arbete"
+          }
+        },
+        "video_yeFHC6": {
+          "type": "video",
+          "settings": {
+            "title": "Heracles H280 - In Action",
+            "youtube_url": "https://www.youtube.com/watch?v=3aJKk5Ufpu8",
+            "title_sv": "Heracles H280 – i arbete"
+          }
+        }
+      },
+      "block_order": [
+        "video_xw7PDn",
+        "video_pd3yr6",
+        "video_TaPTAj",
+        "video_yeFHC6"
+      ],
+      "name": "Video Gallery",
+      "settings": {
+        "heading": "Machines in Action",
+        "heading_sv": "Maskiner i arbete"
+      }
+    },
+    "testimonials_tyXyqj": {
+      "type": "testimonials",
+      "blocks": {
+        "slide_KB4eGd": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/testi_851bd805-c218-43f7-b10c-71c0a5d7a90e.png",
+            "quote": "RTL Ratels provide the best service",
+            "author": "Anders, Entrepreneur",
+            "quote_sv": "RTL Ratels ger den bästa servicen",
+            "author_sv": "Anders, entreprenör"
+          }
+        }
+      },
+      "block_order": [
+        "slide_KB4eGd"
+      ],
+      "name": "Testimonial Slider",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "categories",
+    "cta",
+    "featured_machines_YnzeM3",
+    "featured_machines_aBDP3V",
+    "featured_machines_cYLxH6",
+    "custom_split_banner_nK9bpB",
+    "email_signup_banner_XA9xki",
+    "custom_split_banner_BCkUni",
+    "video_gallery_gjBmDi",
+    "testimonials_tyXyqj"
+  ]
+}

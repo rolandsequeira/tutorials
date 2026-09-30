@@ -1,0 +1,85 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- liquid
+  assign t_title = section.settings.title
+  if site_lang == 'sv' and section.settings.title_sv != blank
+    assign t_title = section.settings.title_sv
+  endif
+  assign t_text = section.settings.text
+  if site_lang == 'sv' and section.settings.text_sv != blank
+    assign t_text = section.settings.text_sv
+  endif
+  assign t_button_text = section.settings.button_text
+  if site_lang == 'sv' and section.settings.button_text_sv != blank
+    assign t_button_text = section.settings.button_text_sv
+  endif
+-%}
+<div class="cta-banner-rtl page-width">
+  <div class="cta-inner">
+    <div class="cta-content">
+      <h2>{{ t_title }}</h2>
+      <p>{{ t_text }}</p>
+      <a href="{{ section.settings.button_link }}" class="btn btn--red">{{ t_button_text }}</a>
+    </div>
+    <div class="cta-image" style="background-color: #2a2a2a; background-image: url('{{ section.settings.image | img_url: '800x' }}');">
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "RTL CTA Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "NEED A MACHINE?"
+    },
+    {
+      "type": "text",
+      "id": "title_sv",
+      "label": "Heading (Svenska)",
+      "default": "BEHÖVER DU EN MASKIN?"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Tell us what you need and we will send you a proposal."
+    },
+    {
+      "type": "textarea",
+      "id": "text_sv",
+      "label": "Text (Svenska)",
+      "default": "Berätta mer vad du har behov av och vi skickar dig ett förslag."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Label",
+      "default": "GET A QUOTE"
+    },
+    {
+      "type": "text",
+      "id": "button_text_sv",
+      "label": "Button Label (Svenska)",
+      "default": "BEGÄR OFFERT"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Right Side Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RTL CTA Banner"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,241 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- liquid
+  assign t_tagline = section.settings.tagline
+  if site_lang == 'sv' and section.settings.tagline_sv != blank
+    assign t_tagline = section.settings.tagline_sv
+  endif
+  assign t_menu_heading = section.settings.menu_heading
+  if site_lang == 'sv' and section.settings.menu_heading_sv != blank
+    assign t_menu_heading = section.settings.menu_heading_sv
+  endif
+  assign t_contact_heading = section.settings.contact_heading
+  if site_lang == 'sv' and section.settings.contact_heading_sv != blank
+    assign t_contact_heading = section.settings.contact_heading_sv
+  endif
+  assign t_contact_text = section.settings.contact_text
+  if site_lang == 'sv' and section.settings.contact_text_sv != blank
+    assign t_contact_text = section.settings.contact_text_sv
+  endif
+  assign t_social_heading = section.settings.social_heading
+  if site_lang == 'sv' and section.settings.social_heading_sv != blank
+    assign t_social_heading = section.settings.social_heading_sv
+  endif
+  assign t_copyright_text = section.settings.copyright_text
+  if site_lang == 'sv' and section.settings.copyright_text_sv != blank
+    assign t_copyright_text = section.settings.copyright_text_sv
+  endif
+-%}
+<footer class="site-footer">
+  <div class="page-width footer-inner">
+    
+    <div class="footer-col col-brand">
+      <div class="footer-logo">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}" 
+               alt="{{ shop.name }}" 
+               width="{{ section.settings.logo_width }}" 
+               height="auto" 
+               style="max-width: {{ section.settings.logo_width }}px; display: block;">
+        {% else %}
+          <img src="https://1u6fgz-zp.myshopify.com/cdn/shop/files/RTL-Group-Logo-vit_svg.png?v=1781529595&width=250" 
+               alt="{{ shop.name }}" 
+               width="250" 
+               height="auto" 
+               style="max-width: 250px; display: block;">
+        {% endif %}
+      </div>
+      {% if t_tagline != blank %}
+        <p class="footer-tagline">{{ t_tagline }}</p>
+      {% endif %}
+    </div>
+
+    <div class="footer-col">
+      <h4>{{ t_menu_heading }}</h4>
+      <ul>
+        {% if section.settings.menu != blank %}
+          {% for link in linklists[section.settings.menu].links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        {% else %}
+          <li><a href="#">Maskiner</a></li>
+          <li><a href="#">Redskap</a></li>
+          <li><a href="#">Reservdelar</a></li>
+          <li><a href="#">Om oss</a></li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>{{ t_contact_heading }}</h4>
+      {% if t_contact_text != blank %}
+        <div class="footer-contact-text">
+          {{ t_contact_text }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="footer-col col-brand col-social">
+      <h4>{{ t_social_heading }}</h4>
+      <div class="social-icons">
+        {% if section.settings.instagram_url != blank %}
+          <a href="{{ section.settings.instagram_url }}" style="color:#999; margin-right:10px; text-decoration:none;">Instagram</a>
+        {% endif %}
+        {% if section.settings.facebook_url != blank %}
+          <a href="{{ section.settings.facebook_url }}" style="color:#999; margin-right:10px; text-decoration:none;">Facebook</a>
+        {% endif %}
+        {% if section.settings.youtube_url != blank %}
+          <a href="{{ section.settings.youtube_url }}" style="color:#999; text-decoration:none;">YouTube</a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-bottom page-width">
+    <p>&copy; {{ 'now' | date: '%Y' }} {{ t_copyright_text }}</p>
+  </div>
+</footer>
+
+<style>
+  .footer-contact-text p {
+    margin: 0;
+    line-height: 1.6;
+    color: inherit;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Global Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand Identity"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 250,
+      "unit": "px",
+      "label": "Custom logo width"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Machines. Attachments. Solutions. Powerful Machines. Personal Service."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "tagline_sv",
+      "label": "Tagline (Svenska)",
+      "default": "Maskiner. Redskap. Lösningar. Kraftfulla maskiner. Personlig service."
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "text",
+      "id": "menu_heading",
+      "label": "Menu Heading",
+      "default": "QUICK LINKS"
+    },
+    {
+      "type": "text",
+      "id": "menu_heading_sv",
+      "label": "Menu Heading (Svenska)",
+      "default": "SNABBLÄNKAR"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Footer Menu",
+      "default": "footer"
+    },
+    {
+      "type": "header",
+      "content": "Contact Info"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Contact Heading",
+      "default": "CONTACT"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading_sv",
+      "label": "Contact Heading (Svenska)",
+      "default": "KONTAKT"
+    },
+    {
+      "type": "richtext",
+      "id": "contact_text",
+      "label": "Contact Details",
+      "default": "<p>RATELS GROUP AB<br>info@ratels.com<br>+46 123 456 789<br>Smedjegatan 3, 777 30 Smedjebacken</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "contact_text_sv",
+      "label": "Contact Details (Svenska)",
+      "default": "<p>RATELS GROUP AB<br>info@ratels.com<br>+46 123 456 789<br>Smedjegatan 3, 777 30 Smedjebacken</p>"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "label": "Social Heading",
+      "default": "FOLLOW US"
+    },
+    {
+      "type": "text",
+      "id": "social_heading_sv",
+      "label": "Social Heading (Svenska)",
+      "default": "FÖLJ OSS"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Footer Bottom"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "default": "Ratels Group AB. All rights reserved."
+    },
+    {
+      "type": "text",
+      "id": "copyright_text_sv",
+      "label": "Copyright Text (Svenska)",
+      "default": "Ratels Group AB. Alla rättigheter förbehållna."
+    }
+  ]
+}
+{% endschema %}

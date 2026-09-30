@@ -1,0 +1,330 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- liquid
+  assign t_heading = section.settings.heading
+  if site_lang == 'sv' and section.settings.heading_sv != blank
+    assign t_heading = section.settings.heading_sv
+  endif
+-%}
+<div class="video-gallery-section page-width">
+
+  <div class="video-heading">
+    <h2>{{ t_heading }}</h2>
+    <span class="video-line"></span>
+  </div>
+
+  <div class="video-grid">
+
+    {% for block in section.blocks %}
+{%- liquid
+  assign tb_title = block.settings.title
+  if site_lang == 'sv' and block.settings.title_sv != blank
+    assign tb_title = block.settings.title_sv
+  endif
+-%}
+
+
+      {% assign video_id = block.settings.youtube_url
+        | replace: 'https://www.youtube.com/watch?v=', ''
+        | replace: 'https://youtu.be/', ''
+        | split: '&'
+        | first
+      %}
+
+      <div
+        class="video-card"
+        data-video-id="{{ video_id }}"
+        {{ block.shopify_attributes }}
+      >
+
+        <div class="video-thumb">
+
+          <img
+            src="https://img.youtube.com/vi/{{ video_id }}/hqdefault.jpg"
+            alt="{{ tb_title }}"
+            loading="lazy"
+          >
+
+          <div class="video-play">
+            ▶
+          </div>
+
+        </div>
+
+        <div class="video-content">
+          <h3>{{ tb_title }}</h3>
+        </div>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+</div>
+
+<div id="youtubeModal" class="youtube-modal">
+  <div class="youtube-modal-content">
+
+    <button class="youtube-close">
+      &times;
+    </button>
+
+    <div class="youtube-frame-wrap">
+      <iframe
+        id="youtubePlayer"
+        src=""
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+  </div>
+</div>
+
+<style>
+
+.video-gallery-section{
+  padding:45px 60px;
+}
+
+.video-heading{
+  text-align:center;
+  margin-bottom:35px;
+}
+
+.video-heading h2{
+  margin:0;
+  font-size:32px;
+  font-weight:700;
+  text-transform:uppercase;
+}
+
+.video-line{
+  display:block;
+  width:50px;
+  height:3px;
+  background:#d2222a;
+  margin:12px auto 0;
+}
+
+.video-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.video-card{
+  cursor:pointer;
+}
+
+.video-thumb{
+  position:relative;
+  overflow:hidden;
+  border-radius:4px;
+}
+
+.video-thumb img{
+  width:100%;
+  display:block;
+  transition:.4s;
+}
+
+.video-card:hover img{
+  transform:scale(1.08);
+}
+
+.video-play{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:rgba(210,34,42,.9);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  font-weight:bold;
+}
+
+.video-content{
+  padding-top:12px;
+}
+
+.video-content h3{
+  margin:0;
+  font-size:16px;
+  text-align:center;
+}
+
+/* MODAL */
+
+.youtube-modal{
+  display:none;
+  position:fixed;
+  z-index:9999;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.85);
+}
+
+.youtube-modal.active{
+  display:block;
+}
+
+.youtube-modal-content{
+  width:90%;
+  max-width:1000px;
+  margin:60px auto;
+  position:relative;
+}
+
+.youtube-close{
+  position:absolute;
+  right:-10px;
+  top:-50px;
+  background:none;
+  border:none;
+  color:#fff;
+  font-size:42px;
+  cursor:pointer;
+}
+
+.youtube-frame-wrap{
+  position:relative;
+  padding-bottom:56.25%;
+  height:0;
+}
+
+.youtube-frame-wrap iframe{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1024px){
+
+  .video-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:767px){
+
+  .video-grid{
+    grid-template-columns:1fr;
+  }
+
+  .video-heading h2{
+    font-size:24px;
+  }
+
+}
+
+</style>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  const modal = document.getElementById('youtubeModal');
+  const player = document.getElementById('youtubePlayer');
+  const closeBtn = document.querySelector('.youtube-close');
+
+  document.querySelectorAll('.video-card').forEach(card => {
+
+    card.addEventListener('click', function(){
+
+      const id = this.dataset.videoId;
+
+      player.src =
+      'https://www.youtube.com/embed/' +
+      id +
+      '?autoplay=1&rel=0';
+
+      modal.classList.add('active');
+
+    });
+
+  });
+
+  closeBtn.addEventListener('click', function(){
+
+    modal.classList.remove('active');
+    player.src='';
+
+  });
+
+  modal.addEventListener('click', function(e){
+
+    if(e.target === modal){
+
+      modal.classList.remove('active');
+      player.src='';
+
+    }
+
+  });
+
+});
+
+</script>
+
+{% schema %}
+{
+  "name": "Video Gallery",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "SE MASKINERNA I ARBETE"
+    },
+    {
+      "type": "text",
+      "id": "heading_sv",
+      "label": "Heading (Svenska)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Video Title"
+        },
+        {
+          "type": "text",
+          "id": "title_sv",
+          "label": "Video Title (Svenska)"
+        },
+        {
+          "type": "text",
+          "id": "youtube_url",
+          "label": "YouTube URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Gallery"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,260 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- liquid
+  assign t_title = section.settings.title
+  if site_lang == 'sv' and section.settings.title_sv != blank
+    assign t_title = section.settings.title_sv
+  endif
+-%}
+<div class="page-width category-grid-section">
+
+  <h2 class="section-title">
+    {{ t_title }}
+  </h2>
+
+  <div class="category-grid-container">
+    {% for block in section.blocks %}
+{%- liquid
+  assign tb_title = block.settings.title
+  if site_lang == 'sv' and block.settings.title_sv != blank
+    assign tb_title = block.settings.title_sv
+  endif
+-%}
+
+      <a
+        href="{{ block.settings.link | default: '#' }}"
+        class="category-card-item"
+        {{ block.shopify_attributes }}
+      >
+
+        <div class="category-card-inner">
+
+          {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | image_url: width: 1000 }}"
+              alt="{{ tb_title }}"
+              class="category-img"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="category-placeholder"></div>
+          {% endif %}
+
+          <div class="category-overlay"></div>
+
+          <div class="category-title-overlay">
+            <span class="category-card-title">
+              {{ tb_title }}
+            </span>
+          </div>
+
+        </div>
+
+      </a>
+    {% endfor %}
+  </div>
+
+</div>
+
+<style>
+/* ==========================================================
+   CATEGORY GRID
+========================================================== */
+
+.category-grid-section {
+  padding:25px 45px;
+}
+
+/* HEADING */
+
+.section-title {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.section-title:after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: #d22027;
+  margin: 12px auto 0;
+}
+
+/* GRID */
+
+.category-grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+}
+
+/* CARD */
+
+.category-card-item {
+  display: block;
+  text-decoration: none;
+}
+
+.category-card-inner {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #222;
+}
+
+/* IMAGE */
+
+.category-img,
+.category-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.category-img {
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.category-placeholder {
+  background: #ddd;
+}
+
+/* DARK OVERLAY */
+
+.category-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  transition: background 0.3s ease;
+}
+
+/* TITLE */
+
+.category-title-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+  padding: 0 10px;
+}
+
+.category-card-title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
+/* HOVER */
+
+.category-card-item:hover .category-img {
+  transform: scale(1.08);
+}
+
+.category-card-item:hover .category-overlay {
+  background: rgba(0,0,0,0.35);
+}
+
+/* TABLET */
+
+@media screen and (max-width: 1199px) {
+  .category-grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* MOBILE */
+
+@media screen and (max-width: 767px) {
+  .category-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .category-card-inner {
+    height: 200px;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .category-card-title {
+    font-size: 15px;
+  }
+}
+
+/* SMALL MOBILE */
+
+@media screen and (max-width: 480px) {
+  .category-grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Category Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "POPULAR CATEGORIES"
+    },
+    {
+      "type": "text",
+      "id": "title_sv",
+      "label": "Heading (Svenska)",
+      "default": "POPULÄRA KATEGORIER"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category_item",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Title",
+          "default": "AGRICULTURAL MACHINES"
+        },
+        {
+          "type": "text",
+          "id": "title_sv",
+          "label": "Category Title (Svenska)",
+          "default": "LANTMASKINER"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Category Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category Grid"
+    }
+  ]
+}
+{% endschema %}

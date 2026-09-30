@@ -1,0 +1,313 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- liquid
+  assign t_heading = section.settings.heading
+  if site_lang == 'sv' and section.settings.heading_sv != blank
+    assign t_heading = section.settings.heading_sv
+  endif
+  assign t_text = section.settings.text
+  if site_lang == 'sv' and section.settings.text_sv != blank
+    assign t_text = section.settings.text_sv
+  endif
+  assign t_feature_1 = section.settings.feature_1
+  if site_lang == 'sv' and section.settings.feature_1_sv != blank
+    assign t_feature_1 = section.settings.feature_1_sv
+  endif
+  assign t_feature_2 = section.settings.feature_2
+  if site_lang == 'sv' and section.settings.feature_2_sv != blank
+    assign t_feature_2 = section.settings.feature_2_sv
+  endif
+  assign t_feature_3 = section.settings.feature_3
+  if site_lang == 'sv' and section.settings.feature_3_sv != blank
+    assign t_feature_3 = section.settings.feature_3_sv
+  endif
+  assign t_button_label = section.settings.button_label
+  if site_lang == 'sv' and section.settings.button_label_sv != blank
+    assign t_button_label = section.settings.button_label_sv
+  endif
+-%}
+<div class="hero-full-width-section" style="background-image: url('{% if section.settings.image != blank %}{{ section.settings.image | image_url: width: 2400 }}{% else %}https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image.png{% endif %}');">
+  
+  <div class="hero-overlay-wrapper">
+    <div class="hero-slanted-box"></div>
+    
+    <div class="hero-content-container page-width">
+      <div class="hero-content-inner">
+        <h2 class="hero-headline">{{ t_heading }}</h2>
+        
+        {% if t_text != blank %}
+          <p class="hero-subtext">{{ t_text }}</p>
+        {% endif %}
+
+        <ul class="hero-feature-list">
+          {% if t_feature_1 != blank %}<li><span class="red-checkmark">✓</span> {{ t_feature_1 }}</li>{% endif %}
+          {% if t_feature_2 != blank %}<li><span class="red-checkmark">✓</span> {{ t_feature_2 }}</li>{% endif %}
+          {% if t_feature_3 != blank %}<li><span class="red-checkmark">✓</span> {{ t_feature_3 }}</li>{% endif %}
+        </ul>
+
+        {% if t_button_label != blank %}
+          <a href="{{ section.settings.button_link }}" class="btn btn--red hero-cta-btn">
+            {{ t_button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+/* ==========================================================================
+   FULL-WIDTH INDUSTRIAL HERO BANNER
+   ========================================================================== */
+
+/* 1. Main Full-Width Container */
+.hero-full-width-section {
+  position: relative;
+  width: 100vw;
+  min-height: 600px;
+  background-position: center right;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.hero-overlay-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+}
+
+/* 2. The Black Slanted Shape with Red Cut (Desktop) */
+.hero-slanted-box {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -10%; /* Starts off-screen to ensure full coverage */
+  width: 55%; /* Covers left half of screen */
+  background-color: rgba(17, 17, 17, 0.95);
+  transform: skewX(-12deg); /* The diagonal cut */
+  border-right: 8px solid #E31837; /* The red industrial line */
+  z-index: 1;
+}
+
+/* 3. The Content Container */
+.hero-content-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.hero-content-inner {
+  max-width: 480px;
+  padding: 40px 0;
+  color: #fff;
+}
+
+/* Typography */
+.hero-headline {
+  font-family: var(--font-heading, Arial, sans-serif);
+  font-size: 42px;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.hero-subtext {
+  font-size: 16px;
+  color: #cccccc;
+  line-height: 1.6;
+  margin: 0 0 30px 0;
+}
+
+.hero-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 40px 0;
+}
+
+.hero-feature-list li {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.red-checkmark {
+  color: #E31837;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.hero-cta-btn {
+  display: inline-block;
+  padding: 16px 45px;
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  background-color: #E31837;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.hero-cta-btn:hover {
+  background-color: #be132c;
+}
+
+/* 4. MOBILE RESPONSIVE FIXES */
+@media (max-width: 990px) {
+  
+  .hero-full-width-section {
+    display: block; 
+    min-height: auto;
+    padding-top: 300px; /* Leaves the top 300px empty to show the background image */
+    background-position: top center;
+  }
+
+  .hero-overlay-wrapper {
+    position: relative; /* Change from absolute so it flows down */
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-slanted-box {
+    position: absolute; /* Relative to wrapper */
+    top: 0;
+    left: 0;
+    width: 100%; /* Force 100% width, no gaps */
+    height: 100%; /* Match height of text content */
+    transform: none; /* Kill the slant entirely */
+    border-right: none;
+    border-top: 8px solid #E31837; /* Flat red line on top */
+    background-color: #111111; /* Solid black on mobile */
+  }
+
+  .hero-content-container {
+    position: relative;
+    padding: 0;
+    display: block;
+  }
+
+  .hero-content-inner {
+    max-width: 100%;
+    padding: 50px 20px; /* Internal padding for the black box */
+    margin: 0 auto;
+  }
+
+  .hero-headline {
+    font-size: 32px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Industrial Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Din partner för tunga maskiner"
+    },
+    {
+      "type": "text",
+      "id": "heading_sv",
+      "label": "Heading (Svenska)"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Subtext",
+      "default": "Kvalitet och service."
+    },
+    {
+      "type": "textarea",
+      "id": "text_sv",
+      "label": "Subtext (Svenska)"
+    },
+    {
+      "type": "text",
+      "id": "feature_1",
+      "label": "Feature 1",
+      "default": "Kvalitet i fokus"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_sv",
+      "label": "Feature 1 (Svenska)"
+    },
+    {
+      "type": "text",
+      "id": "feature_2",
+      "label": "Feature 2",
+      "default": "Rikstäckande service"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_sv",
+      "label": "Feature 2 (Svenska)"
+    },
+    {
+      "type": "text",
+      "id": "feature_3",
+      "label": "Feature 3",
+      "default": "Skräddarsydda lösningar"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_sv",
+      "label": "Feature 3 (Svenska)"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Text",
+      "default": "KONTAKTA OSS"
+    },
+    {
+      "type": "text",
+      "id": "button_label_sv",
+      "label": "Button Text (Svenska)"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Industrial Hero Banner",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

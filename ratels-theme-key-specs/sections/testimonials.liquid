@@ -1,0 +1,329 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+<div class="rtl-testimonial-section">
+
+  <div class="rtl-testimonial-slider">
+
+    {% for block in section.blocks %}
+{%- liquid
+  assign tb_author = block.settings.author
+  if site_lang == 'sv' and block.settings.author_sv != blank
+    assign tb_author = block.settings.author_sv
+  endif
+  assign tb_quote = block.settings.quote
+  if site_lang == 'sv' and block.settings.quote_sv != blank
+    assign tb_quote = block.settings.quote_sv
+  endif
+-%}
+
+
+      <div
+        class="rtl-slide {% if forloop.first %}active{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+
+        {% if block.settings.image %}
+          <img
+            src="{{ block.settings.image | image_url: width: 2000 }}"
+            alt=""
+            class="rtl-bg-image"
+            loading="lazy"
+          >
+        {% endif %}
+
+        <div class="rtl-overlay"></div>
+
+        <div class="rtl-content-wrapper">
+
+          <div class="rtl-content">
+
+            <div class="rtl-quote-icon">
+              ❞
+            </div>
+
+            <div class="rtl-quote">
+              {{ tb_quote }}
+            </div>
+
+            <div class="rtl-author">
+              – {{ tb_author }}
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    {% endfor %}
+
+    <div class="rtl-dots">
+      {% for block in section.blocks %}
+{%- liquid
+  assign tb_author = block.settings.author
+  if site_lang == 'sv' and block.settings.author_sv != blank
+    assign tb_author = block.settings.author_sv
+  endif
+  assign tb_quote = block.settings.quote
+  if site_lang == 'sv' and block.settings.quote_sv != blank
+    assign tb_quote = block.settings.quote_sv
+  endif
+-%}
+
+        <button
+          class="rtl-dot {% if forloop.first %}active{% endif %}"
+          data-slide="{{ forloop.index0 }}">
+        </button>
+      {% endfor %}
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+
+.rtl-testimonial-section{
+  width:100%;
+  position:relative;
+}
+
+.rtl-testimonial-slider{
+  position:relative;
+  height:220px;
+  overflow:hidden;
+}
+
+.rtl-slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .8s ease;
+}
+
+.rtl-slide.active{
+  opacity:1;
+  visibility:visible;
+  z-index:2;
+}
+
+.rtl-bg-image{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.rtl-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.85) 0%,
+      rgba(0,0,0,.65) 25%,
+      rgba(0,0,0,.15) 100%
+    );
+}
+
+.rtl-content-wrapper{
+  position:relative;
+  z-index:10;
+  height:100%;
+  max-width:1400px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+}
+
+.rtl-content{
+  width:420px;
+  padding-left:60px;
+}
+
+.rtl-quote-icon{
+  color:#e31e24;
+  font-size:50px;
+  line-height:1;
+  margin-bottom:10px;
+  font-weight:700;
+}
+
+.rtl-quote{
+  color:#fff;
+  font-size:24px;
+  line-height:1.3;
+  font-weight:500;
+  margin-bottom:15px;
+}
+
+.rtl-author{
+  color:#fff;
+  font-size:14px;
+  font-weight:500;
+}
+
+.rtl-dots{
+  position:absolute;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+  z-index:30;
+}
+
+.rtl-dot{
+  width:12px;
+  height:12px;
+  border:none;
+  border-radius:50%;
+  background:#fff;
+  opacity:.7;
+  cursor:pointer;
+  padding:0;
+}
+
+.rtl-dot.active{
+  background:#e31e24;
+  opacity:1;
+}
+
+@media(max-width:990px){
+
+  .rtl-testimonial-slider{
+    height:280px;
+  }
+
+  .rtl-content{
+    width:100%;
+    padding:30px;
+  }
+
+  .rtl-quote{
+    font-size:20px;
+  }
+
+}
+
+@media(max-width:767px){
+
+  .rtl-testimonial-slider{
+    height:320px;
+  }
+
+  .rtl-quote{
+    font-size:18px;
+  }
+
+  .rtl-content{
+    padding:25px;
+  }
+
+}
+
+</style>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  const slider = document.querySelector('.rtl-testimonial-slider');
+
+  if(!slider) return;
+
+  const slides = slider.querySelectorAll('.rtl-slide');
+  const dots = slider.querySelectorAll('.rtl-dot');
+
+  let current = 0;
+
+  function showSlide(index){
+
+    slides.forEach(slide=>{
+      slide.classList.remove('active');
+    });
+
+    dots.forEach(dot=>{
+      dot.classList.remove('active');
+    });
+
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+
+    current = index;
+  }
+
+  dots.forEach((dot,index)=>{
+
+    dot.addEventListener('click',function(){
+
+      showSlide(index);
+
+    });
+
+  });
+
+  setInterval(function(){
+
+    let next = current + 1;
+
+    if(next >= slides.length){
+      next = 0;
+    }
+
+    showSlide(next);
+
+  },5000);
+
+});
+
+</script>
+
+{% schema %}
+{
+  "name": "RTL Testimonial Slider",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background Image"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Vi fick rätt maskin till rätt pris och snabb support när vi behövde hjälp."
+        },
+        {
+          "type": "textarea",
+          "id": "quote_sv",
+          "label": "Quote (Svenska)"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Anders, Entreprenör"
+        },
+        {
+          "type": "text",
+          "id": "author_sv",
+          "label": "Author (Svenska)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RTL Testimonial Slider"
+    }
+  ]
+}
+{% endschema %}
