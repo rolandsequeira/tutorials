@@ -28,15 +28,15 @@ All metafields are in the `custom` namespace.
 - `sections/main-product-machinery.liquid`: the category key specs appear as tiles at the top of the Key Attributes card, followed by the other flagged attributes (duplicates removed)
 - `assets/component-machinery-product.css`: tile styles
 
-# Swedish on .se, English on .com
+# Swedish and English without mixing
 
-The theme picks the language from the domain (`snippets/site-lang.liquid`): www.ratelsgroup.se shows Swedish and www.ratelsgroup.com shows English. On any other host (theme preview, myshopify.com), the visitor's Shopify language is used.
+The theme language follows the visitor's Shopify language (`snippets/site-lang.liquid`): ratelsgroup.com/sv (or ratelsgroup.se, if it serves the store) shows Swedish, and ratelsgroup.com shows English.
 
-- **Homepage, header and footer texts:** every text setting has an English field and a Swedish field (label ends in "(Svenska)") in the theme editor, so this no longer depends on Translate & Adapt translations that are tied to one theme. All current texts are filled in in both languages.
-- **SV | EN switch:** links to the same page on the other domain.
-- **Product page:** spec labels come from `snippets/spec-label.liquid`, which is generated from the `specs` keys in `locales/en.default.json` and `locales/sv.json`. Values like Yes/No, Petrol and Air-cooled are translated on the Swedish site by `snippets/spec-value.liquid`. Placeholders ("unknown", "- kN") are hidden on both sites.
-- **Collection grid:** the sidebar and sorting texts follow the domain.
-- **Contact page:** the funnelbud form (Swedish or English) follows the domain.
+- **Homepage, header and footer texts:** every text setting has an English field and a Swedish field (label ends in "(Svenska)") in the theme editor, so this no longer depends on Translate & Adapt translations that are tied to one theme. All current texts and all built-in defaults exist in both languages. An empty Swedish field falls back to the English text.
+- **SV | EN switch:** uses Shopify's language form, so it works with a /sv folder or with a separate domain.
+- **Product page:** spec labels come from `snippets/spec-label.liquid`, which is generated from the `specs` keys in `locales/en.default.json` and `locales/sv.json`. Values like Yes/No, Petrol and Air-cooled are translated on the Swedish site by `snippets/spec-value.liquid`. Placeholders ("unknown", "- kN") are hidden in both languages.
+- **Collection grid and cart:** all texts follow the language. The cart links keep the /sv prefix.
+- **Contact page:** the funnelbud form (Swedish or English) follows the language.
 - `templates/index.context.se.json` was removed. It swapped the hero title to Swedish for visitors in the Swedish market, even on the English site.
 
-Content stored in Shopify (product titles and descriptions, collection names, menus) still comes from Shopify's own language settings. Under Settings → Markets / Domains, ratelsgroup.se should serve Swedish and ratelsgroup.com English.
+Content stored in Shopify (product titles and descriptions, collection names, menus) comes from Translate & Adapt, which keeps those translations for the whole store rather than per theme.

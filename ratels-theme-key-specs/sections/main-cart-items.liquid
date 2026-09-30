@@ -1,0 +1,97 @@
+{%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
+{{ 'theme-rtl.css' | asset_url | stylesheet_tag }}
+
+<div class="page-width section-padding">
+  <div class="cart-container">
+    
+    <div class="cart-header-flex">
+      <h1 class="cart-title">{% if site_lang == 'sv' %}VARUKORG{% else %}CART{% endif %}</h1>
+      <a href="{{ routes.all_products_collection_url }}" class="continue-shopping-link">{% if site_lang == 'sv' %}Fortsätt handla{% else %}Continue shopping{% endif %}</a>
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form">
+        
+        <div class="cart-grid">
+          
+          <div class="cart-items-column">
+            <table class="cart-items-table">
+              <thead>
+                <tr>
+                  <th colspan="2">{% if site_lang == 'sv' %}PRODUKT{% else %}PRODUCT{% endif %}</th>
+                  <th>{% if site_lang == 'sv' %}ANTAL{% else %}QUANTITY{% endif %}</th>
+                  <th class="text-right">{% if site_lang == 'sv' %}TOTALT{% else %}TOTAL{% endif %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart.items %}
+                  <tr class="cart-item-row">
+                    
+                    <td class="cart-item-image-td">
+                      <a href="{{ item.url }}">
+                        <img src="{{ item.image | image_url: width: 150 }}" alt="{{ item.title | escape }}" class="cart-item-image">
+                      </a>
+                    </td>
+                    
+                    <td class="cart-item-details-td">
+                      <div class="cart-item-vendor">{{ item.vendor }}</div>
+                      <a href="{{ item.url }}" class="cart-item-title">{{ item.product.title }}</a>
+                      <div class="cart-item-price">{{ item.original_price | money }}</div>
+                      
+                      <a href="{{ item.url_to_remove }}" class="cart-remove-link">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        {% if site_lang == 'sv' %}Ta bort{% else %}Remove{% endif %}
+                      </a>
+                    </td>
+                    
+                    <td class="cart-item-qty-td">
+                      <div class="qty-selector">
+                        <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0" class="qty-input">
+                      </div>
+                    </td>
+                    
+                    <td class="cart-item-total-td text-right">
+                      <strong>{{ item.final_line_price | money }}</strong>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            
+            <div class="cart-update-action text-right">
+              <button type="submit" name="update" class="btn btn--outline">{% if site_lang == 'sv' %}Uppdatera varukorg{% else %}Update cart{% endif %}</button>
+            </div>
+          </div>
+
+          <div class="cart-summary-column">
+            <div class="summary-box">
+              <h3>{% if site_lang == 'sv' %}SAMMANFATTNING{% else %}SUMMARY{% endif %}</h3>
+              
+              <div class="summary-line subtotal">
+                <span>{% if site_lang == 'sv' %}Delsumma{% else %}Subtotal{% endif %}</span>
+                <span>{{ cart.total_price | money }}</span>
+              </div>
+              
+              <p class="summary-taxes">{% if site_lang == 'sv' %}Skatt och frakt beräknas i kassan.{% else %}Taxes and shipping calculated at checkout.{% endif %}</p>
+              
+              <button type="submit" name="checkout" class="btn btn--red btn--full checkout-btn">
+                {% if site_lang == 'sv' %}TILL KASSAN{% else %}CHECKOUT{% endif %}
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    {% else %}
+      
+      <div class="empty-cart-message text-center">
+        <h2>{% if site_lang == 'sv' %}Din varukorg är tom{% else %}Your cart is empty{% endif %}</h2>
+        <p>{% if site_lang == 'sv' %}Du har inte lagt till några maskiner eller redskap ännu.{% else %}You haven't added any machines or attachments yet.{% endif %}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--red mt-40">{% if site_lang == 'sv' %}SE VÅRT UTBUD{% else %}SEE OUR RANGE{% endif %}</a>
+      </div>
+      
+    {% endif %}
+
+  </div>
+</div>
