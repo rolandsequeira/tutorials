@@ -1,0 +1,19 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <!-- RATELS THEME SV-EN v5 -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ page_title }}</title>
+    {{ content_for_header }}
+    {{ 'theme-rtl.css' | asset_url | stylesheet_tag }}
+  </head>
+  <body>
+    {% section 'header-rtl' %}
+    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+    {% section 'footer-rtl' %}
+  </body>
+</html>
