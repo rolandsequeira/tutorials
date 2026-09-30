@@ -1,7 +1,7 @@
 {%- comment -%}
   Outputs the site language: 'sv' or 'en'.
-  Follows the visitor's Shopify language, so ratelsgroup.com/sv (and ratelsgroup.se, if it serves the store) is Swedish,
-  and ratelsgroup.com is English.
+  The domain decides first, so www.ratelsgroup.se is always Swedish and www.ratelsgroup.com is always English.
+  On any other host (theme preview, myshopify.com) the visitor's Shopify language is used.
 
   Usage:
   {%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
@@ -11,8 +11,11 @@
   assign lang = 'en'
   if request.locale.iso_code == 'sv'
     assign lang = 'sv'
-  elsif host == 'ratelsgroup.se' or host == 'www.ratelsgroup.se'
+  endif
+  if host == 'ratelsgroup.se' or host == 'www.ratelsgroup.se'
     assign lang = 'sv'
+  elsif host == 'ratelsgroup.com' or host == 'www.ratelsgroup.com'
+    assign lang = 'en'
   endif
 -%}
 {{- lang -}}

@@ -1,89 +1,29 @@
 {%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
-{%- comment -%} Each text has an English field and a Swedish (_sv) field. On the Swedish site the _sv field is used; if it is empty, snippets/sv-auto.liquid translates the English text. {%- endcomment -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
 {%- liquid
   assign t_tagline = section.settings.tagline
-  if site_lang == 'sv'
-    if section.settings.tagline_sv != blank
-      assign t_tagline = section.settings.tagline_sv
-    else
-      capture t_tagline
-        render 'sv-auto', text: section.settings.tagline
-      endcapture
-    endif
-  else
-    capture t_tagline
-      render 'en-auto', text: section.settings.tagline
-    endcapture
+  if site_lang == 'sv' and section.settings.tagline_sv != blank
+    assign t_tagline = section.settings.tagline_sv
   endif
   assign t_menu_heading = section.settings.menu_heading
-  if site_lang == 'sv'
-    if section.settings.menu_heading_sv != blank
-      assign t_menu_heading = section.settings.menu_heading_sv
-    else
-      capture t_menu_heading
-        render 'sv-auto', text: section.settings.menu_heading
-      endcapture
-    endif
-  else
-    capture t_menu_heading
-      render 'en-auto', text: section.settings.menu_heading
-    endcapture
+  if site_lang == 'sv' and section.settings.menu_heading_sv != blank
+    assign t_menu_heading = section.settings.menu_heading_sv
   endif
   assign t_contact_heading = section.settings.contact_heading
-  if site_lang == 'sv'
-    if section.settings.contact_heading_sv != blank
-      assign t_contact_heading = section.settings.contact_heading_sv
-    else
-      capture t_contact_heading
-        render 'sv-auto', text: section.settings.contact_heading
-      endcapture
-    endif
-  else
-    capture t_contact_heading
-      render 'en-auto', text: section.settings.contact_heading
-    endcapture
+  if site_lang == 'sv' and section.settings.contact_heading_sv != blank
+    assign t_contact_heading = section.settings.contact_heading_sv
   endif
   assign t_contact_text = section.settings.contact_text
-  if site_lang == 'sv'
-    if section.settings.contact_text_sv != blank
-      assign t_contact_text = section.settings.contact_text_sv
-    else
-      capture t_contact_text
-        render 'sv-auto', text: section.settings.contact_text
-      endcapture
-    endif
-  else
-    capture t_contact_text
-      render 'en-auto', text: section.settings.contact_text
-    endcapture
+  if site_lang == 'sv' and section.settings.contact_text_sv != blank
+    assign t_contact_text = section.settings.contact_text_sv
   endif
   assign t_social_heading = section.settings.social_heading
-  if site_lang == 'sv'
-    if section.settings.social_heading_sv != blank
-      assign t_social_heading = section.settings.social_heading_sv
-    else
-      capture t_social_heading
-        render 'sv-auto', text: section.settings.social_heading
-      endcapture
-    endif
-  else
-    capture t_social_heading
-      render 'en-auto', text: section.settings.social_heading
-    endcapture
+  if site_lang == 'sv' and section.settings.social_heading_sv != blank
+    assign t_social_heading = section.settings.social_heading_sv
   endif
   assign t_copyright_text = section.settings.copyright_text
-  if site_lang == 'sv'
-    if section.settings.copyright_text_sv != blank
-      assign t_copyright_text = section.settings.copyright_text_sv
-    else
-      capture t_copyright_text
-        render 'sv-auto', text: section.settings.copyright_text
-      endcapture
-    endif
-  else
-    capture t_copyright_text
-      render 'en-auto', text: section.settings.copyright_text
-    endcapture
+  if site_lang == 'sv' and section.settings.copyright_text_sv != blank
+    assign t_copyright_text = section.settings.copyright_text_sv
   endif
 -%}
 <footer class="site-footer">
@@ -196,7 +136,8 @@
     {
       "type": "inline_richtext",
       "id": "tagline_sv",
-      "label": "Tagline (Svenska – leave empty to auto-translate)"
+      "label": "Tagline (Svenska)",
+      "default": "Maskiner. Redskap. Lösningar. Kraftfulla maskiner. Personlig service."
     },
     {
       "type": "header",
@@ -211,7 +152,8 @@
     {
       "type": "text",
       "id": "menu_heading_sv",
-      "label": "Menu Heading (Svenska – leave empty to auto-translate)"
+      "label": "Menu Heading (Svenska)",
+      "default": "SNABBLÄNKAR"
     },
     {
       "type": "link_list",
@@ -232,7 +174,8 @@
     {
       "type": "text",
       "id": "contact_heading_sv",
-      "label": "Contact Heading (Svenska – leave empty to auto-translate)"
+      "label": "Contact Heading (Svenska)",
+      "default": "KONTAKT"
     },
     {
       "type": "richtext",
@@ -243,7 +186,8 @@
     {
       "type": "richtext",
       "id": "contact_text_sv",
-      "label": "Contact Details (Svenska – leave empty to auto-translate)"
+      "label": "Contact Details (Svenska)",
+      "default": "<p>RATELS GROUP AB<br>info@ratels.com<br>+46 123 456 789<br>Smedjegatan 3, 777 30 Smedjebacken</p>"
     },
     {
       "type": "header",
@@ -258,7 +202,8 @@
     {
       "type": "text",
       "id": "social_heading_sv",
-      "label": "Social Heading (Svenska – leave empty to auto-translate)"
+      "label": "Social Heading (Svenska)",
+      "default": "FÖLJ OSS"
     },
     {
       "type": "url",
@@ -288,7 +233,8 @@
     {
       "type": "text",
       "id": "copyright_text_sv",
-      "label": "Copyright Text (Svenska – leave empty to auto-translate)"
+      "label": "Copyright Text (Svenska)",
+      "default": "Ratels Group AB. Alla rättigheter förbehållna."
     }
   ]
 }

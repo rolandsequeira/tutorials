@@ -61,22 +61,38 @@
         </a>
       {% endif %}
 
-      {% comment %} SV / EN switch: Shopify sends the visitor to the Swedish or English version of the current page {% endcomment %}
-      {%- form 'localization', id: 'HeaderLocalizationForm', class: 'header-localization-form' -%}
-        <div class="lang-selector">
-          <button type="submit" name="language_code" value="sv" lang="sv"
-                  class="lang-btn{% if site_lang == 'sv' %} active{% endif %}"{% if site_lang == 'sv' %} aria-current="true"{% endif %}>
-            <span class="lang-text">SV</span>
-          </button>
+      {% comment %}
+        SV / EN switch: each language has its own domain (.se = Swedish, .com = English).
+        Links keep the current page and drop any /en or /sv prefix from the path.
+      {% endcomment %}
+      {%- liquid
+        assign current_path = request.path
+        assign locale_prefix = '/' | append: request.locale.iso_code
+        assign prefix_len = locale_prefix.size
+        assign path_start = current_path | slice: 0, prefix_len
+        assign char_after = current_path | slice: prefix_len, 1
+        if path_start == locale_prefix
+          if char_after == '/' or char_after == ''
+            assign current_path = current_path | slice: prefix_len, 2000
+          endif
+        endif
+        if current_path == blank
+          assign current_path = '/'
+        endif
+      -%}
+      <div class="lang-selector">
+        <a href="https://www.ratelsgroup.se{{ current_path }}" hreflang="sv" lang="sv"
+           class="lang-btn{% if site_lang == 'sv' %} active{% endif %}"{% if site_lang == 'sv' %} aria-current="true"{% endif %}>
+          <span class="lang-text">SV</span>
+        </a>
 
-          <span class="lang-divider">|</span>
+        <span class="lang-divider">|</span>
 
-          <button type="submit" name="language_code" value="en" lang="en"
-                  class="lang-btn{% if site_lang == 'en' %} active{% endif %}"{% if site_lang == 'en' %} aria-current="true"{% endif %}>
-            <span class="lang-text">EN</span>
-          </button>
-        </div>
-      {%- endform -%}
+        <a href="https://www.ratelsgroup.com{{ current_path }}" hreflang="en" lang="en"
+           class="lang-btn{% if site_lang == 'en' %} active{% endif %}"{% if site_lang == 'en' %} aria-current="true"{% endif %}>
+          <span class="lang-text">EN</span>
+        </a>
+      </div>
     </div>
   </div>
 </header>

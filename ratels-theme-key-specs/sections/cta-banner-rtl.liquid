@@ -1,47 +1,17 @@
 {%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
-{%- comment -%} Each text has an English field and a Swedish (_sv) field. On the Swedish site the _sv field is used; if it is empty, snippets/sv-auto.liquid translates the English text. {%- endcomment -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
 {%- liquid
   assign t_title = section.settings.title
-  if site_lang == 'sv'
-    if section.settings.title_sv != blank
-      assign t_title = section.settings.title_sv
-    else
-      capture t_title
-        render 'sv-auto', text: section.settings.title
-      endcapture
-    endif
-  else
-    capture t_title
-      render 'en-auto', text: section.settings.title
-    endcapture
+  if site_lang == 'sv' and section.settings.title_sv != blank
+    assign t_title = section.settings.title_sv
   endif
   assign t_text = section.settings.text
-  if site_lang == 'sv'
-    if section.settings.text_sv != blank
-      assign t_text = section.settings.text_sv
-    else
-      capture t_text
-        render 'sv-auto', text: section.settings.text
-      endcapture
-    endif
-  else
-    capture t_text
-      render 'en-auto', text: section.settings.text
-    endcapture
+  if site_lang == 'sv' and section.settings.text_sv != blank
+    assign t_text = section.settings.text_sv
   endif
   assign t_button_text = section.settings.button_text
-  if site_lang == 'sv'
-    if section.settings.button_text_sv != blank
-      assign t_button_text = section.settings.button_text_sv
-    else
-      capture t_button_text
-        render 'sv-auto', text: section.settings.button_text
-      endcapture
-    endif
-  else
-    capture t_button_text
-      render 'en-auto', text: section.settings.button_text
-    endcapture
+  if site_lang == 'sv' and section.settings.button_text_sv != blank
+    assign t_button_text = section.settings.button_text_sv
   endif
 -%}
 <div class="cta-banner-rtl page-width">
@@ -68,7 +38,8 @@
     {
       "type": "text",
       "id": "title_sv",
-      "label": "Heading (Svenska – leave empty to auto-translate)"
+      "label": "Heading (Svenska)",
+      "default": "BEHÖVER DU EN MASKIN?"
     },
     {
       "type": "textarea",
@@ -79,7 +50,8 @@
     {
       "type": "textarea",
       "id": "text_sv",
-      "label": "Text (Svenska – leave empty to auto-translate)"
+      "label": "Text (Svenska)",
+      "default": "Berätta mer vad du har behov av och vi skickar dig ett förslag."
     },
     {
       "type": "text",
@@ -90,7 +62,8 @@
     {
       "type": "text",
       "id": "button_text_sv",
-      "label": "Button Label (Svenska – leave empty to auto-translate)"
+      "label": "Button Label (Svenska)",
+      "default": "BEGÄR OFFERT"
     },
     {
       "type": "url",

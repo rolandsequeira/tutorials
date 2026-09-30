@@ -1,61 +1,21 @@
 {%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
-{%- comment -%} Each text has an English field and a Swedish (_sv) field. On the Swedish site the _sv field is used; if it is empty, snippets/sv-auto.liquid translates the English text. {%- endcomment -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
 {%- liquid
   assign t_heading = section.settings.heading
-  if site_lang == 'sv'
-    if section.settings.heading_sv != blank
-      assign t_heading = section.settings.heading_sv
-    else
-      capture t_heading
-        render 'sv-auto', text: section.settings.heading
-      endcapture
-    endif
-  else
-    capture t_heading
-      render 'en-auto', text: section.settings.heading
-    endcapture
+  if site_lang == 'sv' and section.settings.heading_sv != blank
+    assign t_heading = section.settings.heading_sv
   endif
   assign t_primary_button_text = section.settings.primary_button_text
-  if site_lang == 'sv'
-    if section.settings.primary_button_text_sv != blank
-      assign t_primary_button_text = section.settings.primary_button_text_sv
-    else
-      capture t_primary_button_text
-        render 'sv-auto', text: section.settings.primary_button_text
-      endcapture
-    endif
-  else
-    capture t_primary_button_text
-      render 'en-auto', text: section.settings.primary_button_text
-    endcapture
+  if site_lang == 'sv' and section.settings.primary_button_text_sv != blank
+    assign t_primary_button_text = section.settings.primary_button_text_sv
   endif
   assign t_secondary_button_text = section.settings.secondary_button_text
-  if site_lang == 'sv'
-    if section.settings.secondary_button_text_sv != blank
-      assign t_secondary_button_text = section.settings.secondary_button_text_sv
-    else
-      capture t_secondary_button_text
-        render 'sv-auto', text: section.settings.secondary_button_text
-      endcapture
-    endif
-  else
-    capture t_secondary_button_text
-      render 'en-auto', text: section.settings.secondary_button_text
-    endcapture
+  if site_lang == 'sv' and section.settings.secondary_button_text_sv != blank
+    assign t_secondary_button_text = section.settings.secondary_button_text_sv
   endif
   assign t_view_all_text = section.settings.view_all_text
-  if site_lang == 'sv'
-    if section.settings.view_all_text_sv != blank
-      assign t_view_all_text = section.settings.view_all_text_sv
-    else
-      capture t_view_all_text
-        render 'sv-auto', text: section.settings.view_all_text
-      endcapture
-    endif
-  else
-    capture t_view_all_text
-      render 'en-auto', text: section.settings.view_all_text
-    endcapture
+  if site_lang == 'sv' and section.settings.view_all_text_sv != blank
+    assign t_view_all_text = section.settings.view_all_text_sv
   endif
 -%}
 {% assign collection = collections[section.settings.collection] %}
@@ -287,12 +247,12 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "FEATURED MACHINES"
+      "default": "UTVALDA MASKINER"
     },
     {
       "type": "text",
       "id": "heading_sv",
-      "label": "Heading (Svenska – leave empty to auto-translate)"
+      "label": "Heading (Svenska)"
     },
     {
       "type": "collection",
@@ -317,18 +277,19 @@
     {
       "type": "text",
       "id": "primary_button_text_sv",
-      "label": "Primary Button (Svenska – leave empty to auto-translate)"
+      "label": "Primary Button (Svenska)",
+      "default": "BEGÄR OFFERT"
     },
     {
       "type": "text",
       "id": "secondary_button_text",
-      "default": "DOWNLOAD DATA SHEET",
+      "default": "LADDA DATABLAD",
       "label": "Secondary Button"
     },
     {
       "type": "text",
       "id": "secondary_button_text_sv",
-      "label": "Secondary Button (Svenska – leave empty to auto-translate)"
+      "label": "Secondary Button (Svenska)"
     },
     {
       "type": "checkbox",
@@ -339,13 +300,13 @@
     {
       "type": "text",
       "id": "view_all_text",
-      "default": "SEE ALL MACHINES",
+      "default": "SE ALLA MASKINER",
       "label": "View All Text"
     },
     {
       "type": "text",
       "id": "view_all_text_sv",
-      "label": "View All Text (Svenska – leave empty to auto-translate)"
+      "label": "View All Text (Svenska)"
     }
   ],
   "presets": [

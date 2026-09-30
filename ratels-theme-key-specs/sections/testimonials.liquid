@@ -1,5 +1,5 @@
 {%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
-{%- comment -%} Each text has an English field and a Swedish (_sv) field. On the Swedish site the _sv field is used; if it is empty, snippets/sv-auto.liquid translates the English text. {%- endcomment -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
 <div class="rtl-testimonial-section">
 
   <div class="rtl-testimonial-slider">
@@ -7,32 +7,12 @@
     {% for block in section.blocks %}
 {%- liquid
   assign tb_author = block.settings.author
-  if site_lang == 'sv'
-    if block.settings.author_sv != blank
-      assign tb_author = block.settings.author_sv
-    else
-      capture tb_author
-        render 'sv-auto', text: block.settings.author
-      endcapture
-    endif
-  else
-    capture tb_author
-      render 'en-auto', text: block.settings.author
-    endcapture
+  if site_lang == 'sv' and block.settings.author_sv != blank
+    assign tb_author = block.settings.author_sv
   endif
   assign tb_quote = block.settings.quote
-  if site_lang == 'sv'
-    if block.settings.quote_sv != blank
-      assign tb_quote = block.settings.quote_sv
-    else
-      capture tb_quote
-        render 'sv-auto', text: block.settings.quote
-      endcapture
-    endif
-  else
-    capture tb_quote
-      render 'en-auto', text: block.settings.quote
-    endcapture
+  if site_lang == 'sv' and block.settings.quote_sv != blank
+    assign tb_quote = block.settings.quote_sv
   endif
 -%}
 
@@ -81,32 +61,12 @@
       {% for block in section.blocks %}
 {%- liquid
   assign tb_author = block.settings.author
-  if site_lang == 'sv'
-    if block.settings.author_sv != blank
-      assign tb_author = block.settings.author_sv
-    else
-      capture tb_author
-        render 'sv-auto', text: block.settings.author
-      endcapture
-    endif
-  else
-    capture tb_author
-      render 'en-auto', text: block.settings.author
-    endcapture
+  if site_lang == 'sv' and block.settings.author_sv != blank
+    assign tb_author = block.settings.author_sv
   endif
   assign tb_quote = block.settings.quote
-  if site_lang == 'sv'
-    if block.settings.quote_sv != blank
-      assign tb_quote = block.settings.quote_sv
-    else
-      capture tb_quote
-        render 'sv-auto', text: block.settings.quote
-      endcapture
-    endif
-  else
-    capture tb_quote
-      render 'en-auto', text: block.settings.quote
-    endcapture
+  if site_lang == 'sv' and block.settings.quote_sv != blank
+    assign tb_quote = block.settings.quote_sv
   endif
 -%}
 
@@ -339,23 +299,23 @@ document.addEventListener('DOMContentLoaded', function(){
           "type": "textarea",
           "id": "quote",
           "label": "Quote",
-          "default": "We got the right machine at the right price, and fast support when we needed it."
+          "default": "Vi fick rätt maskin till rätt pris och snabb support när vi behövde hjälp."
         },
         {
           "type": "textarea",
           "id": "quote_sv",
-          "label": "Quote (Svenska – leave empty to auto-translate)"
+          "label": "Quote (Svenska)"
         },
         {
           "type": "text",
           "id": "author",
           "label": "Author",
-          "default": "Anders, Entrepreneur"
+          "default": "Anders, Entreprenör"
         },
         {
           "type": "text",
           "id": "author_sv",
-          "label": "Author (Svenska – leave empty to auto-translate)"
+          "label": "Author (Svenska)"
         }
       ]
     }

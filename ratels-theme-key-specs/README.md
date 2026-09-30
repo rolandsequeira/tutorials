@@ -28,18 +28,13 @@ All metafields are in the `custom` namespace.
 - `sections/main-product-machinery.liquid`: the category key specs appear as tiles at the top of the Key Attributes card, followed by the other flagged attributes (duplicates removed)
 - `assets/component-machinery-product.css`: tile styles
 
-# Swedish and English without mixing
+# Language: baseline v2 (confirmed working on the live store)
 
-The full theme (`ratels-theme-full-sv-en.zip`) is the 27 Sep export with these changes. The homepage keeps the export's sections, order and category tiles.
+This folder holds the files changed from the 27 Sep export. v2.1 is v2 plus the bilingual cart. Future fixes build on this version.
 
-- **Language:** the theme follows the visitor's Shopify language (`snippets/site-lang.liquid`). ratelsgroup.com/sv (or ratelsgroup.se, if it serves the store) is Swedish, and ratelsgroup.com is English.
-- **Homepage, header and footer texts:** each text setting has a "(Svenska)" field, and all current texts are filled in in both languages.
-  - An empty Swedish field falls back to `snippets/sv-auto.liquid`, a phrase list of the site's texts.
-  - On the English site, Swedish text typed into an English field goes through `snippets/en-auto.liquid`.
-- **SV | EN switch:** uses Shopify's language form.
-- **Product page:** labels come from `snippets/spec-label.liquid` (generated from the locale files). Values are translated and placeholders hidden by `snippets/spec-value.liquid`.
-- **Collection grid and cart:** bilingual. The cart links keep the /sv prefix.
-- **Contact page:** the funnelbud form follows the language.
-- `templates/index.context.se.json` was removed. It swapped the hero title to Swedish for Swedish-market visitors, even on the English site.
-
-Product and collection texts and menus come from Translate & Adapt, which keeps those translations for the whole store rather than per theme.
+- **Language:** follows the domain (`snippets/site-lang.liquid`). www.ratelsgroup.se is Swedish, www.ratelsgroup.com is English, and other hosts use the Shopify language.
+- **Homepage, header and footer texts:** each text setting has an English field and a "(Svenska)" field, filled in `templates/index.json` and `config/settings_data.json`.
+- **SV | EN switch:** links to the same page on the other domain.
+- **Product page:** labels come from `snippets/spec-label.liquid`, and values are translated and placeholders hidden by `snippets/spec-value.liquid`.
+- **Collection grid, cart and contact form:** follow the language.
+- `templates/index.context.se.json` was removed.
