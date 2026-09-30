@@ -1,45 +1,145 @@
 {%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
-{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field. On the Swedish site the _sv field is used; if it is empty, snippets/sv-auto.liquid translates the English text. {%- endcomment -%}
 {%- liquid
   assign t_title_main = section.settings.title_main
-  if site_lang == 'sv' and section.settings.title_main_sv != blank
-    assign t_title_main = section.settings.title_main_sv
+  if site_lang == 'sv'
+    if section.settings.title_main_sv != blank
+      assign t_title_main = section.settings.title_main_sv
+    else
+      capture t_title_main
+        render 'sv-auto', text: section.settings.title_main
+      endcapture
+    endif
+  else
+    capture t_title_main
+      render 'en-auto', text: section.settings.title_main
+    endcapture
   endif
   assign t_title_colored = section.settings.title_colored
-  if site_lang == 'sv' and section.settings.title_colored_sv != blank
-    assign t_title_colored = section.settings.title_colored_sv
+  if site_lang == 'sv'
+    if section.settings.title_colored_sv != blank
+      assign t_title_colored = section.settings.title_colored_sv
+    else
+      capture t_title_colored
+        render 'sv-auto', text: section.settings.title_colored
+      endcapture
+    endif
+  else
+    capture t_title_colored
+      render 'en-auto', text: section.settings.title_colored
+    endcapture
   endif
   assign t_subtext = section.settings.subtext
-  if site_lang == 'sv' and section.settings.subtext_sv != blank
-    assign t_subtext = section.settings.subtext_sv
+  if site_lang == 'sv'
+    if section.settings.subtext_sv != blank
+      assign t_subtext = section.settings.subtext_sv
+    else
+      capture t_subtext
+        render 'sv-auto', text: section.settings.subtext
+      endcapture
+    endif
+  else
+    capture t_subtext
+      render 'en-auto', text: section.settings.subtext
+    endcapture
   endif
   assign t_btn_text = section.settings.btn_text
-  if site_lang == 'sv' and section.settings.btn_text_sv != blank
-    assign t_btn_text = section.settings.btn_text_sv
+  if site_lang == 'sv'
+    if section.settings.btn_text_sv != blank
+      assign t_btn_text = section.settings.btn_text_sv
+    else
+      capture t_btn_text
+        render 'sv-auto', text: section.settings.btn_text
+      endcapture
+    endif
+  else
+    capture t_btn_text
+      render 'en-auto', text: section.settings.btn_text
+    endcapture
   endif
   assign t_feature1_title = section.settings.feature1_title
-  if site_lang == 'sv' and section.settings.feature1_title_sv != blank
-    assign t_feature1_title = section.settings.feature1_title_sv
+  if site_lang == 'sv'
+    if section.settings.feature1_title_sv != blank
+      assign t_feature1_title = section.settings.feature1_title_sv
+    else
+      capture t_feature1_title
+        render 'sv-auto', text: section.settings.feature1_title
+      endcapture
+    endif
+  else
+    capture t_feature1_title
+      render 'en-auto', text: section.settings.feature1_title
+    endcapture
   endif
   assign t_feature1_text = section.settings.feature1_text
-  if site_lang == 'sv' and section.settings.feature1_text_sv != blank
-    assign t_feature1_text = section.settings.feature1_text_sv
+  if site_lang == 'sv'
+    if section.settings.feature1_text_sv != blank
+      assign t_feature1_text = section.settings.feature1_text_sv
+    else
+      capture t_feature1_text
+        render 'sv-auto', text: section.settings.feature1_text
+      endcapture
+    endif
+  else
+    capture t_feature1_text
+      render 'en-auto', text: section.settings.feature1_text
+    endcapture
   endif
   assign t_feature2_title = section.settings.feature2_title
-  if site_lang == 'sv' and section.settings.feature2_title_sv != blank
-    assign t_feature2_title = section.settings.feature2_title_sv
+  if site_lang == 'sv'
+    if section.settings.feature2_title_sv != blank
+      assign t_feature2_title = section.settings.feature2_title_sv
+    else
+      capture t_feature2_title
+        render 'sv-auto', text: section.settings.feature2_title
+      endcapture
+    endif
+  else
+    capture t_feature2_title
+      render 'en-auto', text: section.settings.feature2_title
+    endcapture
   endif
   assign t_feature2_text = section.settings.feature2_text
-  if site_lang == 'sv' and section.settings.feature2_text_sv != blank
-    assign t_feature2_text = section.settings.feature2_text_sv
+  if site_lang == 'sv'
+    if section.settings.feature2_text_sv != blank
+      assign t_feature2_text = section.settings.feature2_text_sv
+    else
+      capture t_feature2_text
+        render 'sv-auto', text: section.settings.feature2_text
+      endcapture
+    endif
+  else
+    capture t_feature2_text
+      render 'en-auto', text: section.settings.feature2_text
+    endcapture
   endif
   assign t_feature3_title = section.settings.feature3_title
-  if site_lang == 'sv' and section.settings.feature3_title_sv != blank
-    assign t_feature3_title = section.settings.feature3_title_sv
+  if site_lang == 'sv'
+    if section.settings.feature3_title_sv != blank
+      assign t_feature3_title = section.settings.feature3_title_sv
+    else
+      capture t_feature3_title
+        render 'sv-auto', text: section.settings.feature3_title
+      endcapture
+    endif
+  else
+    capture t_feature3_title
+      render 'en-auto', text: section.settings.feature3_title
+    endcapture
   endif
   assign t_feature3_text = section.settings.feature3_text
-  if site_lang == 'sv' and section.settings.feature3_text_sv != blank
-    assign t_feature3_text = section.settings.feature3_text_sv
+  if site_lang == 'sv'
+    if section.settings.feature3_text_sv != blank
+      assign t_feature3_text = section.settings.feature3_text_sv
+    else
+      capture t_feature3_text
+        render 'sv-auto', text: section.settings.feature3_text
+      endcapture
+    endif
+  else
+    capture t_feature3_text
+      render 'en-auto', text: section.settings.feature3_text
+    endcapture
   endif
 -%}
 <div class="hero-rtl" style="background-color: #1a1a1a; background-image: url('{{ section.settings.bg_image | img_url: 'master' }}');">
@@ -109,8 +209,7 @@
     {
       "type": "text",
       "id": "title_main_sv",
-      "label": "Heading (White Text) (Svenska)",
-      "default": "KRAFTFULLA MASKINER."
+      "label": "Heading (White Text) (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "text",
@@ -121,8 +220,7 @@
     {
       "type": "text",
       "id": "title_colored_sv",
-      "label": "Heading (Red Highlighted Text) (Svenska)",
-      "default": "PERSONLIG SERVICE."
+      "label": "Heading (Red Highlighted Text) (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "inline_richtext",
@@ -133,8 +231,7 @@
     {
       "type": "inline_richtext",
       "id": "subtext_sv",
-      "label": "Subtext (Svenska)",
-      "default": "Högpresterande maskiner för varje jobb. Med personlig service du kan lita på – före, under och efter köpet."
+      "label": "Subtext (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "text",
@@ -145,8 +242,7 @@
     {
       "type": "text",
       "id": "btn_text_sv",
-      "label": "Button Text (Svenska)",
-      "default": "BEGÄR OFFERT"
+      "label": "Button Text (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "url",
@@ -172,8 +268,7 @@
     {
       "type": "text",
       "id": "feature1_title_sv",
-      "label": "Feature 1 Title (Svenska)",
-      "default": "KVALITET DU KAN LITA PÅ"
+      "label": "Feature 1 Title (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "inline_richtext",
@@ -184,8 +279,7 @@
     {
       "type": "inline_richtext",
       "id": "feature1_text_sv",
-      "label": "Feature 1 Text (Svenska)",
-      "default": "Byggda för hållbarhet och lång livslängd."
+      "label": "Feature 1 Text (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "header",
@@ -206,8 +300,7 @@
     {
       "type": "text",
       "id": "feature2_title_sv",
-      "label": "Feature 2 Title (Svenska)",
-      "default": "EXPERTSUPPORT"
+      "label": "Feature 2 Title (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "inline_richtext",
@@ -218,8 +311,7 @@
     {
       "type": "inline_richtext",
       "id": "feature2_text_sv",
-      "label": "Feature 2 Text (Svenska)",
-      "default": "Personlig service från riktiga människor."
+      "label": "Feature 2 Text (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "header",
@@ -240,8 +332,7 @@
     {
       "type": "text",
       "id": "feature3_title_sv",
-      "label": "Feature 3 Title (Svenska)",
-      "default": "REDO NÄR DU ÄR"
+      "label": "Feature 3 Title (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "inline_richtext",
@@ -252,8 +343,7 @@
     {
       "type": "inline_richtext",
       "id": "feature3_text_sv",
-      "label": "Feature 3 Text (Svenska)",
-      "default": "Maskiner och reservdelar i lager."
+      "label": "Feature 3 Text (Svenska – leave empty to auto-translate)"
     }
   ],
   "presets": [

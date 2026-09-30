@@ -30,13 +30,15 @@ All metafields are in the `custom` namespace.
 
 # Swedish and English without mixing
 
-The theme language follows the visitor's Shopify language (`snippets/site-lang.liquid`): ratelsgroup.com/sv (or ratelsgroup.se, if it serves the store) shows Swedish, and ratelsgroup.com shows English.
+This folder is a code-only patch for the live theme (see INSTALL.txt). It doesn't include templates or settings, so live homepage content is kept.
 
-- **Homepage, header and footer texts:** every text setting has an English field and a Swedish field (label ends in "(Svenska)") in the theme editor, so this no longer depends on Translate & Adapt translations that are tied to one theme. All current texts and all built-in defaults exist in both languages. An empty Swedish field falls back to the English text.
-- **SV | EN switch:** uses Shopify's language form, so it works with a /sv folder or with a separate domain.
-- **Product page:** spec labels come from `snippets/spec-label.liquid`, which is generated from the `specs` keys in `locales/en.default.json` and `locales/sv.json`. Values like Yes/No, Petrol and Air-cooled are translated on the Swedish site by `snippets/spec-value.liquid`. Placeholders ("unknown", "- kN") are hidden in both languages.
-- **Collection grid and cart:** all texts follow the language. The cart links keep the /sv prefix.
-- **Contact page:** the funnelbud form (Swedish or English) follows the language.
-- `templates/index.context.se.json` was removed. It swapped the hero title to Swedish for visitors in the Swedish market, even on the English site.
+- **Language:** the theme follows the visitor's Shopify language (`snippets/site-lang.liquid`). ratelsgroup.com/sv (or ratelsgroup.se, if it serves the store) is Swedish, and ratelsgroup.com is English.
+- **Homepage, header and footer texts:** each text setting has a "(Svenska)" field.
+  - Filled in: the Swedish field is used on the Swedish site.
+  - Empty: the English text goes through `snippets/sv-auto.liquid`, a phrase list of the site's texts.
+  - On the English site, Swedish text typed into an English field goes through `snippets/en-auto.liquid`.
+- **SV | EN switch:** uses Shopify's language form.
+- **Product page:** labels come from `snippets/spec-label.liquid` (generated from the locale files). Values are translated and placeholders hidden by `snippets/spec-value.liquid`.
+- **Collection grid and cart:** bilingual. The cart links keep the /sv prefix.
 
-Content stored in Shopify (product titles and descriptions, collection names, menus) comes from Translate & Adapt, which keeps those translations for the whole store rather than per theme.
+Product and collection texts and menus come from Translate & Adapt.

@@ -1,0 +1,93 @@
+{%- comment -%}
+  English fallback for Swedish texts typed into the English (main) fields, used on the English site.
+  Matches the whole text (case-insensitive). ALL-CAPS Swedish gives ALL-CAPS English. Unknown texts are returned unchanged.
+  Accepts: text {String}
+{%- endcomment -%}
+{%- liquid
+  assign src = text | strip
+  assign key = src | downcase
+  assign out = ''
+  case key
+    when 'kraftfulla maskiner.'
+      assign out = 'Powerful machines.'
+    when 'personlig service.'
+      assign out = 'Personal service.'
+    when 'begär offert'
+      assign out = 'Get a quote'
+    when 'kontakta oss'
+      assign out = 'Contact us'
+    when 'behöver du en maskin?'
+      assign out = 'Need a machine?'
+    when 'berätta mer vad du har behov av och vi skickar dig ett förslag.'
+      assign out = 'Tell us what you need and we will send you a proposal.'
+    when 'berätta vad du behöver så skickar vi dig det bästa erbjudandet'
+      assign out = 'Tell us what you need and we will send you the best offer'
+    when 'din partner för tunga maskiner'
+      assign out = 'Your partner for heavy machinery'
+    when 'kvalitet och service.'
+      assign out = 'Quality and service.'
+    when 'kvalitet i fokus'
+      assign out = 'Quality in focus'
+    when 'rikstäckande service'
+      assign out = 'Nationwide service'
+    when 'skräddarsydda lösningar'
+      assign out = 'Tailored solutions'
+    when 'populära kategorier'
+      assign out = 'Popular categories'
+    when 'lastmaskiner'
+      assign out = 'Loaders'
+    when 'grävmaskiner'
+      assign out = 'Excavators'
+    when 'reservdelar'
+      assign out = 'Parts'
+    when 'elektriska maskiner'
+      assign out = 'Electric machines'
+    when 'redskap'
+      assign out = 'Attachments'
+    when 'skogsbruk'
+      assign out = 'Forestry'
+    when 'skogsbruk & lantbruk'
+      assign out = 'Forestry & agriculture'
+    when 'lantmaskiner'
+      assign out = 'Agricultural machines'
+    when 'annat'
+      assign out = 'Other'
+    when 'utvalda maskiner'
+      assign out = 'Featured machines'
+    when 'ladda datablad'
+      assign out = 'Download data sheet'
+    when 'ladda ner pdf'
+      assign out = 'Download PDF'
+    when 'se alla maskiner'
+      assign out = 'See all machines'
+    when 'se maskinerna i arbete'
+      assign out = 'See the machines in action'
+    when 'maskiner i arbete'
+      assign out = 'Machines in action'
+    when 'vi fick rätt maskin till rätt pris och snabb support när vi behövde det.'
+      assign out = 'We got the right machine at the right price, and fast support when we needed it.'
+    when 'anders, entreprenör'
+      assign out = 'Anders, Entrepreneur'
+    when 'maskiner. redskap. lösningar. kraftfulla maskiner. personlig service.'
+      assign out = 'Machines. Attachments. Solutions. Powerful Machines. Personal Service.'
+    when 'snabblänkar'
+      assign out = 'Quick links'
+    when 'länkar'
+      assign out = 'Links'
+    when 'kontakt'
+      assign out = 'Contact'
+    when 'följ oss'
+      assign out = 'Follow us'
+    when 'ratels group ab. alla rättigheter förbehållna.'
+      assign out = 'Ratels Group AB. All rights reserved.'
+  endcase
+  if out == ''
+    assign out = src
+  else
+    assign src_upper = src | upcase
+    if src == src_upper
+      assign out = out | upcase
+    endif
+  endif
+-%}
+{{- out -}}

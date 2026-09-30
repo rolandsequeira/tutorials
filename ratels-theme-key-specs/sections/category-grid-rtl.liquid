@@ -1,9 +1,19 @@
 {%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
-{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field. On the Swedish site the _sv field is used; if it is empty, snippets/sv-auto.liquid translates the English text. {%- endcomment -%}
 {%- liquid
   assign t_title = section.settings.title
-  if site_lang == 'sv' and section.settings.title_sv != blank
-    assign t_title = section.settings.title_sv
+  if site_lang == 'sv'
+    if section.settings.title_sv != blank
+      assign t_title = section.settings.title_sv
+    else
+      capture t_title
+        render 'sv-auto', text: section.settings.title
+      endcapture
+    endif
+  else
+    capture t_title
+      render 'en-auto', text: section.settings.title
+    endcapture
   endif
 -%}
 <div class="page-width category-grid-section">
@@ -16,8 +26,18 @@
     {% for block in section.blocks %}
 {%- liquid
   assign tb_title = block.settings.title
-  if site_lang == 'sv' and block.settings.title_sv != blank
-    assign tb_title = block.settings.title_sv
+  if site_lang == 'sv'
+    if block.settings.title_sv != blank
+      assign tb_title = block.settings.title_sv
+    else
+      capture tb_title
+        render 'sv-auto', text: block.settings.title
+      endcapture
+    endif
+  else
+    capture tb_title
+      render 'en-auto', text: block.settings.title
+    endcapture
   endif
 -%}
 
@@ -217,8 +237,7 @@
     {
       "type": "text",
       "id": "title_sv",
-      "label": "Heading (Svenska)",
-      "default": "POPULÄRA KATEGORIER"
+      "label": "Heading (Svenska – leave empty to auto-translate)"
     }
   ],
   "blocks": [
@@ -235,8 +254,7 @@
         {
           "type": "text",
           "id": "title_sv",
-          "label": "Category Title (Svenska)",
-          "default": "LANTMASKINER"
+          "label": "Category Title (Svenska – leave empty to auto-translate)"
         },
         {
           "type": "image_picker",

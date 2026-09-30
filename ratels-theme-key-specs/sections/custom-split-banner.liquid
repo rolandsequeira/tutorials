@@ -1,29 +1,89 @@
 {%- capture site_lang -%}{% render 'site-lang' %}{%- endcapture -%}
-{%- comment -%} Each text has an English field and a Swedish (_sv) field; the Swedish one is used on the Swedish site when filled in. {%- endcomment -%}
+{%- comment -%} Each text has an English field and a Swedish (_sv) field. On the Swedish site the _sv field is used; if it is empty, snippets/sv-auto.liquid translates the English text. {%- endcomment -%}
 {%- liquid
   assign t_heading = section.settings.heading
-  if site_lang == 'sv' and section.settings.heading_sv != blank
-    assign t_heading = section.settings.heading_sv
+  if site_lang == 'sv'
+    if section.settings.heading_sv != blank
+      assign t_heading = section.settings.heading_sv
+    else
+      capture t_heading
+        render 'sv-auto', text: section.settings.heading
+      endcapture
+    endif
+  else
+    capture t_heading
+      render 'en-auto', text: section.settings.heading
+    endcapture
   endif
   assign t_text = section.settings.text
-  if site_lang == 'sv' and section.settings.text_sv != blank
-    assign t_text = section.settings.text_sv
+  if site_lang == 'sv'
+    if section.settings.text_sv != blank
+      assign t_text = section.settings.text_sv
+    else
+      capture t_text
+        render 'sv-auto', text: section.settings.text
+      endcapture
+    endif
+  else
+    capture t_text
+      render 'en-auto', text: section.settings.text
+    endcapture
   endif
   assign t_feature_1 = section.settings.feature_1
-  if site_lang == 'sv' and section.settings.feature_1_sv != blank
-    assign t_feature_1 = section.settings.feature_1_sv
+  if site_lang == 'sv'
+    if section.settings.feature_1_sv != blank
+      assign t_feature_1 = section.settings.feature_1_sv
+    else
+      capture t_feature_1
+        render 'sv-auto', text: section.settings.feature_1
+      endcapture
+    endif
+  else
+    capture t_feature_1
+      render 'en-auto', text: section.settings.feature_1
+    endcapture
   endif
   assign t_feature_2 = section.settings.feature_2
-  if site_lang == 'sv' and section.settings.feature_2_sv != blank
-    assign t_feature_2 = section.settings.feature_2_sv
+  if site_lang == 'sv'
+    if section.settings.feature_2_sv != blank
+      assign t_feature_2 = section.settings.feature_2_sv
+    else
+      capture t_feature_2
+        render 'sv-auto', text: section.settings.feature_2
+      endcapture
+    endif
+  else
+    capture t_feature_2
+      render 'en-auto', text: section.settings.feature_2
+    endcapture
   endif
   assign t_feature_3 = section.settings.feature_3
-  if site_lang == 'sv' and section.settings.feature_3_sv != blank
-    assign t_feature_3 = section.settings.feature_3_sv
+  if site_lang == 'sv'
+    if section.settings.feature_3_sv != blank
+      assign t_feature_3 = section.settings.feature_3_sv
+    else
+      capture t_feature_3
+        render 'sv-auto', text: section.settings.feature_3
+      endcapture
+    endif
+  else
+    capture t_feature_3
+      render 'en-auto', text: section.settings.feature_3
+    endcapture
   endif
   assign t_button_label = section.settings.button_label
-  if site_lang == 'sv' and section.settings.button_label_sv != blank
-    assign t_button_label = section.settings.button_label_sv
+  if site_lang == 'sv'
+    if section.settings.button_label_sv != blank
+      assign t_button_label = section.settings.button_label_sv
+    else
+      capture t_button_label
+        render 'sv-auto', text: section.settings.button_label
+      endcapture
+    endif
+  else
+    capture t_button_label
+      render 'en-auto', text: section.settings.button_label
+    endcapture
   endif
 -%}
 <div class="hero-full-width-section" style="background-image: url('{% if section.settings.image != blank %}{{ section.settings.image | image_url: width: 2400 }}{% else %}https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image.png{% endif %}');">
@@ -240,8 +300,7 @@
     {
       "type": "text",
       "id": "heading_sv",
-      "label": "Heading (Svenska)",
-      "default": "Din partner för tunga maskiner"
+      "label": "Heading (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "textarea",
@@ -252,8 +311,7 @@
     {
       "type": "textarea",
       "id": "text_sv",
-      "label": "Subtext (Svenska)",
-      "default": "Kvalitet och service."
+      "label": "Subtext (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "text",
@@ -264,8 +322,7 @@
     {
       "type": "text",
       "id": "feature_1_sv",
-      "label": "Feature 1 (Svenska)",
-      "default": "Kvalitet i fokus"
+      "label": "Feature 1 (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "text",
@@ -276,8 +333,7 @@
     {
       "type": "text",
       "id": "feature_2_sv",
-      "label": "Feature 2 (Svenska)",
-      "default": "Rikstäckande service"
+      "label": "Feature 2 (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "text",
@@ -288,8 +344,7 @@
     {
       "type": "text",
       "id": "feature_3_sv",
-      "label": "Feature 3 (Svenska)",
-      "default": "Skräddarsydda lösningar"
+      "label": "Feature 3 (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "text",
@@ -300,8 +355,7 @@
     {
       "type": "text",
       "id": "button_label_sv",
-      "label": "Button Text (Svenska)",
-      "default": "KONTAKTA OSS"
+      "label": "Button Text (Svenska – leave empty to auto-translate)"
     },
     {
       "type": "url",
