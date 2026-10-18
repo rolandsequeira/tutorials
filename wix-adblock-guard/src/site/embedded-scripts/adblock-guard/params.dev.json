@@ -1,0 +1,13 @@
+{
+  "config": "",
+  "noscript": "on",
+  "nsTitle": "Ad blocker detected",
+  "nsMessage": "This site is free because of the ads we show. Scripts appear to be blocked in your browser. Please allow scripts and ads for this site, then reload.",
+  "nsLock": "off",
+  "nsBranding": "on",
+  "strict": "off",
+  "strictDelay": "4s",
+  "accent": "#116DFF",
+  "bg": "#FFFFFF",
+  "fg": "#162D3D"
+}
