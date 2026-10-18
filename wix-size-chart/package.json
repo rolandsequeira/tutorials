@@ -1,0 +1,18 @@
+{
+  "name": "wix-size-chart",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Size chart pop-up for Wix Stores product pages, sold on the Wix App Market (self-hosted).",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/server.js",
+    "dev": "DEV_MODE=1 node --disable-warning=ExperimentalWarning --watch src/server.js",
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

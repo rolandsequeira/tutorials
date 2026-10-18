@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FitChart settings</title>
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <div>
+      <h1 id="app-name">FitChart</h1>
+      <p class="muted" id="site-line">Loading…</p>
+    </div>
+    <div class="plan">
+      <span id="plan-badge" class="badge">…</span>
+      <a id="upgrade" class="btn primary" target="_blank" rel="noopener" hidden>Upgrade to Pro</a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <div id="error" class="alert" role="alert" hidden></div>
+    <div id="embed-warning" class="alert warn-box" hidden>
+      The size guide script isn't active on your site yet. Reopen this page in a minute, and make sure the site is
+      published on a Premium plan with a connected domain (Wix only runs app scripts on those sites).
+    </div>
+
+    <section aria-labelledby="stats-h">
+      <h2 id="stats-h">Shoppers <span class="muted small" id="stats-range"></span></h2>
+      <div class="tiles" id="stat-tiles"></div>
+      <div id="daily-chart" class="chart" role="img" aria-label="Product page visits with a size guide, and size guide opens, per day"></div>
+    </section>
+
+    <div class="split">
+      <form id="settings-form" novalidate>
+        <h2>Settings</h2>
+        <fieldset>
+          <legend>Status</legend>
+          <label class="switch"><input type="checkbox" name="enabled"> Show the "Size guide" link on product pages</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Size charts</legend>
+          <p class="muted small">When a product matches several charts, the most specific one wins: a chart for that product,
+            then a keyword in its name or URL, then one of its categories, then a chart for all products.</p>
+          <ol id="chart-list" class="chart-list"></ol>
+          <div class="row add-row">
+            <label>Start from
+              <select id="template-select"></select>
+            </label>
+            <button type="button" class="btn" id="add-chart">Add chart</button>
+            <span class="lock" id="charts-lock" hidden>Pro: more charts</span>
+          </div>
+        </fieldset>
+
+        <fieldset id="chart-editor" hidden>
+          <legend>Edit chart: <span id="editor-name"></span></legend>
+          <div class="row">
+            <label>Name (only you see it) <input data-chart="name" maxlength="60"></label>
+            <label>Pop-up title <input data-chart="title" maxlength="80"></label>
+          </div>
+
+          <h3>Table</h3>
+          <p class="muted small">Enter lengths in <b>cm</b> and weights in <b>kg</b>, for example <code>86-90</code>.
+            Set a column to "Length" or "Weight" and visitors can switch it to inches or pounds.</p>
+          <div class="grid-wrap"><table class="grid" id="grid"></table></div>
+          <div class="actions">
+            <button type="button" class="btn" id="add-row">Add row</button>
+            <button type="button" class="btn" id="add-col">Add column</button>
+            <details class="paste">
+              <summary class="btn">Paste from a spreadsheet</summary>
+              <label>Copy the cells in Excel or Google Sheets (first row = column names) and paste them here
+                <textarea id="paste-box" rows="5" placeholder="Size	Chest	Waist&#10;S	86-90	70-74&#10;M	90-96	74-80"></textarea>
+              </label>
+              <button type="button" class="btn" id="paste-apply">Replace table</button>
+            </details>
+          </div>
+
+          <label>How to measure (shown under the table) <textarea data-chart="note" rows="3" maxlength="1000"></textarea></label>
+
+          <div data-requires="images">
+            <h3>Image <span class="lock" hidden>Pro</span></h3>
+            <div class="row image-row">
+              <img id="image-thumb" alt="" hidden>
+              <label class="file">Upload a picture (PNG, JPG, WebP or GIF, up to 2 MB)
+                <input type="file" id="image-file" accept="image/png,image/jpeg,image/webp,image/gif">
+              </label>
+              <label>…or an image URL <input data-chart="image" placeholder="https://static.wixstatic.com/media/…"></label>
+              <button type="button" class="btn" id="image-remove">Remove image</button>
+            </div>
+          </div>
+
+          <h3>Show this chart on</h3>
+          <label class="switch"><input type="checkbox" data-assign="all"> All products that no other chart matches</label>
+          <div id="collections-box">
+            <p class="small"><b>Categories</b> <span class="muted" id="collections-status"></span></p>
+            <div id="collections" class="checks"></div>
+          </div>
+          <label>Keywords in the product name or URL, comma separated (for example <code>glove, mitt</code>)
+            <input data-assign="keywords" placeholder="glove, mitt"></label>
+          <label>Specific products: the last part of the product URL, one per line (for <code>/product-page/<b>boxing-gloves-12oz</b></code>)
+            <textarea data-assign="products" rows="3" placeholder="boxing-gloves-12oz"></textarea></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Link</legend>
+          <div class="row">
+            <label>Text <input name="linkText" maxlength="40"></label>
+            <label>Style
+              <select name="linkStyle">
+                <option value="link">Text link</option>
+                <option value="button">Button</option>
+              </select>
+            </label>
+            <label>Position
+              <select name="position">
+                <option value="after-options">Under the size options</option>
+                <option value="before-cart">Above "Add to Cart"</option>
+                <option value="after-title">Under the product name</option>
+              </select>
+            </label>
+          </div>
+          <label>If the position can't be found
+            <select name="fallback">
+              <option value="floating">Show a "Size guide" tab on the side of the page</option>
+              <option value="none">Don't show the link</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Pop-up</legend>
+          <div class="row">
+            <label>Layout
+              <select name="layout">
+                <option value="modal">Pop-up in the middle</option>
+                <option value="drawer">Side panel</option>
+              </select>
+            </label>
+            <label>Units shown first
+              <select name="defaultUnit">
+                <option value="metric">cm / kg</option>
+                <option value="imperial">inches / lb</option>
+              </select>
+            </label>
+          </div>
+          <label class="switch" data-requires="unitSwitch"><input type="checkbox" name="showUnitSwitch"> Let shoppers switch between cm and inches <span class="lock" hidden>Pro</span></label>
+          <div class="row colors">
+            <label>Accent <input type="color" name="accentColor"></label>
+            <label>Text <input type="color" name="textColor"></label>
+            <label>Background <input type="color" name="backgroundColor"></label>
+            <label>Table header <input type="color" name="headerColor"></label>
+          </div>
+        </fieldset>
+
+        <fieldset data-requires="removeBranding">
+          <legend>Branding <span class="lock" hidden>Pro</span></legend>
+          <label class="switch"><input type="checkbox" name="showBranding"> Show "Powered by" under the chart</label>
+        </fieldset>
+
+        <details class="advanced">
+          <summary>Advanced</summary>
+          <fieldset>
+            <label>Product page URL prefix (change it only if you renamed it in Wix's SEO settings)
+              <input name="productPath" maxlength="60" placeholder="/product-page/"></label>
+            <label>Put the link after this element instead (CSS selector, optional)
+              <input name="customSelector" maxlength="200" placeholder='[data-hook="product-options"]'></label>
+          </fieldset>
+        </details>
+
+        <div class="actions sticky-actions">
+          <button class="btn primary" type="submit">Save</button>
+          <a id="live-preview" class="btn" target="_blank" rel="noopener" hidden>Preview on my site</a>
+          <span id="save-status" class="muted" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+
+      <aside class="preview-col" aria-labelledby="preview-h">
+        <h2 id="preview-h">Preview</h2>
+        <div id="preview" class="preview">
+          <div class="fake-product" aria-hidden="true">
+            <div class="fake-img"></div>
+            <div class="fake-info">
+              <div class="fake-title" id="fake-title">Product name</div>
+              <div class="fake-price">$49.00</div>
+              <div class="fake-label">Size</div>
+              <div class="fake-select">Select</div>
+              <div id="fake-link-slot"></div>
+              <div class="fake-cart">Add to Cart</div>
+            </div>
+          </div>
+        </div>
+        <p class="muted small">Click the link in the preview to open the chart. <span id="preview-chart-name"></span></p>
+      </aside>
+    </div>
+  </main>
+
+  <script src="/guide.js"></script>
+  <script src="/dashboard/dashboard.js"></script>
+</body>
+</html>

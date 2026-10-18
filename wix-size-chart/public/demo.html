@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo store</title>
+  <style>
+    body { margin: 0; font: 16px/1.6 system-ui, sans-serif; color: #1f2937; background: #fafaf9; }
+    header { background: #1f2937; color: #fff; padding: 16px 24px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    header a { color: #e5e7eb; }
+    main { max-width: 980px; margin: 0 auto; padding: 24px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    @media (max-width: 720px) { main { grid-template-columns: 1fr; } }
+    .img { aspect-ratio: 1; border-radius: 10px; background: linear-gradient(135deg, #fde68a, #fca5a5); }
+    select { width: 100%; padding: 10px; font: inherit; border: 1px solid #9ca3af; border-radius: 6px; }
+    button.cart { width: 100%; padding: 12px; font: inherit; font-weight: 600; background: #111827; color: #fff; border: 0; border-radius: 6px; margin-top: 16px; }
+    .help { grid-column: 1 / -1; font-size: 14px; color: #4b5563; }
+    code { background: #e7e5e4; padding: 1px 5px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Demo Sports</strong>
+    <a href="/product-page/boxing-gloves-12oz">Boxing gloves</a>
+    <a href="/product-page/winter-gloves">Winter gloves</a>
+    <a href="/product-page/running-shoe-pro">Running shoe</a>
+    <a href="/product-page/classic-t-shirt">T-shirt</a>
+  </header>
+  <!-- Mimics the data-hook markup of a Wix Stores product page. -->
+  <main data-hook="product-page">
+    <div class="img" data-hook="product-image"></div>
+    <div>
+      <h1 data-hook="product-title" id="title">Product</h1>
+      <p data-hook="product-price">$49.00</p>
+      <div data-hook="product-options">
+        <div data-hook="product-options-dropdown">
+          <label data-hook="options-dropdown-title" for="size">Size</label>
+          <select id="size"><option>Select</option><option>S</option><option>M</option><option>L</option></select>
+        </div>
+      </div>
+      <div data-hook="product-page-cta"><button class="cart" data-hook="add-to-cart">Add to Cart</button></div>
+    </div>
+    <p class="help">Local test page for the <code>dev-site-0001</code> site. The links above switch products without a reload,
+      like a Wix site does. Edit charts at <a href="/dashboard?instanceId=dev-site-0001&amp;plan=pro">/dashboard?instanceId=dev-site-0001&amp;plan=pro</a>
+      (drop <code>&amp;plan=pro</code> to see the Free plan). Settings are cached for up to 5 minutes; use a private window to skip the cache.</p>
+  </main>
+  <script>
+    // Simulate Wix's client-side navigation: swap the title, re-render the options block, push the URL.
+    function show(path) {
+      var slug = path.split('/').pop();
+      document.getElementById('title').textContent = slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+      var opts = document.querySelector('[data-hook="product-options"]');
+      opts.replaceWith(opts.cloneNode(true));
+    }
+    document.querySelectorAll('header a').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        history.pushState(null, '', a.getAttribute('href'));
+        show(location.pathname);
+      });
+    });
+    addEventListener('popstate', function () { show(location.pathname); });
+    show(location.pathname);
+  </script>
+  <script src="/guide.js" data-instance="dev-site-0001" defer></script>
+</body>
+</html>
