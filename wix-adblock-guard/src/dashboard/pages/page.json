@@ -1,0 +1,5 @@
+{
+  "$schema": "https://dev.wix.com/wix-cli/schemas/dashboard-page.json",
+  "id": "d645c927-0afe-4b39-ac4f-76fec6a8880d",
+  "title": "AdBlock Guard"
+}
