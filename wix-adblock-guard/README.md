@@ -80,6 +80,9 @@ rendered outside Wix by `marketing/preview` with the Wix SDK mocked.
 
 ## Publish to the Wix App Market
 
+For a click-by-click version covering both Wix and YouTube, with every field's
+text and file, see `docs/publish-checklist.md`.
+
 You have to do these steps signed in as **Coders Creation** in the
 [Wix App Dashboard](https://manage.wix.com/account/custom-apps).
 
