@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AdBlock Guard Privacy Policy</title>
+<meta name="description" content="How the AdBlock Guard app for Wix handles data for site owners and site visitors.">
+<style>
+  :root { --bg: #ffffff; --text: #162d3d; --muted: #5a6b7b; --accent: #116dff; --rule: #e3e8ee; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0b1f3a; --text: #e8eef5; --muted: #a8b6c6; --accent: #7db3ff; --rule: #22395a; } }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Arial, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 72px; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 4px; }
+  h2 { font-size: 1.25rem; margin: 2.2em 0 .5em; padding-top: 1.2em; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.05rem; margin: 1.5em 0 .3em; }
+  .meta { color: var(--muted); margin: 0 0 2em; }
+  a { color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: .95rem; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--rule); }
+  th { color: var(--muted); font-weight: 600; }
+  code { font-size: .9em; }
+  footer { margin-top: 3em; color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>AdBlock Guard Privacy Policy</h1>
+<p class="meta">Effective 19 October 2026</p>
+
+<p>AdBlock Guard is an app for Wix websites that detects visitors who use an
+ad blocker and asks them to allow ads. It is made by Coders Creation, a sole
+proprietorship based in India ("we", "us"). This policy explains what information the app
+handles, for the Wix site owners who install it and for the people who visit
+those sites.</p>
+
+<p><strong>In short:</strong> AdBlock Guard does not collect, store or sell
+personal data about site visitors. It sets no cookies and has no analytics or
+tracking. We run no servers for the app: it runs in the visitor's browser,
+and its settings are stored by Wix.</p>
+
+<h2>1. Site visitors</h2>
+
+<p>When someone visits a Wix site that uses AdBlock Guard, a small script runs
+in their browser. The script:</p>
+
+<ul>
+  <li><strong>Checks whether a test element is hidden.</strong> Ad blockers hide
+    page elements that look like ads, so the script adds one and checks
+    whether it stays visible. This happens entirely inside the browser.</li>
+  <li><strong>Checks whether ad requests are blocked</strong> (if the site owner
+    has left this check on). The browser sends one request to Google's ad
+    server at <code>pagead2.googlesyndication.com</code>, without cookies, and
+    the script only notes whether the request was blocked. Like any web
+    request, it reveals the visitor's IP address and browser type to Google,
+    whose handling of it is covered by
+    <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.
+    The request does not carry any information about the visitor or the
+    page beyond what every web request carries.</li>
+  <li><strong>Checks whether the browser is Brave</strong>, using the browser's
+    own <code>navigator.brave</code> feature, so Brave users can be shown how to
+    turn off Brave Shields for the site.</li>
+  <li><strong>Remembers a dismissed message</strong> for the rest of the visit.
+    If the visitor closes the message, the script saves
+    <code>abg-dismissed</code> in the browser's session storage. This is not a
+    cookie, is never sent anywhere, and the browser deletes it when the tab
+    is closed.</li>
+</ul>
+
+<p>The results of these checks are only used to decide whether to show the
+message. They are not sent to us, to the site owner or to anyone else, and
+we never receive any information about individual visitors.</p>
+
+<p>If the visitor's browser blocks all scripts, the site shows the message
+with plain HTML and nothing runs at all.</p>
+
+<h2>2. Site owners (Wix users)</h2>
+
+<h3>Settings</h3>
+<p>The settings you choose in the AdBlock Guard dashboard (mode, text,
+colors, excluded pages and so on) are saved to your Wix site through Wix's
+embedded-script feature and stored by Wix. We do not keep a copy.</p>
+
+<h3>Information Wix shares with us</h3>
+<p>As with any Wix app, Wix gives us certain information when you install the
+app, such as your site's URL, the app instance ID, which plan you are on and,
+depending on Wix's settings, the site owner's contact email. The app uses
+the plan inside your dashboard to decide which features to show. We use this
+information only to provide the app, to answer support requests and to
+handle billing questions, and we do not sell or share it.</p>
+
+<h3>Payments</h3>
+<p>Premium plans are sold and billed by Wix. We never see or store your card
+or bank details.</p>
+
+<h3>Support</h3>
+<p>If you email us, we keep your message and email address for as long as we
+need them to help you and to keep a record of the request, then delete
+them.</p>
+
+<h2>3. Who is responsible for what</h2>
+
+<table>
+  <tr><th>Data</th><th>Who handles it</th></tr>
+  <tr><td>The detection checks in a visitor's browser</td><td>Runs only in the visitor's browser. No one receives the results.</td></tr>
+  <tr><td>The request to Google's ad server</td><td>Google, under its own privacy policy</td></tr>
+  <tr><td>App settings</td><td>Stored by Wix on your site</td></tr>
+  <tr><td>Install and plan details</td><td>Wix, which shares them with us as the app developer</td></tr>
+  <tr><td>Payments</td><td>Wix</td></tr>
+  <tr><td>Support emails</td><td>Us</td></tr>
+</table>
+
+<p>Site owners decide whether to use AdBlock Guard on their site, so they
+are responsible for telling their visitors about it in their own privacy
+notice, including the optional check against Google's ad server. You can
+turn that check off in the dashboard at any time.</p>
+
+<h2>4. Legal basis (EU and UK visitors)</h2>
+<p>For site owners, we process the information Wix shares with us to
+perform our agreement with you (providing the app and support) and for our
+legitimate interest in running the app. For visitors, the detection checks
+serve the site owner's legitimate interest in keeping their site funded by
+ads, and they involve no tracking, profiling or stored personal data.</p>
+
+<h2>5. Your rights</h2>
+<p>Depending on where you live, you may have the right to access, correct or
+delete personal data we hold about you, to object to its use, or to complain
+to your data protection authority. In India, this includes your rights
+under the Digital Personal Data Protection Act, 2023. Because we hold no data about site
+visitors, visitors with questions about a particular website should contact
+that website's owner. Site owners can contact us at the address below.
+Uninstalling the app removes its settings from your site.</p>
+
+<h2>6. Children</h2>
+<p>AdBlock Guard is a tool for website owners and is not directed at
+children. It collects no personal data from anyone, children included.</p>
+
+<h2>7. Changes</h2>
+<p>If the app starts handling data differently, we will update this policy
+and change the date at the top. For significant changes, we will also tell
+site owners through the app or by email.</p>
+
+<h2>8. Contact</h2>
+<p>Coders Creation (sole proprietorship, India)<br>
+Email: <a href="mailto:support@coderscreation.com">support@coderscreation.com</a></p>
+<p>Privacy questions, requests and grievances go to the same address. We
+reply within 30 days.</p>
+
+<footer>See also the <a href="terms.html">AdBlock Guard Terms of Use</a>.</footer>
+</main>
+</body>
+</html>

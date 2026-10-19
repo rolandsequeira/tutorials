@@ -12,11 +12,13 @@ asks for its link. It becomes Public once Wix approves the app.
 
 - [ ] Signed in to the [Wix App Dashboard](https://manage.wix.com/account/custom-apps) as **Coders Creation**
 - [ ] Signed in to [YouTube Studio](https://studio.youtube.com) on the channel the video belongs to
-- [ ] A support email address
-- [ ] A privacy policy URL. It must mention the optional ad-server check (a
-      cookieless `HEAD` request to `pagead2.googlesyndication.com` that site
-      owners can turn off) and say that no visitor data is collected
-- [ ] A terms of use URL
+- [ ] Support email: `support@coderscreation.com` (make sure the mailbox exists)
+- [ ] Privacy policy and terms of use live on coderscreation.com. Upload
+      `legal/privacy.html` and `legal/terms.html` (they link to each other,
+      so keep them in one folder), e.g. to
+      `https://coderscreation.com/adblock-guard/privacy.html` and
+      `https://coderscreation.com/adblock-guard/terms.html`, and check that
+      both open in a private window
 - [ ] A Wix test site, plus a browser with uBlock Origin, and Brave
 
 ## 1. Wix: create and release the app
