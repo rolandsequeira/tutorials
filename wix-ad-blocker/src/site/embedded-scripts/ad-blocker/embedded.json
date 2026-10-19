@@ -1,7 +1,0 @@
-{
-  "$schema": "https://dev.wix.com/wix-cli/schemas/embedded-script.json",
-  "id": "8399e2b7-8565-4b09-9d7a-6a192470af5d",
-  "name": "AdFree Site",
-  "scriptType": "ESSENTIAL",
-  "placement": "HEAD"
-}
