@@ -13,12 +13,11 @@ asks for its link. It becomes Public once Wix approves the app.
 - [ ] Signed in to the [Wix App Dashboard](https://manage.wix.com/account/custom-apps) as **Coders Creation**
 - [ ] Signed in to [YouTube Studio](https://studio.youtube.com) on the channel the video belongs to
 - [ ] Support email: `support@coderscreation.com` (make sure the mailbox exists)
-- [ ] Privacy policy and terms of use live on coderscreation.com. Upload
-      `legal/privacy.html` and `legal/terms.html` (they link to each other,
-      so keep them in one folder), e.g. to
-      `https://coderscreation.com/adblock-guard/privacy.html` and
-      `https://coderscreation.com/adblock-guard/terms.html`, and check that
-      both open in a private window
+- [ ] Privacy policy: `https://coderscreation.com/privacy-policy/`. Check
+      that it covers AdBlock Guard's optional cookieless request to
+      `pagead2.googlesyndication.com` (owners can turn it off) and says the
+      app collects no visitor data
+- [ ] Terms of use: `https://coderscreation.com/terms-of-service/`
 - [ ] A Wix test site, plus a browser with uBlock Origin, and Brave
 
 ## 1. Wix: create and release the app
@@ -168,7 +167,9 @@ Video: paste the Unlisted YouTube link from step 2.
 
 **Support and legal**
 
-- [ ] Support email, privacy policy URL, terms of use URL
+- [ ] Support email `support@coderscreation.com`, privacy policy
+      `https://coderscreation.com/privacy-policy/`, terms of use
+      `https://coderscreation.com/terms-of-service/`
 - [ ] Developer / company info: `Coders Creation` (Wix caps company names
       at 23 characters; this is 15)
 
