@@ -1,11 +1,9 @@
 .wix
 node_modules
 dist
-out
+/out
 *.log
 .DS_Store
 demo-output
-marketing/out/raw
-marketing/out/dashboard
 marketing/out/raw
 marketing/out/dashboard
