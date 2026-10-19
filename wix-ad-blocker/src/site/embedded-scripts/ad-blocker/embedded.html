@@ -1,0 +1,372 @@
+<!--
+  AdFree Site: embedded site script.
+
+  Blocks third-party ads on the owner's own Wix site: ad scripts, ad iframes,
+  tracking pixels, ad requests and pop-unders that come in through custom
+  code, embeds and third-party widgets. It is injected into <head> so it runs
+  before those scripts.
+
+  How a request gets stopped, by the way it's made:
+    - element.src = url / setAttribute('src', url)  property and method guards
+    - <script src> / <iframe> in HTML or innerHTML    MutationObserver removes it
+    - fetch / XMLHttpRequest / navigator.sendBeacon  wrapped, fail like a blocked request
+    - window.open                                     blocked for ad hosts, and
+                                                      without a click (pop-ups, Premium)
+
+  It never blocks the site's own domain or Wix's infrastructure (see
+  PROTECTED), so it can't break the site or hide Wix's own branding.
+
+  The double-brace placeholder is a Wix dynamic parameter, set by the
+  dashboard page with embeddedScripts.embedScript(). See src/shared/config.ts.
+-->
+<script>
+(function () {
+  'use strict';
+
+  var RAW_CONFIG = '{{config}}';
+
+  // Keep in sync with PROTECTED_DOMAINS in src/shared/config.ts.
+  var PROTECTED = [
+    'wix.com', 'wixsite.com', 'wixstatic.com', 'parastorage.com', 'wixapps.net',
+    'wix-code.com', 'wixmp.com', 'filesusr.com', 'editorx.io', 'wixstudio.io', 'wixstudio.com'
+  ];
+
+  // Ad networks, ad exchanges and pop-under networks.
+  var ADS = [
+    'doubleclick.net', 'googlesyndication.com', 'googleadservices.com', 'adservice.google.com',
+    'googletagservices.com', 'amazon-adsystem.com', 'adnxs.com', 'criteo.com', 'criteo.net',
+    'taboola.com', 'outbrain.com', 'revcontent.com', 'mgid.com', 'adskeeper.com',
+    'propellerads.com', 'popads.net', 'popcash.net', 'adsterra.com', 'hilltopads.net',
+    'exoclick.com', 'juicyads.com', 'media.net', 'pubmatic.com', 'rubiconproject.com',
+    'openx.net', 'casalemedia.com', 'indexww.com', 'smartadserver.com', 'adform.net',
+    'yieldmo.com', 'sharethrough.com', 'teads.tv', '33across.com', 'zedo.com',
+    'moatads.com', 'adroll.com', 'bidswitch.net', 'contextweb.com', 'lijit.com',
+    'sovrn.com', 'infolinks.com', 'ezoic.net', 'a-ads.com', 'adsafeprotected.com',
+    'serving-sys.com', 'yieldlove.com', 'onclickads.net', 'adcash.com', 'clickadu.com'
+  ];
+
+  // Third-party ad trackers and data brokers. Deliberately leaves out
+  // analytics and marketing tools owners connect themselves (Google
+  // Analytics, Meta Pixel, Hotjar), so turning this on doesn't break them.
+  var TRACKERS = [
+    'scorecardresearch.com', 'quantserve.com', 'quantcount.com', 'bluekai.com', 'krxd.net',
+    'demdex.net', 'everesttech.net', 'mathtag.com', 'rlcdn.com', 'adsrvr.org',
+    'crwdcntrl.net', 'exelator.com', 'agkn.com', 'tapad.com', 'bidr.io',
+    'eyeota.net', 'adhigh.net', 'id5-sync.com', 'liadm.com', 'openx.com'
+  ];
+
+  // Containers ad code renders into. Only hidden, never removed, so the
+  // site's layout code can still find them.
+  var SLOT_SELECTORS = [
+    'ins.adsbygoogle', '[id^="div-gpt-ad"]', '[id^="google_ads_iframe"]',
+    '[data-google-query-id]', '[id^="taboola-"]', '.trc_related_container',
+    '.OUTBRAIN', '.ob-widget', '[id^="rc-widget-"]', '.mgbox', '.adsbyvli'
+  ];
+
+  var DEFAULTS = {
+    enabled: true, blockAds: true, hideAdSlots: true, blockTrackers: false,
+    blockPopups: false, customBlocked: [], allowed: [], excludedPaths: []
+  };
+
+  function decodeConfig(raw) {
+    try {
+      if (!raw || raw.charAt(0) === '{') return {};
+      var b64 = raw.replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var parsed = JSON.parse(new TextDecoder().decode(bytes));
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  var cfg = (function () {
+    var out = {}, k, parsed = decodeConfig(RAW_CONFIG);
+    for (k in DEFAULTS) out[k] = DEFAULTS[k];
+    for (k in parsed) {
+      if (!Object.prototype.hasOwnProperty.call(DEFAULTS, k)) continue;
+      if (typeof parsed[k] === typeof DEFAULTS[k] && Array.isArray(parsed[k]) === Array.isArray(DEFAULTS[k])) {
+        out[k] = parsed[k];
+      }
+    }
+    return out;
+  })();
+
+  if (!cfg.enabled || window.__adFreeSite) return;
+
+  var root = document.documentElement;
+  var stats = { count: 0, blocked: [] };
+  try {
+    Object.defineProperty(window, '__adFreeSite', { value: stats });
+  } catch (e) { return; }
+
+  // Pages can change without a reload on Wix, so this is checked per request.
+  function active() {
+    var path = location.pathname || '/';
+    for (var i = 0; i < cfg.excludedPaths.length; i++) {
+      var p = String(cfg.excludedPaths[i]).replace(/\/$/, '');
+      if (path === p || path.indexOf(p + '/') === 0) return false;
+    }
+    return true;
+  }
+
+  function listed(host, list) {
+    for (var i = 0; i < list.length; i++) {
+      var d = list[i];
+      if (host === d || host.slice(-d.length - 1) === '.' + d) return true;
+    }
+    return false;
+  }
+
+  function hostOf(url) {
+    try {
+      var u = new URL(String(url), location.href);
+      return u.protocol === 'http:' || u.protocol === 'https:' ? u.hostname.toLowerCase() : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function shouldBlock(url) {
+    if (url == null || url === '' || !active()) return false;
+    var host = hostOf(url);
+    if (!host || host === location.hostname.toLowerCase()) return false;
+    if (listed(host, PROTECTED) || listed(host, cfg.allowed)) return false;
+    return (cfg.blockAds && listed(host, ADS)) ||
+      (cfg.blockTrackers && listed(host, TRACKERS)) ||
+      listed(host, cfg.customBlocked);
+  }
+
+  function report(url, via) {
+    var entry = { url: String(url).slice(0, 300), host: hostOf(url), via: via };
+    stats.count++;
+    if (stats.blocked.length < 200) stats.blocked.push(entry);
+    try {
+      window.dispatchEvent(new CustomEvent('adfreesite:blocked', { detail: entry }));
+    } catch (e) { /* very old browser */ }
+  }
+
+  var origSetAttribute = Element.prototype.setAttribute;
+  var origRemove = Element.prototype.remove;
+
+  function neutralize(el, url, via) {
+    if (el.tagName === 'SCRIPT') {
+      // A script whose type isn't JavaScript is never run, even once inserted.
+      origSetAttribute.call(el, 'type', 'javascript/blocked');
+    }
+    origSetAttribute.call(el, 'data-adfree-blocked', '');
+    report(url, via);
+  }
+
+  // URL attribute per element type.
+  var URL_ATTR = { SCRIPT: 'src', IFRAME: 'src', FRAME: 'src', IMG: 'src', EMBED: 'src', LINK: 'href', OBJECT: 'data' };
+
+  // 1. element.src = url
+  function guardProperty(Ctor, prop) {
+    var proto = Ctor && Ctor.prototype;
+    var desc = proto && Object.getOwnPropertyDescriptor(proto, prop);
+    if (!desc || !desc.set || !desc.configurable) return;
+    Object.defineProperty(proto, prop, {
+      configurable: true,
+      enumerable: desc.enumerable,
+      get: desc.get,
+      set: function (value) {
+        if (shouldBlock(value)) return neutralize(this, value, 'property');
+        return desc.set.call(this, value);
+      }
+    });
+  }
+  guardProperty(window.HTMLScriptElement, 'src');
+  guardProperty(window.HTMLIFrameElement, 'src');
+  guardProperty(window.HTMLFrameElement, 'src');
+  guardProperty(window.HTMLImageElement, 'src');
+  guardProperty(window.HTMLEmbedElement, 'src');
+  guardProperty(window.HTMLLinkElement, 'href');
+  guardProperty(window.HTMLObjectElement, 'data');
+
+  // 2. element.setAttribute('src', url)
+  Element.prototype.setAttribute = function (name, value) {
+    var attr = URL_ATTR[this.tagName];
+    if (attr && String(name).toLowerCase() === attr && shouldBlock(value)) {
+      return neutralize(this, value, 'attribute');
+    }
+    return origSetAttribute.apply(this, arguments);
+  };
+
+  // 3. Elements that arrive as HTML: the page itself, innerHTML,
+  //    insertAdjacentHTML, document.write.
+  function check(el) {
+    var attr = URL_ATTR[el.tagName];
+    if (!attr || el.hasAttribute('data-adfree-blocked')) return;
+    var url = el.getAttribute(attr);
+    if (!shouldBlock(url)) return;
+    neutralize(el, url, 'html');
+    if (el.tagName === 'IFRAME' || el.tagName === 'FRAME') el.removeAttribute('src');
+    if (el.parentNode) origRemove.call(el);
+  }
+
+  var URL_ELEMENTS = 'script[src],iframe[src],frame[src],img[src],embed[src],link[href],object[data]';
+
+  function scan(node) {
+    if (node.nodeType !== 1) return;
+    check(node);
+    if (node.firstElementChild) {
+      var found = node.querySelectorAll(URL_ELEMENTS);
+      for (var i = 0; i < found.length; i++) check(found[i]);
+    }
+  }
+
+  // innerHTML starts loading iframes and images as soon as it's parsed,
+  // before the observer below sees them, so HTML strings are cleaned first.
+  // A <template> parses without loading anything.
+  var innerHTMLDesc = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+  var MAYBE_URL = /\b(?:src|href|data)\s*=/i;
+  function cleanHTML(html) {
+    if (typeof html !== 'string' || !MAYBE_URL.test(html) || !innerHTMLDesc || !active()) return html;
+    var t = document.createElement('template');
+    innerHTMLDesc.set.call(t, html);
+    var found = t.content.querySelectorAll(URL_ELEMENTS), changed = false;
+    for (var i = 0; i < found.length; i++) {
+      var el = found[i], url = el.getAttribute(URL_ATTR[el.tagName]);
+      if (!shouldBlock(url)) continue;
+      neutralize(el, url, 'html');
+      el.parentNode.removeChild(el);
+      changed = true;
+    }
+    return changed ? innerHTMLDesc.get.call(t) : html;
+  }
+
+  function guardHTMLProperty(prop) {
+    var desc = Object.getOwnPropertyDescriptor(Element.prototype, prop);
+    if (!desc || !desc.set || !desc.configurable) return;
+    Object.defineProperty(Element.prototype, prop, {
+      configurable: true,
+      enumerable: desc.enumerable,
+      get: desc.get,
+      set: function (value) { return desc.set.call(this, cleanHTML(value)); }
+    });
+  }
+  guardHTMLProperty('innerHTML');
+  guardHTMLProperty('outerHTML');
+  var origInsertAdjacentHTML = Element.prototype.insertAdjacentHTML;
+  if (origInsertAdjacentHTML) {
+    Element.prototype.insertAdjacentHTML = function (position, html) {
+      return origInsertAdjacentHTML.call(this, position, cleanHTML(html));
+    };
+  }
+
+  if (window.MutationObserver) {
+    new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var added = mutations[i].addedNodes;
+        for (var j = 0; j < added.length; j++) scan(added[j]);
+      }
+    }).observe(root, { childList: true, subtree: true });
+  }
+
+  // Firefox fires this before every script runs, a last chance to stop it.
+  document.addEventListener('beforescriptexecute', function (e) {
+    var s = e.target;
+    if (s && s.hasAttribute && (s.hasAttribute('data-adfree-blocked') || shouldBlock(s.getAttribute('src')))) {
+      e.preventDefault();
+    }
+  }, true);
+
+  // 4. Network APIs. Blocked calls fail the way they do under a browser ad
+  //    blocker, so well-written ad code takes its own error path.
+  if (window.fetch) {
+    var origFetch = window.fetch;
+    window.fetch = function (input) {
+      var url = input && typeof input === 'object' && 'url' in input ? input.url : input;
+      if (shouldBlock(url)) {
+        report(url, 'fetch');
+        return Promise.reject(new TypeError('Failed to fetch'));
+      }
+      return origFetch.apply(this, arguments);
+    };
+  }
+
+  if (window.XMLHttpRequest) {
+    var xhr = XMLHttpRequest.prototype;
+    var origOpen = xhr.open, origSend = xhr.send;
+    var BLOCKED = typeof Symbol === 'function' ? Symbol('adfree') : '__adfreeBlocked';
+    xhr.open = function (method, url) {
+      this[BLOCKED] = shouldBlock(url) ? String(url) : null;
+      return origOpen.apply(this, arguments);
+    };
+    xhr.send = function () {
+      var url = this[BLOCKED];
+      if (!url) return origSend.apply(this, arguments);
+      report(url, 'xhr');
+      var req = this;
+      setTimeout(function () {
+        req.dispatchEvent(new ProgressEvent('error'));
+        req.dispatchEvent(new ProgressEvent('loadend'));
+      }, 0);
+    };
+  }
+
+  if (navigator.sendBeacon) {
+    var origBeacon = navigator.sendBeacon;
+    navigator.sendBeacon = function (url) {
+      if (shouldBlock(url)) {
+        report(url, 'beacon');
+        return false;
+      }
+      return origBeacon.apply(navigator, arguments);
+    };
+  }
+
+  // 5. Pop-ups. A window.open to an ad host is always blocked. With pop-up
+  //    blocking on, so is any window.open the visitor didn't click for.
+  var lastGesture = 0;
+  ['pointerdown', 'keydown', 'click', 'touchend'].forEach(function (type) {
+    window.addEventListener(type, function (e) { if (e.isTrusted) lastGesture = Date.now(); }, true);
+  });
+  function visitorJustActed() {
+    var ua = navigator.userActivation;
+    if (ua && typeof ua.isActive === 'boolean') return ua.isActive;
+    return Date.now() - lastGesture < 1000;
+  }
+  var origWindowOpen = window.open;
+  window.open = function (url) {
+    if (url != null && url !== '' && shouldBlock(url)) {
+      report(url, 'popup');
+      return null;
+    }
+    if (cfg.blockPopups && active() && !visitorJustActed()) {
+      report(url == null || url === '' ? 'about:blank' : url, 'popup');
+      return null;
+    }
+    return origWindowOpen.apply(window, arguments);
+  };
+
+  // 6. Hide the empty slots the blocked ads would have filled.
+  if (cfg.hideAdSlots && cfg.blockAds) {
+    var style = document.createElement('style');
+    style.setAttribute('data-adfree', '');
+    var scoped = SLOT_SELECTORS.map(function (sel) { return 'html:not([data-adfree-off]) ' + sel; });
+    style.textContent = scoped.join(',') + '{display:none!important}';
+    (document.head || root).appendChild(style);
+  }
+
+  function syncPage() {
+    if (active()) root.removeAttribute('data-adfree-off');
+    else origSetAttribute.call(root, 'data-adfree-off', '');
+  }
+  ['pushState', 'replaceState'].forEach(function (name) {
+    var orig = history[name];
+    if (typeof orig !== 'function') return;
+    history[name] = function () {
+      var result = orig.apply(this, arguments);
+      syncPage();
+      return result;
+    };
+  });
+  window.addEventListener('popstate', syncPage);
+  syncPage();
+})();
+</script>
