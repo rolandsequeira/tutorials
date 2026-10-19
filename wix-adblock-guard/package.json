@@ -30,6 +30,7 @@
     "logs": "wix app logs",
     "typecheck": "tsc --noEmit",
     "test": "node --test test/*.test.ts",
-    "demo-video": "node scripts/record-demo.ts"
+    "demo-video": "node scripts/record-demo.ts",
+    "media": "vite build --config marketing/preview/vite.config.ts && node marketing/make-media.ts"
   }
 }

@@ -61,6 +61,23 @@ npm run typecheck
 npm run demo-video  # writes demo-output/adblock-guard-demo.webm
 ```
 
+## Launch kit
+
+`npm run media` builds everything the listing and YouTube need into
+`marketing/out/` (committed, so you can use the files without running it):
+
+| File | Use |
+| --- | --- |
+| `icon-512.png`, `icon-256.png`, `icon-64.png`, `logo.png` | App Dashboard icon, listing logo |
+| `screenshot-1…5-*.png` (1600×900) | App Market screenshots |
+| `adblock-guard-demo.mp4` (1080p, 61 s) | YouTube and the listing video |
+| `youtube-thumbnail.png` | YouTube thumbnail |
+
+Copy for the listing is in `docs/app-market-listing.md`; title, description,
+chapters and tags for YouTube are in `docs/youtube.md`. The video uses the
+real detector against simulated ad blockers and the real dashboard page,
+rendered outside Wix by `marketing/preview` with the Wix SDK mocked.
+
 ## Publish to the Wix App Market
 
 You have to do these steps signed in as **Coders Creation** in the

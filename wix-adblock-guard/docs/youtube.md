@@ -1,45 +1,72 @@
-# YouTube upload: @wixappscc
+# YouTube upload: AdBlock Guard demo
 
-Video file: `docs/adblock-guard-demo.webm` (38 s, 1280×720). YouTube accepts
-.webm directly. To regenerate it, run `npm run demo-video`.
+- **Video:** `marketing/out/adblock-guard-demo.mp4` (1080p, 61 s, silent)
+- **Thumbnail:** `marketing/out/youtube-thumbnail.png` (1280×720)
+- **Regenerate both:** `npm run media`
 
-## Title
+Everything in the video is the real app: the real detector against
+simulated ad blockers in Chromium, and the real dashboard page. It has no
+soundtrack, so nothing in it can trigger a copyright claim; to add music, use
+YouTube Studio → **Editor → Audio**, whose tracks are cleared for YouTube.
 
-AdBlock Guard for Wix: Detect Ad Blockers (Even When Scripts Are Blocked)
+The older `docs/adblock-guard-demo.webm` (720p, 38 s) is superseded by the MP4.
+
+## Title (≤ 100 characters)
+
+```
+Stop Ad Blockers on Your Wix Site: AdBlock Guard (Free App)
+```
 
 ## Description
 
-AdBlock Guard asks visitors who use ad blockers to allow ads on your Wix site,
-so your free content keeps paying for itself.
+```
+AdBlock Guard detects visitors who use ad blockers on your Wix site and asks
+them, politely or firmly, to allow ads, so your free content keeps paying
+for itself.
 
-What's in the demo:
-0:00 Intro
-0:03 Visitor without an ad blocker: nothing changes
-0:07 Visitor with an ad blocker: a friendly pop-up
-0:15 All scripts blocked (Brave "Block scripts"): the message still appears
-0:24 Premium: lock mode with your own text and colors
-0:34 Plans
+It detects:
+• Browser extensions: AdBlock, AdBlock Plus, uBlock Origin
+• Brave Shields and DNS blockers like Pi-hole, with step-by-step Shields
+  instructions for Brave users
+• Browsers that block all scripts (Brave "Block scripts", NoScript): the
+  message still appears, with no JavaScript needed. Most detectors miss this.
 
-Works with:
-• AdBlock, AdBlock Plus, uBlock Origin (element hiding)
-• Brave Shields and DNS blockers like Pi-hole (blocked ad requests)
-• Browsers that block all scripts (Brave "Block scripts", NoScript)
+Free plan: detection, a pop-up or bottom bar, scripts-blocked protection.
+Premium: lock mode (content stays hidden until ads are allowed), your own
+text and colors, strict mode, show once per visit, excluded pages, no
+branding.
 
-Free plan: detection, pop-up or bar, scripts-blocked protection.
-Premium: lock mode, custom text and colors, strict mode, exclude pages, no branding.
+Install free from the Wix App Market: search "AdBlock Guard".
 
-Get it on the Wix App Market: <your listing URL>
-More apps by Coders Creation: https://www.wix.com/app-market/developer/coders-creation
+Chapters
+0:00 Intro and a visitor without an ad blocker
+0:12 Ad blocker extensions and Brave Shields
+0:22 All scripts blocked, and setting it up in your dashboard
+0:45 Lock mode and everything AdBlock Guard detects
 
-Demo recorded in Chromium with simulated ad blockers.
+#Wix #WixApps #AdBlock
+```
+
+The chapter times match the scene cuts in the current video. YouTube only
+shows chapters when the first starts at 0:00 and each is at least 10 seconds
+long, so re-check them if you regenerate the video.
 
 ## Tags
 
-wix, wix app, ad blocker detector, adblock detector, wix ads, anti adblock,
-brave, ublock origin, website monetization, wix app market
+```
+wix, wix app, wix app market, adblock detector, ad blocker detector, anti adblock, detect adblock, brave shields, ublock origin, website monetization
+```
 
-## Upload settings
+## Settings
 
-- Visibility: **Unlisted** until the App Market listing is approved, then Public
-- Audience: Not made for kids
-- Thumbnail: a frame from 0:22 (the scripts-blocked message)
+| Setting | Value |
+| --- | --- |
+| Audience | No, it's not made for kids |
+| Visibility | **Unlisted** until the app is live in the App Market, then Public |
+| Category | Science & Technology |
+| Altered or synthetic content | No (screen recording of the real app) |
+| End screen | Subscribe element + another of your app videos |
+
+After the app is approved, replace "search AdBlock Guard" in the description
+with the App Market link, make the video Public, and add the YouTube link to
+the App Market listing.
