@@ -1,0 +1,14 @@
+<!-- KFB Management: Page Settings > Advanced > Page Header Code Injection (this page only). -->
+<style>
+  /* The design has its own header and footer, so hide Squarespace's on this page */
+  #header, .header-announcement-bar-wrapper, #footer-sections, footer.sections { display: none !important; }
+  body, #siteWrapper, #page { background: #F6F4EF !important; }
+  /* Let the code block run edge to edge */
+  .page-section:has(.kfb) { padding: 0 !important; min-height: 0 !important; }
+  .page-section:has(.kfb) .section-background { display: none !important; }
+  .page-section:has(.kfb) .content-wrapper { padding: 0 !important; max-width: none !important; width: 100% !important; }
+  .page-section:has(.kfb) .content,
+  .page-section:has(.kfb) .fluid-engine { display: block !important; width: 100% !important; max-width: none !important; }
+  .page-section:has(.kfb) .fe-block { width: 100% !important; grid-area: auto !important; }
+  .sqs-block:has(.kfb), .sqs-block:has(.kfb) .sqs-block-content { padding: 0 !important; }
+</style>

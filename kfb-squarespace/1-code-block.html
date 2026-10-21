@@ -1,0 +1,1036 @@
+<!-- KFB Management: paste this whole file into ONE Squarespace Code Block (Display Source off). -->
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>    :root {
+      --navy: #172B43;
+      --navy-lift: #243E5C;
+      --ivory: #F6F4EF;
+      --slate: #657887;
+      --brass: #C2A77D;
+      --brass-ink: #7A6540;
+      --charcoal: #2A323A;
+      --line: #DCE3E8;
+      --white: #FFFFFF;
+      --error: #7A2E2E;
+      --serif: "DM Serif Display", "Iowan Old Style", Palatino, Georgia, serif;
+      --sans: Inter, Manrope, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --wrap: 1160px;
+    }
+    .kfb, :where(.kfb) *, :where(.kfb) *::before, :where(.kfb) *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    .kfb {
+      margin: 0;
+      background: var(--ivory);
+      color: var(--charcoal);
+      font-family: var(--sans);
+      font-size: 16.5px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
+    }
+    :where(.kfb) img { max-width: 100%; display: block; }
+    :where(.kfb) a { color: inherit; }
+    :where(.kfb) h1, :where(.kfb) h2, :where(.kfb) h3, :where(.kfb) p { margin: 0; padding: 0; letter-spacing: normal; text-transform: none; }
+    :where(.kfb) ul, :where(.kfb) ol { margin: 0; padding: 0; list-style: none; }
+    :where(.kfb) button, :where(.kfb) input, :where(.kfb) select, :where(.kfb) textarea { font-family: inherit; }
+    :where(.kfb) ::selection { background: var(--navy); color: var(--ivory); }
+    .kfb-sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+    .kfb-skip {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      z-index: 80;
+      background: var(--navy);
+      color: var(--ivory);
+      padding: 10px 14px;
+      text-decoration: none;
+    }
+    .kfb-skip:focus { top: 12px; }
+    .kfb-wrap { width: min(var(--wrap), calc(100% - 64px)); margin-inline: auto; }
+    .kfb-section { scroll-margin-top: 104px; }
+    .kfb a:focus-visible,
+    .kfb button:focus-visible,
+    .kfb input:focus-visible,
+    .kfb select:focus-visible,
+    .kfb textarea:focus-visible {
+      outline: 2px solid var(--brass-ink);
+      outline-offset: 3px;
+    }
+
+    .kfb-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(246, 244, 239, 0.94);
+      backdrop-filter: blur(16px);
+      border-top: 2px solid var(--brass);
+      border-bottom: 1px solid var(--line);
+    }
+    .kfb-header-bar {
+      width: min(var(--wrap), calc(100% - 64px));
+      margin-inline: auto;
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .kfb-wordmark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--navy);
+      flex: none;
+    }
+    .kfb-wordmark-mark {
+      font-family: var(--serif);
+      font-size: 32px;
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+    }
+    .kfb-wordmark-meta { display: grid; gap: 3px; }
+    .kfb-wordmark-name {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .kfb-wordmark-tag {
+      color: var(--brass-ink);
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .kfb-nav { display: flex; align-items: center; gap: 26px; }
+    .kfb-nav a {
+      text-decoration: none;
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--charcoal);
+    }
+    .kfb-nav a:hover { color: var(--navy); }
+    .kfb-nav a[aria-current="true"] { box-shadow: inset 0 -1px 0 var(--brass); color: var(--navy); }
+    .kfb-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      background: var(--navy);
+      color: var(--ivory);
+      text-decoration: none;
+      font-size: 14.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .kfb-btn:hover { background: var(--navy-lift); }
+    .kfb-btn-ghost { background: transparent; color: var(--navy); border-color: #b7c2cb; }
+    .kfb-btn-ghost:hover { background: var(--navy); color: var(--ivory); border-color: var(--navy); }
+    .kfb-btn-brass { background: var(--brass); color: var(--navy); }
+    .kfb-btn-brass:hover { background: #d4c09a; color: var(--navy); }
+    .kfb-nav .kfb-btn { min-height: 40px; padding: 0 14px; font-size: 14px; color: var(--ivory); }
+    .kfb-nav .kfb-btn:hover { color: var(--ivory); }
+
+    .kfb-kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      color: var(--brass-ink);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .kfb-kicker::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--brass);
+    }
+    .kfb h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2rem, 3.2vw, 2.7rem);
+      line-height: 1.12;
+      color: var(--navy);
+      text-wrap: balance;
+    }
+
+    .kfb-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+      min-height: 520px;
+      background: var(--ivory);
+      overflow: hidden;
+    }
+    .kfb-hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      padding: 56px 40px 56px clamp(24px, 5vw, 72px);
+    }
+    .kfb-hero h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.35rem, 3.5vw, 3.55rem);
+      line-height: 1.05;
+      color: var(--navy);
+      max-width: 12ch;
+      text-wrap: balance;
+    }
+    .kfb-hero-lead {
+      margin-top: 18px;
+      max-width: 34rem;
+      font-size: 17px;
+      color: var(--charcoal);
+    }
+    .kfb-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .kfb-hero-media { position: relative; min-width: 0; min-height: 420px; overflow: hidden; }
+    .kfb-hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 62% center; }
+    .kfb-hero-media::after {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: min(46%, 280px);
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(90deg, var(--ivory) 0%, rgba(246, 244, 239, 0.82) 28%, rgba(246, 244, 239, 0.28) 68%, rgba(246, 244, 239, 0) 100%);
+    }
+
+    .kfb-about { padding: 96px 0; background: var(--white); }
+    .kfb-about-grid {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 48px;
+      align-items: center;
+    }
+    .kfb-portrait {
+      width: 300px;
+      height: 340px;
+      object-fit: cover;
+      object-position: center 12%;
+    }
+    .kfb-prose { margin-top: 18px; display: grid; gap: 16px; }
+    .kfb-prose p { color: var(--charcoal); }
+
+    .kfb-services { background: var(--navy); color: var(--ivory); padding: 96px 0 88px; }
+    .kfb-services h2 { color: var(--ivory); max-width: 11em; }
+    .kfb-services-head {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 40px;
+      align-items: end;
+    }
+    .kfb-services-lead { color: #e7e2d8; font-size: 16.5px; max-width: 38rem; }
+    .kfb-service-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 42px;
+    }
+    .kfb-card { background: var(--white); color: var(--charcoal); display: flex; flex-direction: column; }
+    .kfb-card-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #d5dde3; }
+    .kfb-card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+    .kfb-card:hover .kfb-card-media img { transform: scale(1.045); }
+    .kfb-badge {
+      position: absolute;
+      left: 16px;
+      bottom: -20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--white);
+      color: var(--brass-ink);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 14px rgba(23, 43, 67, 0.12);
+    }
+    .kfb-badge svg { width: 20px; height: 20px; }
+    .kfb-card-body { padding: 32px 18px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .kfb-card h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 1.28rem;
+      line-height: 1.2;
+      color: var(--navy);
+      text-wrap: balance;
+    }
+    .kfb-card p { font-size: 14.5px; line-height: 1.55; color: #3d4850; }
+    .kfb-more {
+      margin-top: auto;
+      padding-top: 8px;
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .kfb-more:hover { color: var(--brass-ink); }
+
+    .kfb-expertise { padding: 96px 0 72px; background: var(--ivory); }
+    .kfb-expertise-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .kfb-expertise-grid p + p { margin-top: 16px; }
+    .kfb-industries {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      margin-top: 56px;
+      border-top: 1px solid var(--line);
+    }
+    .kfb-industries li {
+      text-align: center;
+      padding: 28px 10px 8px;
+      color: var(--brass);
+      border-right: 1px solid var(--line);
+    }
+    .kfb-industries li:last-child { border-right: 0; }
+    .kfb-industries svg { width: 34px; height: 34px; margin-inline: auto; }
+    .kfb-industries span {
+      display: block;
+      margin-top: 12px;
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .kfb-industries span::after {
+      content: "";
+      display: block;
+      width: 26px;
+      height: 1px;
+      margin: 12px auto 0;
+      background: var(--brass);
+    }
+
+    .kfb-approach {
+      position: relative;
+      overflow: hidden;
+      background: #eef2f4;
+      padding: 88px 0 96px;
+    }
+    .kfb-approach-photo {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 58%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 70% center;
+    }
+    .kfb-approach-fade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #eef2f4 0%, #eef2f4 36%, rgba(238, 242, 244, 0.78) 52%, rgba(238, 242, 244, 0.15) 78%, rgba(238, 242, 244, 0) 100%);
+    }
+    .kfb-approach-inner { position: relative; z-index: 1; }
+    .kfb-approach-head {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 36px;
+      align-items: end;
+    }
+    .kfb-approach-head p { max-width: 36rem; }
+    .kfb-steps {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 8px 18px;
+      margin-top: 48px;
+      align-items: start;
+    }
+    .kfb-step { display: grid; grid-template-columns: auto 1fr; gap: 14px; max-width: 280px; }
+    .kfb-step-num {
+      font-family: var(--serif);
+      font-size: 2.35rem;
+      line-height: 1;
+      color: #b8956c;
+    }
+    .kfb-step h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--navy);
+      padding-left: 12px;
+      border-left: 1px solid var(--brass);
+      line-height: 1.3;
+    }
+    .kfb-step p { margin-top: 8px; padding-left: 12px; font-size: 14.5px; color: #3e4a53; }
+    .kfb-step-arrow { align-self: center; color: var(--slate); font-size: 22px; padding-bottom: 28px; }
+
+    .kfb-lets {
+      position: relative;
+      overflow: hidden;
+      background: var(--navy);
+      color: var(--ivory);
+      padding: 72px 0;
+    }
+    .kfb-lets-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: right center;
+      opacity: 0.55;
+    }
+    .kfb-lets-fade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(23, 43, 67, 0.96) 0%, rgba(23, 43, 67, 0.88) 42%, rgba(23, 43, 67, 0.45) 100%);
+    }
+    .kfb-lets-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+    }
+    .kfb-lets h2 { color: var(--ivory); max-width: 12em; }
+    .kfb-lets p { margin-top: 14px; max-width: 40rem; color: #e7e2d8; }
+    .kfb-lets .kfb-kicker { color: var(--brass); }
+
+    .kfb-contact { padding: 88px 0 96px; }
+    .kfb-contact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+      gap: 56px;
+      align-items: start;
+    }
+    .kfb-contact-copy { margin-top: 14px; max-width: 34rem; }
+    .kfb-direct { margin-top: 28px; display: grid; gap: 18px; }
+    .kfb-direct li { display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+    .kfb-ico {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--brass-ink);
+      background: #f3efe6;
+    }
+    .kfb-ico svg { width: 16px; height: 16px; }
+    .kfb-direct strong { display: block; color: var(--navy); font-weight: 600; }
+    .kfb-direct a { color: var(--navy); text-underline-offset: 3px; }
+    .kfb-direct .kfb-role,
+    .kfb-direct .kfb-sub { display: block; color: var(--slate); font-size: 14px; }
+
+    .kfb-form {
+      position: relative;
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 28px;
+      box-shadow: 0 16px 40px rgba(23, 43, 67, 0.05);
+    }
+    .kfb-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .kfb-field { display: grid; gap: 6px; }
+    .kfb-field-wide { grid-column: 1 / -1; }
+    .kfb-field label { font-size: 13px; font-weight: 600; color: var(--navy); }
+    .kfb-req { color: var(--brass-ink); }
+    .kfb-field input,
+    .kfb-field select,
+    .kfb-field textarea {
+      width: 100%;
+      border: 1px solid #e1e6ea;
+      background: #fbfaf8;
+      color: var(--charcoal);
+      font-size: 16px;
+      padding: 12px 12px;
+      border-radius: 2px;
+      appearance: none;
+    }
+    .kfb-field textarea { min-height: 120px; resize: vertical; }
+    .kfb-field select {
+      background-image: linear-gradient(45deg, transparent 50%, var(--navy) 50%), linear-gradient(135deg, var(--navy) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 34px;
+    }
+    .kfb-field input::placeholder,
+    .kfb-field textarea::placeholder { color: #8b98a3; }
+    .kfb-field.is-invalid input,
+    .kfb-field.is-invalid select,
+    .kfb-field.is-invalid textarea { border-color: var(--error); }
+    .kfb-error { color: var(--error); font-size: 13px; }
+    .kfb-error:empty { display: none; }
+    .kfb-consent { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 400; line-height: 1.45; }
+    .kfb-consent input { width: 16px; height: 16px; margin-top: 3px; flex: none; accent-color: var(--navy); }
+    .kfb-form .kfb-btn { margin-top: 8px; }
+    .kfb-form-note { margin-top: 12px; color: var(--error); font-size: 14px; }
+    .kfb-form-note:empty { display: none; }
+    .kfb-success { display: grid; gap: 12px; padding: 12px 4px 8px; }
+    .kfb-success h3 { font-family: var(--serif); font-weight: 400; font-size: 2rem; color: var(--navy); }
+    .kfb-success[hidden], .kfb-fields[hidden] { display: none; }
+    .kfb-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+    .kfb-privacy { padding: 8px 0 80px; }
+    .kfb-privacy-panel { max-width: 42rem; padding-top: 28px; border-top: 1px solid var(--line); }
+    .kfb-privacy h2 { font-size: 2rem; }
+    .kfb-privacy p { margin-top: 14px; }
+    .kfb-privacy a { color: var(--navy); }
+
+    .kfb-footer { background: var(--navy); color: var(--ivory); padding: 28px 0 22px; }
+    .kfb-footer-top, .kfb-footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .kfb-footer .kfb-wordmark { color: var(--ivory); }
+    .kfb-footer .kfb-wordmark-tag { color: var(--brass); }
+    .kfb-footer-nav, .kfb-footer-side { display: flex; align-items: center; gap: 22px; }
+    .kfb-footer a { color: #e7e2d8; text-decoration: none; font-size: 14px; }
+    .kfb-footer a:hover { color: var(--white); }
+    .kfb-in {
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(246, 244, 239, 0.45);
+      display: grid;
+      place-items: center;
+    }
+    .kfb-in svg { width: 14px; height: 14px; }
+    .kfb-footer-bottom {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(246, 244, 239, 0.12);
+      color: #c9d0d6;
+      font-size: 13px;
+    }
+    .kfb-footer-tagline { letter-spacing: 0.08em; text-transform: uppercase; font-size: 11px; color: var(--brass); }
+
+    @media (max-width: 1080px) {
+      .kfb-service-grid { grid-template-columns: 1fr 1fr; }
+      .kfb-industries { grid-template-columns: repeat(3, 1fr); }
+      .kfb-industries li:nth-child(3) { border-right: 0; }
+      .kfb-steps { grid-template-columns: 1fr; gap: 22px; }
+      .kfb-step { max-width: none; }
+      .kfb-step-arrow { display: none; }
+    }
+    @media (max-width: 900px) {
+      .kfb-wrap, .kfb-header-bar { width: min(var(--wrap), calc(100% - 40px)); }
+      .kfb-hero, .kfb-about-grid, .kfb-services-head, .kfb-expertise-grid, .kfb-approach-head, .kfb-contact-grid, .kfb-form-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .kfb-hero-copy, .kfb-hero-media { min-width: 0; }
+      .kfb-hero-copy { padding: 48px 20px 32px; }
+      .kfb-portrait { width: min(280px, 100%); height: 260px; }
+      .kfb-hero { min-height: 0; }
+      .kfb-hero-media img { min-height: 280px; max-height: 460px; }
+      .kfb-hero-media::after {
+        inset: 0;
+        width: auto;
+        height: 88px;
+        background: linear-gradient(180deg, var(--ivory) 0%, rgba(246, 244, 239, 0) 100%);
+      }
+      .kfb-about, .kfb-services, .kfb-expertise, .kfb-contact { padding: 64px 0; }
+      .kfb-approach { padding: 64px 0; }
+      .kfb-approach-photo { width: 100%; opacity: 0.28; }
+      .kfb-approach-fade { background: linear-gradient(180deg, rgba(238,242,244,0.92), rgba(238,242,244,0.88)); }
+      .kfb-lets-inner { flex-direction: column; align-items: flex-start; }
+      .kfb-field-wide { grid-column: auto; }
+      .kfb-nav .kfb-btn { display: none; }
+    }
+    @media (max-width: 720px) {
+      .kfb-header-bar { flex-wrap: wrap; padding: 12px 0 8px; gap: 8px; }
+      .kfb-nav {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+      }
+      .kfb-nav a { font-size: 12.5px; text-align: center; }
+      .kfb-hero-actions { flex-direction: column; align-items: stretch; }
+      .kfb-hero-actions .kfb-btn { width: 100%; }
+      .kfb-service-grid, .kfb-industries { grid-template-columns: 1fr 1fr; }
+      .kfb-industries li { border-right: 0; border-bottom: 1px solid var(--line); }
+      .kfb-hero h1 { max-width: none; }
+      .kfb-footer-nav { gap: 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .kfb-card-media img { transition: none; }
+    }
+  </style>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "KFB Management",
+    "description": "KFB Management helps businesses develop growth strategies, build strategic partnerships, and execute commercial opportunities.",
+    "email": "kfbizdev@gmail.com",
+    "telephone": "+1-973-610-2958",
+    "founder": {
+      "@type": "Person",
+      "name": "Karim Farag",
+      "jobTitle": "Principal Consultant & Advisor"
+    }
+  }
+  </script>
+<div class="kfb">
+    <a class="kfb-skip" href="#top">Skip to content</a>
+    <header class="kfb-header">
+      <div class="kfb-header-bar">
+        <a class="kfb-wordmark" href="#top">
+          <span class="kfb-wordmark-mark">KFB</span>
+          <span class="kfb-wordmark-meta">
+            <span class="kfb-wordmark-name">Management</span>
+            <span class="kfb-wordmark-tag">Strategy. Partnerships. Growth.</span>
+          </span>
+        </a>
+        <nav class="kfb-nav" aria-label="Primary">
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#expertise">Expertise</a>
+          <a href="#contact">Contact</a>
+          <a class="kfb-btn" href="#contact">Start a Conversation</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="kfb-hero kfb-section" aria-labelledby="hero-heading">
+        <div class="kfb-hero-copy">
+          <p class="kfb-kicker">Strategy. Partnerships. Growth.</p>
+          <h1 id="hero-heading">Turn opportunity into growth.</h1>
+          <p class="kfb-hero-lead">Helping businesses identify where to grow, build the strategic partnerships to get there, and execute the strategies that move them forward.</p>
+          <div class="kfb-hero-actions">
+            <a class="kfb-btn" href="#contact">Start a Conversation <span aria-hidden="true">→</span></a>
+            <a class="kfb-btn kfb-btn-ghost" href="#services">Explore Our Services</a>
+          </div>
+        </div>
+        <div class="kfb-hero-media">
+          <img src="PASTE-URL-FOR-hero-office.jpg" alt="Conference room overlooking a city skyline at sunrise" width="1280" height="720">
+        </div>
+      </section>
+
+      <section class="kfb-about kfb-section" id="about" aria-labelledby="about-heading">
+        <div class="kfb-wrap kfb-about-grid">
+          <img class="kfb-portrait" src="PASTE-URL-FOR-portrait.jpg" alt="Karim Farag, Principal Consultant and Advisor at KFB Management" width="1152" height="864">
+          <div>
+            <p class="kfb-kicker">About KFB Management</p>
+            <h2 id="about-heading">Experience that connects strategy with execution.</h2>
+            <div class="kfb-prose">
+              <p>KFB Management provides strategic and commercial advisory services to organizations seeking to accelerate growth, pursue new opportunities, and build meaningful business relationships.</p>
+              <p>Led by Karim Farag, Principal Consultant &amp; Advisor, the business draws on two decades of experience in digital health, healthcare, and related industries, with broader experience supporting organizations ranging from startups to Fortune 500 companies.</p>
+              <p>Our approach combines strategic thinking, commercial insight, relationship development, and practical execution.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="kfb-services kfb-section" id="services" aria-labelledby="services-heading">
+        <div class="kfb-wrap">
+          <div class="kfb-services-head">
+            <h2 id="services-heading">Advisory services designed to move businesses forward.</h2>
+            <p class="kfb-services-lead">From strategy and go-to-market planning to partnerships, revenue growth, and transformation, KFB Management provides practical commercial advisory services tailored to your business goals.</p>
+          </div>
+          <div class="kfb-service-grid">
+            <article class="kfb-card">
+              <div class="kfb-card-media">
+                <img src="PASTE-URL-FOR-service-strategy.jpg" alt="Brass compass on marble" width="1152" height="864">
+                <span class="kfb-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg></span>
+              </div>
+              <div class="kfb-card-body">
+                <h3>Strategy, Planning &amp; Go-To-Market</h3>
+                <p>Strategic planning and analysis, growth opportunity assessment, go-to-market strategy development and execution, market positioning, and commercial roadmaps.</p>
+                <a class="kfb-more" href="#contact">Learn More <span aria-hidden="true">→</span></a>
+              </div>
+            </article>
+            <article class="kfb-card">
+              <div class="kfb-card-media">
+                <img src="PASTE-URL-FOR-service-partnerships.jpg" alt="Handshake across a meeting table" width="1152" height="864">
+                <span class="kfb-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 13l2 2 4-4M4 12l3-3a2 2 0 0 1 3 0l1 1 4-4a2 2 0 0 1 3 0l2 2M7 17l-2 2M17 17l2 2"/></svg></span>
+              </div>
+              <div class="kfb-card-body">
+                <h3>Business Development, Partnerships &amp; Licensing</h3>
+                <p>Identify, develop, structure, and negotiate strategic partnerships, licensing agreements, distribution arrangements, and other routes to market.</p>
+                <a class="kfb-more" href="#contact">Learn More <span aria-hidden="true">→</span></a>
+              </div>
+            </article>
+            <article class="kfb-card">
+              <div class="kfb-card-media">
+                <img src="PASTE-URL-FOR-service-revenue.jpg" alt="Printed performance charts and a pen" width="1152" height="864">
+                <span class="kfb-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19h16M7 16l3-4 3 2 4-6"/><path d="M14 8h4v4"/></svg></span>
+              </div>
+              <div class="kfb-card-body">
+                <h3>Revenue &amp; Operational Performance</h3>
+                <p>Revenue optimization, commercial growth initiatives, process optimization, and execution support to improve performance and scalability.</p>
+                <a class="kfb-more" href="#contact">Learn More <span aria-hidden="true">→</span></a>
+              </div>
+            </article>
+            <article class="kfb-card">
+              <div class="kfb-card-media">
+                <img src="PASTE-URL-FOR-service-building.jpg" alt="Modern glass office building" width="1152" height="864">
+                <span class="kfb-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="9" r="2.2"/><circle cx="16" cy="9" r="2.2"/><path d="M4.5 18c.6-2.4 2.2-3.6 4.5-3.6S13 15.6 13.5 18M10.5 18c.5-2.2 2-3.4 4-3.4 2.2 0 3.6 1.2 4.2 3.4"/></svg></span>
+              </div>
+              <div class="kfb-card-body">
+                <h3>Business Transformation &amp; Executive Advisory</h3>
+                <p>Business transformation, change management, and fractional or executive-level advisory leadership to translate strategy into sustained results.</p>
+                <a class="kfb-more" href="#contact">Learn More <span aria-hidden="true">→</span></a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="kfb-expertise kfb-section" id="expertise" aria-labelledby="expertise-heading">
+        <div class="kfb-wrap">
+          <div class="kfb-expertise-grid">
+            <div>
+              <p class="kfb-kicker">Expertise</p>
+              <h2 id="expertise-heading">Broad business perspective. Specialized industry experience.</h2>
+            </div>
+            <div>
+              <p>KFB Management works across industries, applying proven principles of strategy, partnerships, and business development to different commercial environments.</p>
+              <p>The firm brings particularly deep experience in digital health, health technology, pharmaceuticals, life sciences, and healthcare—sectors where complex ecosystems, strategic relationships, and effective execution are essential to growth.</p>
+            </div>
+          </div>
+          <ul class="kfb-industries">
+            <li>
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M16 27s-8-5-11-9.2C3.2 14.4 4.4 10 8.2 9.3 11 8.8 13 10 16 13.2 19 10 21 8.8 23.8 9.3c3.8.7 5 5.1 3.2 8.5C24 22 16 27 16 27z"/></svg>
+              <span>Digital Health</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="9" y="9" width="14" height="14" rx="2"/><rect x="13" y="13" width="6" height="6"/><path d="M13 9V6M16 9V6M19 9V6M13 26v-3M16 26v-3M19 26v-3M9 13H6M9 16H6M9 19H6M26 13h-3M26 16h-3M26 19h-3"/></svg>
+              <span>Health Technology</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="7" y="12" width="18" height="8" rx="4" transform="rotate(-35 16 16)"/><path d="M16 11.2l.2 9.6"/></svg>
+              <span>Pharmaceuticals</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M11 4c5 3.2 5 6.2 0 9.4s-5 6.2 0 9.4 5 6.2 0 9.2"/><path d="M21 4c-5 3.2-5 6.2 0 9.4s5 6.2 0 9.4-5 6.2 0 9.2"/><path d="M11 10.5h10M11 16h10M11 21.5h10"/></svg>
+              <span>Life Sciences</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="16" cy="16" r="9"/><path d="M16 11v10M11 16h10"/></svg>
+              <span>Healthcare</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="16" cy="16" r="9"/><path d="M7 16h18M16 7c2.4 2.6 3.6 5.6 3.6 9s-1.2 6.4-3.6 9c-2.4-2.6-3.6-5.6-3.6-9s1.2-6.4 3.6-9z"/></svg>
+              <span>Across Industries</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="kfb-approach" id="approach" aria-labelledby="approach-heading">
+        <img class="kfb-approach-photo" src="PASTE-URL-FOR-mountains.jpg" alt="" width="1280" height="720">
+        <div class="kfb-approach-fade" aria-hidden="true"></div>
+        <div class="kfb-wrap kfb-approach-inner">
+          <div class="kfb-approach-head">
+            <div>
+              <p class="kfb-kicker">Our Approach</p>
+              <h2 id="approach-heading">A practical, collaborative approach to achieving results.</h2>
+            </div>
+            <p>We take the time to understand your business, market, and growth objectives, develop a clear and actionable plan with the right partners and approach, and support implementation to help you achieve measurable commercial outcomes.</p>
+          </div>
+          <ol class="kfb-steps">
+            <li class="kfb-step">
+              <span class="kfb-step-num">01</span>
+              <div>
+                <h3>Understand the Opportunity</h3>
+                <p>We take the time to understand your business, market, and growth objectives.</p>
+              </div>
+            </li>
+            <li class="kfb-step-arrow" aria-hidden="true">→</li>
+            <li class="kfb-step">
+              <span class="kfb-step-num">02</span>
+              <div>
+                <h3>Build the Strategy</h3>
+                <p>We develop a clear, actionable plan with the right partners, approach, and roadmap.</p>
+              </div>
+            </li>
+            <li class="kfb-step-arrow" aria-hidden="true">→</li>
+            <li class="kfb-step">
+              <span class="kfb-step-num">03</span>
+              <div>
+                <h3>Execute for Growth</h3>
+                <p>We support implementation and help drive measurable commercial outcomes.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="kfb-lets" aria-labelledby="lets-heading">
+        <img class="kfb-lets-photo" src="PASTE-URL-FOR-facade.jpg" alt="" width="1280" height="720">
+        <div class="kfb-lets-fade" aria-hidden="true"></div>
+        <div class="kfb-wrap kfb-lets-inner">
+          <div>
+            <p class="kfb-kicker">Let’s talk</p>
+            <h2 id="lets-heading">Let’s explore what’s possible.</h2>
+            <p>Whether you’re evaluating a new growth opportunity, pursuing strategic partnerships, or looking for experienced commercial guidance, we’d welcome the conversation.</p>
+          </div>
+          <a class="kfb-btn kfb-btn-brass" href="#contact">Start a Conversation <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section class="kfb-contact kfb-section" id="contact" aria-labelledby="contact-heading">
+        <div class="kfb-wrap kfb-contact-grid">
+          <div>
+            <p class="kfb-kicker">Contact</p>
+            <h2 id="contact-heading">Get in touch.</h2>
+            <p class="kfb-contact-copy">We look forward to learning more about your business and discussing how KFB Management can help you achieve your goals.</p>
+            <ul class="kfb-direct">
+              <li>
+                <span class="kfb-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3"/><path d="M5 19c1.2-3 3.4-4.5 7-4.5S17.8 16 19 19"/></svg></span>
+                <span>
+                  <strong>Karim Farag</strong>
+                  <span class="kfb-role">Principal Consultant &amp; Advisor</span>
+                </span>
+              </li>
+              <li>
+                <span class="kfb-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4h3l1.5 3.5-2 1.2a11 11 0 0 0 4.8 4.8l1.2-2L20 13v3a1.5 1.5 0 0 1-1.6 1.5A14.5 14.5 0 0 1 5.5 5.6 1.5 1.5 0 0 1 7 4z"/></svg></span>
+                <a href="tel:+19736102958">973-610-2958</a>
+              </li>
+              <li>
+                <span class="kfb-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="M4 7l8 6 8-6"/></svg></span>
+                <a href="mailto:kfbizdev@gmail.com">kfbizdev@gmail.com</a>
+              </li>
+              <li>
+                <span class="kfb-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10z"/><circle cx="12" cy="11" r="2"/></svg></span>
+                <span>
+                  <strong>Based in the United States.</strong>
+                  <span class="kfb-sub">Working with clients globally.</span>
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <form class="kfb-form" id="inquiry" action="mailto:kfbizdev@gmail.com" method="post" enctype="text/plain" novalidate>
+            <div class="kfb-fields" id="inquiry-fields">
+              <div class="kfb-form-grid">
+                <div class="kfb-field">
+                  <label for="kfb-name">Full name <span class="kfb-req" aria-hidden="true">*</span><span class="kfb-sr">required</span></label>
+                  <input id="kfb-name" name="name" type="text" autocomplete="name" placeholder="Your full name" required aria-describedby="kfb-name-error">
+                  <p class="kfb-error" id="kfb-name-error"></p>
+                </div>
+                <div class="kfb-field">
+                  <label for="kfb-email">Business email <span class="kfb-req" aria-hidden="true">*</span><span class="kfb-sr">required</span></label>
+                  <input id="kfb-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@company.com" required aria-describedby="kfb-email-error">
+                  <p class="kfb-error" id="kfb-email-error"></p>
+                </div>
+                <div class="kfb-field kfb-field-wide">
+                  <label for="kfb-company">Company / Organization <span class="kfb-sr">optional</span></label>
+                  <input id="kfb-company" name="company" type="text" autocomplete="organization" placeholder="Your company (optional)">
+                </div>
+                <div class="kfb-field kfb-field-wide">
+                  <label for="kfb-interest">How can we help? <span class="kfb-sr">optional</span></label>
+                  <select id="kfb-interest" name="interest">
+                    <option value="">Select an option</option>
+                    <option>Strategy &amp; Go-To-Market</option>
+                    <option>Partnerships, Licensing &amp; Distribution</option>
+                    <option>Revenue &amp; Process Optimization</option>
+                    <option>Business Transformation &amp; Change Management</option>
+                    <option>Executive Advisory</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="kfb-field kfb-field-wide">
+                  <label for="kfb-message">Message <span class="kfb-req" aria-hidden="true">*</span><span class="kfb-sr">required</span></label>
+                  <textarea id="kfb-message" name="message" placeholder="Tell us more about your goals or project." required aria-describedby="kfb-message-error"></textarea>
+                  <p class="kfb-error" id="kfb-message-error"></p>
+                </div>
+                <div class="kfb-field kfb-field-wide">
+                  <label class="kfb-consent" for="kfb-consent">
+                    <input id="kfb-consent" name="consent" type="checkbox" value="yes" required aria-describedby="kfb-consent-error">
+                    <span>I consent to have my information used to respond to my inquiry. <a href="#privacy">Privacy Notice</a>.</span>
+                  </label>
+                  <p class="kfb-error" id="kfb-consent-error"></p>
+                </div>
+              </div>
+              <div class="kfb-hp" aria-hidden="true">
+                <label for="kfb-gotcha">Leave this field blank</label>
+                <input id="kfb-gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+              </div>
+              <button class="kfb-btn" type="submit">Send Inquiry <span aria-hidden="true">→</span></button>
+              <p class="kfb-form-note" id="inquiry-status" role="alert"></p>
+            </div>
+            <div class="kfb-success" id="inquiry-success" hidden>
+              <p class="kfb-kicker">Inquiry</p>
+              <h3 tabindex="-1">Thank you.</h3>
+              <p id="inquiry-success-copy"></p>
+              <button class="kfb-btn kfb-btn-ghost" type="button" id="inquiry-reset">Send another inquiry</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="kfb-privacy kfb-section" id="privacy" aria-labelledby="privacy-heading">
+        <div class="kfb-wrap">
+          <div class="kfb-privacy-panel">
+            <h2 id="privacy-heading">Privacy notice</h2>
+            <p>KFB Management collects the name, business email, company, topic, and message you submit so Karim Farag can read and reply to your inquiry. Completed inquiries are sent to kfbizdev@gmail.com.</p>
+            <p>That information is used to respond to you. It is not sold. To ask for a copy of an inquiry or to have it deleted, email <a href="mailto:kfbizdev@gmail.com">kfbizdev@gmail.com</a> or call <a href="tel:+19736102958">973-610-2958</a>.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="kfb-footer">
+      <div class="kfb-wrap">
+        <div class="kfb-footer-top">
+          <a class="kfb-wordmark" href="#top">
+            <span class="kfb-wordmark-mark">KFB</span>
+            <span class="kfb-wordmark-meta">
+              <span class="kfb-wordmark-name">Management</span>
+              <span class="kfb-wordmark-tag">Strategy. Partnerships. Growth.</span>
+            </span>
+          </a>
+          <nav class="kfb-footer-nav" aria-label="Footer">
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#expertise">Expertise</a>
+            <a href="#contact">Contact</a>
+          </nav>
+          <div class="kfb-footer-side">
+            <a href="#privacy">Privacy Policy</a>
+            <a class="kfb-in" href="https://www.linkedin.com/" aria-label="KFB Management on LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.5 9H4V20h2.5V9zM5.2 4A1.6 1.6 0 1 0 5.2 7.2 1.6 1.6 0 0 0 5.2 4zM20 20h-2.5v-5.6c0-1.6-.6-2.6-2-2.6-1 0-1.6.7-1.9 1.4-.1.2-.1.6-.1.9V20H11V9h2.4v1.5c.4-.7 1.4-1.8 3.3-1.8 2.4 0 4.3 1.6 4.3 5V20z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="kfb-footer-bottom">
+          <p>© 2026 KFB Management. All rights reserved.</p>
+          <p class="kfb-footer-tagline">Strategy. Partnerships. Growth.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+<script>
+    (function () {
+      var FORM_ENDPOINT = "";
+      var form = document.getElementById("inquiry");
+      var fields = document.getElementById("inquiry-fields");
+      var success = document.getElementById("inquiry-success");
+      var successCopy = document.getElementById("inquiry-success-copy");
+      var status = document.getElementById("inquiry-status");
+      var resetBtn = document.getElementById("inquiry-reset");
+      var navLinks = document.querySelectorAll(".kfb-nav a[href^='#']");
+      var sections = ["about", "services", "expertise", "contact"];
+
+      function setError(input, message) {
+        var wrap = input.closest(".kfb-field");
+        var error = document.getElementById(input.id + "-error");
+        if (message) {
+          wrap.classList.add("is-invalid");
+          input.setAttribute("aria-invalid", "true");
+          if (error) error.textContent = message;
+        } else {
+          wrap.classList.remove("is-invalid");
+          input.removeAttribute("aria-invalid");
+          if (error) error.textContent = "";
+        }
+      }
+      function validEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
+      function validate() {
+        var name = document.getElementById("kfb-name");
+        var email = document.getElementById("kfb-email");
+        var message = document.getElementById("kfb-message");
+        var consent = document.getElementById("kfb-consent");
+        var ok = true;
+        if (!name.value.trim()) { setError(name, "Enter your full name."); ok = false; } else setError(name, "");
+        if (!email.value.trim()) { setError(email, "Enter your business email."); ok = false; }
+        else if (!validEmail(email.value.trim())) { setError(email, "Enter an email address like name@company.com."); ok = false; }
+        else setError(email, "");
+        if (!message.value.trim()) { setError(message, "Enter a message."); ok = false; } else setError(message, "");
+        if (!consent.checked) { setError(consent, "Confirm that KFB Management may use this information to respond."); ok = false; }
+        else setError(consent, "");
+        return ok;
+      }
+      function showSuccess(copy) {
+        successCopy.textContent = copy;
+        fields.hidden = true;
+        success.hidden = false;
+        success.querySelector("h3").focus({ preventScroll: true });
+      }
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        status.textContent = "";
+        if (!validate()) {
+          var firstInvalid = form.querySelector("[aria-invalid='true']");
+          if (firstInvalid) firstInvalid.focus();
+          return;
+        }
+        if (document.getElementById("kfb-gotcha").value) {
+          showSuccess("Thank you. Your inquiry has been received.");
+          return;
+        }
+        var submit = form.querySelector("[type='submit']");
+        submit.disabled = true;
+        if (FORM_ENDPOINT) {
+          fetch(FORM_ENDPOINT, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
+            .then(function (response) { if (!response.ok) throw new Error("Request failed"); form.reset(); showSuccess("Your inquiry has been received. Karim Farag will follow up at the email you provided."); })
+            .catch(function () { status.textContent = "The inquiry could not be sent. Please email kfbizdev@gmail.com or call 973-610-2958. Your details are still in the form."; })
+            .finally(function () { submit.disabled = false; });
+          return;
+        }
+        var name = document.getElementById("kfb-name").value.trim();
+        var body = [
+          "Name: " + name,
+          "Email: " + document.getElementById("kfb-email").value.trim(),
+          "Company: " + (document.getElementById("kfb-company").value.trim() || "—"),
+          "How can we help: " + (document.getElementById("kfb-interest").value || "—"),
+          "",
+          document.getElementById("kfb-message").value.trim()
+        ].join("\n");
+        window.location.href = "mailto:kfbizdev@gmail.com?subject=" + encodeURIComponent("Website inquiry from " + name) + "&body=" + encodeURIComponent(body);
+        showSuccess("Your email app should open with this inquiry addressed to kfbizdev@gmail.com. Send that message to reach Karim Farag. You can also call 973-610-2958.");
+        submit.disabled = false;
+      });
+      ["kfb-name", "kfb-email", "kfb-message", "kfb-consent"].forEach(function (id) {
+        document.getElementById(id).addEventListener("input", function () {
+          if (this.getAttribute("aria-invalid") === "true") validate();
+        });
+      });
+      resetBtn.addEventListener("click", function () {
+        form.reset();
+        form.querySelectorAll(".is-invalid").forEach(function (node) { node.classList.remove("is-invalid"); });
+        form.querySelectorAll("[aria-invalid]").forEach(function (node) { node.removeAttribute("aria-invalid"); });
+        form.querySelectorAll(".kfb-error").forEach(function (node) { node.textContent = ""; });
+        status.textContent = "";
+        success.hidden = true;
+        fields.hidden = false;
+        document.getElementById("kfb-name").focus();
+      });
+      if ("IntersectionObserver" in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach(function (link) {
+              var on = link.getAttribute("href") === "#" + entry.target.id && !link.classList.contains("kfb-btn");
+              if (on) link.setAttribute("aria-current", "true");
+              else link.removeAttribute("aria-current");
+            });
+          });
+        }, { rootMargin: "-40% 0px -50% 0px", threshold: 0.01 });
+        sections.forEach(function (id) {
+          var section = document.getElementById(id);
+          if (section) observer.observe(section);
+        });
+      }
+    })();
+  </script>
